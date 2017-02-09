@@ -12,7 +12,7 @@ before_install:
 - sudo apt-get install --yes make
 - sudo apt-get install --yes libreadline6-dev
 - sudo apt-get install --yes gcc
-- git clone --recursive https://github.com/jamiejennings/rosie-pattern-language.git /opt/
+- git clone --recursive https://github.com/jamiejennings/rosie-pattern-language.git /opt/rosie/
 - cd /opt/rosie && make clean && make linux
 
 language: python
