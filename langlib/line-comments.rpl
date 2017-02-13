@@ -10,6 +10,6 @@ file = {line .}*
 comment_start = "//"
 alias comment_pre = {!comment_start !line_end .}*
 comment_context = {!comment_start !line_end .}*
-alias comment_line = {line_end? {"\t" / " "}* "//" {!line_end .}*}
+comment_line = {line_end? {"\t" / " "}* "//" {!line_end .}*}
 alias comment_inline = {comment_context comment_line}
 comment_body = {{line_end comment_inline} / {line_end comment_pre} / comment_pre .}*
