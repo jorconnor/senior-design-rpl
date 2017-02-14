@@ -1,15 +1,20 @@
 ------------------------------------
--- java
+-- java line comments
+-- Output structure:
+-- "j_comments"
+-- ->"j_comment_inline"
+--   ->"j_comment_contex"
+--   ->"j_comment_body"
+--     ->"j_comment_start"
+--     ->"j_comment_text"
 ------------------------------------
 
 alias line_end = "\n"
-
-line = {!line_end .}*
-file = {line .}*
-
-comment_start = "//"
-alias comment_pre = {!comment_start !line_end .}*
-comment_context = {!comment_start !line_end .}* 
-comment_line = {"//" {!line_end .}*}
-comment_inline = {comment_context comment_line}
-comment_body = {{comment_inline / comment_line / comment_pre / comment_pre} .}*
+j_comment_start = "//"
+j_comment_text = {!line_end .}*
+alias j_comment_pre = {!j_comment_start !line_end  .}*
+j_comment_context = {!j_comment_start !line_end .}*  
+j_comment_body = {j_comment_start j_comment_text}
+j_comment_inline = {j_comment_context j_comment_body}
+j_comments = {{j_comment_inline / j_comment_body / j_comment_pre} .}*
+ 
