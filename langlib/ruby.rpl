@@ -1,0 +1,23 @@
+--Inline Comments
+r.line_comment_start= "#"
+r.line_comment_text= {!line_end .}*
+alias r.line_comment_pre= {!r.line_comment_start !line_end .}*
+r.line_comment_context= {!r.line_comment_start !line_end .}*
+r.line_comment_body= {r.line_comment_start r.line_comment_text}
+r.line_comment= {r.line_comment_context r.line_comment_body}
+r.line_comments= {{r.line_comment / r.line_comment_body / r.line_comment_pre} .}*
+
+--Block Comments
+
+--- Block comments in Ruby start with a "=begin" on a new line
+--- and end with a "=end" on a new line. Both "=begin" and "=end"
+--- must appear first on a line.
+
+alias ruby.block_comment_start = "\n=begin"
+alias ruby.block_comment_end = "\n=end"
+
+ruby.comment_body = {!ruby.block_comment_end .}*
+ruby.block_comment_comment = {ruby.block_comment_start ruby.comment_body ruby.block_comment_end}
+alias ruby.block_comment_pre = {!ruby.block_comment_start .}*
+ruby.block_comments = {ruby.block_comment_pre ruby.block_comment_comment}*
+
