@@ -1,0 +1,17 @@
+--Inline Comments
+js.line_comment_start= "//"
+js.line_comment_text= {!line_end .}*
+alias js.line_comment_pre= {!js.line_comment_start !line_end .}*
+js.line_comment_context= {!js.line_comment_start !line_end .}*
+js.line_comment_body= {js.line_comment_start js.line_comment_text}
+js.line_comment= {js.line_comment_context js.line_comment_body}
+js.line_comments= {{js.line_comment / js.line_comment_body / js.line_comment_pre} .}*
+
+--Block Comments
+alias javascript.block_comment_start = "/*"
+alias javascript.block_comment_end = "*/"
+alias javascript.block_comment_pre= {!javascript.block_comment_start.}*
+javascript.block_comment_body= {!javascript.block_comment_end .}*
+javascript.block_comment= { javascript.block_comment_start javascript.block_comment_body javascript.block_comment_end}
+javascript.block_comments= {javascript.block_comment_pre javascript.block_comment }*
+

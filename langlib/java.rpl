@@ -1,0 +1,17 @@
+--Inline Comments
+j.line_comment_start= "//"
+j.line_comment_text= {!line_end .}*
+alias j.line_comment_pre= {!j.line_comment_start !line_end .}*
+j.line_comment_context= {!j.line_comment_start !line_end .}*
+j.line_comment_body= {j.line_comment_start j.line_comment_text}
+j.line_comment= {j.line_comment_context j.line_comment_body}
+j.line_comments= {{j.line_comment / j.line_comment_body / j.line_comment_pre} .}*
+
+--Block Comments
+alias java.block_comment_start = "/*"
+alias java.block_comment_end = "*/"
+alias java.block_comment_pre= {!java.block_comment_start.}*
+java.block_comment_body= {!java.block_comment_end .}*
+java.block_comment= { java.block_comment_start java.block_comment_body java.block_comment_end}
+java.block_comments= {java.block_comment_pre java.block_comment }*
+
