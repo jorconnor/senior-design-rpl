@@ -1,5 +1,5 @@
 --Inline Comments
-b.line_comment_start= "#"
+alias b.line_comment_start= "#"
 b.line_comment_text= {!line_end .}*
 alias b.line_comment_pre= {!b.line_comment_start !line_end .}*
 b.line_comment_context= {!b.line_comment_start !line_end .}*

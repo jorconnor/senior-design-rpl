@@ -1,5 +1,5 @@
 --Inline Comments
-csharp.line_comment_start= "//"
+alias csharp.line_comment_start= "//"
 csharp.line_comment_text= {!line_end .}*
 alias csharp.line_comment_pre= {!csharp.line_comment_start !line_end .}*
 csharp.line_comment_context= {!csharp.line_comment_start !line_end .}*
