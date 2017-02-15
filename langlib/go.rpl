@@ -8,10 +8,10 @@ g.line_comment= {g.line_comment_context g.line_comment_body}
 g.line_comments= {{g.line_comment / g.line_comment_body / g.line_comment_pre} .}*
 
 --Block Comments
-alias go.block_comment_start = "/*"
-alias go.block_comment_end = "*/"
-alias go.block_comment_pre= {!go.block_comment_start.}*
-go.block_comment_body= {!go.block_comment_end .}*
-go.block_comment= { go.block_comment_start go.block_comment_body go.block_comment_end}
-go.block_comments= {go.block_comment_pre go.block_comment }*
+alias g.block_comment_start = "/*"
+alias g.block_comment_end = "*/"
+alias g.block_comment_pre= {!g.block_comment_start.}*
+g.block_comment_body= {!g.block_comment_end .}*
+g.block_comment= { g.block_comment_start g.block_comment_body g.block_comment_end}
+g.block_comments= {g.block_comment_pre g.block_comment }*
 

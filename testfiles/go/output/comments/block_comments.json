@@ -1,1 +1,20 @@
-// output
+{
+	"g.block_comments" : {
+		"pos" : 1,
+		"text" : "\/* This file is sourced under MIT license from siddontang\/go. This is an example\nof block comments in go *\/",
+		"subs" : [{
+				"g.block_comment" : {
+					"pos" : 1,
+					"text" : "\/* This file is sourced under MIT license from siddontang\/go. This is an example\nof block comments in go *\/",
+					"subs" : [{
+							"g.block_comment_body" : {
+								"pos" : 3,
+								"text" : " This file is sourced under MIT license from siddontang\/go. This is an example\nof block comments in go "
+							}
+						}
+					]
+				}
+			}
+		]
+	}
+}
