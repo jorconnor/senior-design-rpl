@@ -13,10 +13,10 @@ b.line_comments= {{b.line_comment / b.line_comment_body / b.line_comment_pre} .}
 --- things of the form <<ANYWORD\n ...comment... \nANYWORD are commonly used.
 --- Because of this I'm picking out some commonly used "ANYWORDS".
 
-alias bash.block_comment_start = ":<<COMMENT" / "<<COMMENT" / "<<'COMMENT'"
-alias bash.block_comment_end = "\nCOMMENT"
+alias b.block_comment_start = ":<<COMMENT" / "<<COMMENT" / "<<'COMMENT'"
+alias b.block_comment_end = "\nCOMMENT"
 
-bash.comment_body = {!bash.block_comment_end .}*
-bash.block_comment_comment = { bash.block_comment_start bash.comment_body bash.block_comment_end}
-alias bash.block_comment_pre = {!bash.block_comment_start .}*
-bash.block_comments = {bash.block_comment_pre bash.block_comment_comment}*
+b.comment_body = {!b.block_comment_end .}*
+b.block_comment_comment = { b.block_comment_start b.comment_body b.block_comment_end}
+alias b.block_comment_pre = {!b.block_comment_start .}*
+b.block_comments = {b.block_comment_pre b.block_comment_comment}*
