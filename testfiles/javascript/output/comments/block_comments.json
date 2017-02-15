@@ -1,0 +1,20 @@
+{
+	"js.block_comments" : {
+		"pos" : 1,
+		"subs" : [{
+				"js.block_comment" : {
+					"pos" : 1,
+					"subs" : [{
+							"js.block_comment_body" : {
+								"pos" : 3,
+								"text" : ":\/\/github.com\/gre\/bezier-easing\n * BezierEasing - use bezier curve for transition easing function\n * by Gatan Renaudeau 2014 - 2015 - MIT License\n "
+							}
+						}
+					],
+					"text" : "\/*:\/\/github.com\/gre\/bezier-easing\n * BezierEasing - use bezier curve for transition easing function\n * by Gatan Renaudeau 2014 - 2015 - MIT License\n *\/"
+				}
+			}
+		],
+		"text" : "\/*:\/\/github.com\/gre\/bezier-easing\n * BezierEasing - use bezier curve for transition easing function\n * by Gatan Renaudeau 2014 - 2015 - MIT License\n *\/"
+	}
+}
