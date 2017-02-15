@@ -8,10 +8,10 @@ j.line_comment= {j.line_comment_context j.line_comment_body}
 j.line_comments= {{j.line_comment / j.line_comment_body / j.line_comment_pre} .}*
 
 --Block Comments
-alias java.block_comment_start = "/*"
-alias java.block_comment_end = "*/"
-alias java.block_comment_pre= {!java.block_comment_start.}*
-java.block_comment_body= {!java.block_comment_end .}*
-java.block_comment= { java.block_comment_start java.block_comment_body java.block_comment_end}
-java.block_comments= {java.block_comment_pre java.block_comment }*
+alias j.block_comment_start = "/*"
+alias j.block_comment_end = "*/"
+alias j.block_comment_pre= {!j.block_comment_start.}*
+j.block_comment_body= {!j.block_comment_end .}*
+j.block_comment= { j.block_comment_start j.block_comment_body j.block_comment_end}
+j.block_comments= {j.block_comment_pre j.block_comment }*
 
