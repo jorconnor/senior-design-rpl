@@ -1,5 +1,5 @@
 alias line_end = "\n"
-alias import = "import "
+alias statement_end = ";"
 ---
 --Comments common
 ---
