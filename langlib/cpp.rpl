@@ -15,3 +15,11 @@ cpp.block_comment_body= {!cpp.block_comment_end .}*
 cpp.block_comment= { cpp.block_comment_start cpp.block_comment_body cpp.block_comment_end}
 cpp.block_comments= {cpp.block_comment_pre cpp.block_comment }*
 
+--Dependencies
+alias cpp.include = "#include "
+cpp.header = {{!">" !["]} .}*
+alias import_lit = {"<" / ["]} cpp.header
+cpp.dependency = {cpp.include import_lit {">" / ["]}}
+alias cpp.dependencies_pre = {!cpp.include !line_end .}*
+
+cpp.dependencies = {{cpp.dependency / cpp.dependencies_pre} line_end}*
