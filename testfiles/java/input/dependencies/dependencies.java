@@ -46,9 +46,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
-import javax.annotation.Nonnull;
-import org.apache.commons.lang.StringUtils;
-import org.kohsuke.accmod.Restricted;
+import javax.annotation.Nonnull;import org.apache.commons.lang.StringUtils;import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 
 /**
