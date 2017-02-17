@@ -15,3 +15,11 @@ c.block_comment_body= {!c.block_comment_end .}*
 c.block_comment= { c.block_comment_start c.block_comment_body c.block_comment_end}
 c.block_comments= {c.block_comment_pre c.block_comment }*
 
+--Dependencies
+alias c.include = "#include "
+c.header = {{!">" !["]} .}*
+alias import_lit = {"<" / ["]} c.header
+c.dependency = {c.include import_lit {">" / ["]}}
+alias c.dependencies_pre = {!c.include !line_end .}*
+
+c.dependencies = {{c.dependency / c.dependencies_pre} line_end}*
