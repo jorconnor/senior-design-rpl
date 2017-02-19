@@ -17,8 +17,9 @@ java.block_comments= {java.block_comment_pre java.block_comment }*
 
 --Dependencies
 alias java.import = "import "
+alias java.static = "static "
 java.dependencies_text = {!statement_end !line_end .}*
-java.dependencies_single = {java.import java.dependencies_text}
+java.dependencies_single = {java.import java.static? java.dependencies_text}
 alias java.dependencies_pre = {!java.import !line_end .}*
 
 java.package_text = {!statement_end !line_end .}*
