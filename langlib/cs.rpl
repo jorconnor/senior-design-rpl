@@ -19,8 +19,10 @@ cs.block_comments= {cs.block_comment_pre cs.block_comment }*
 alias cs.using = "using "
 alias cs.static = "static "
 cs.type = {!statement_end !line_end .}*
-cs.dependency = {cs.using cs.static? cs.type}
+cs.alias = {!statement_end !line_end !"=" .}*
+alias cs.alias_statement = {cs.alias "= " cs.type}
+cs.dependency = {cs.using cs.static? {cs.alias_statement / cs.type}}
 alias cs.dependencies_pre = {!cs.using !line_end .}*
 
-cs.dependencies = {{cs.dependencies_single / cs.dependencies_pre} {statement_end / line_end}}*
+cs.dependencies = {{cs.dependency / cs.dependencies_pre} {statement_end / line_end}}*
 
