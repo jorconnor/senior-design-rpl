@@ -1,3 +1,4 @@
+
 --Inline Comments
 alias js.line_comment_start= "//"
 js.line_comment_text= {!line_end .}*
@@ -15,3 +16,12 @@ js.block_comment_body= {!js.block_comment_end .}*
 js.block_comment= { js.block_comment_start js.block_comment_body js.block_comment_end}
 js.block_comments= {js.block_comment_pre js.block_comment }*
 
+--Dependencies
+alias js.import = "import "
+alias js.from = " from "
+js.member ={ !js.from !statement_end !line_end  .}*
+js.module = {!statement_end !line_end .}*
+js.dependencies_single = {js.import js.member js.from js.module}
+alias js.dependencies_pre = {!js.import !line_end .}*
+
+js.dependencies = { {js.dependencies_single / js.dependencies_pre} {line_end / statement_end}}*
