@@ -1,0 +1,76 @@
+{
+	"js.dependencies": {
+		"subs": [{
+				"js.dependencies_single": {
+					"subs": [{
+							"js.member": {
+								"text": "meow",
+								"pos": 31
+							}
+						}, {
+							"js.module": {
+								"text": "'meow'\r",
+								"pos": 41
+							}
+						}
+					],
+					"text": "import meow from 'meow'\r",
+					"pos": 24
+				}
+			}, {
+				"js.dependencies_single": {
+					"subs": [{
+							"js.member": {
+								"text": "chalk",
+								"pos": 56
+							}
+						}, {
+							"js.module": {
+								"text": "'chalk'\r",
+								"pos": 67
+							}
+						}
+					],
+					"text": "import chalk from 'chalk'\r",
+					"pos": 49
+				}
+			}, {
+				"js.dependencies_single": {
+					"subs": [{
+							"js.member": {
+								"text": "map",
+								"pos": 83
+							}
+						}, {
+							"js.module": {
+								"text": "'lodash\/fp\/map'\r",
+								"pos": 92
+							}
+						}
+					],
+					"text": "import map from 'lodash\/fp\/map'\r",
+					"pos": 76
+				}
+			}, {
+				"js.dependencies_single": {
+					"subs": [{
+							"js.member": {
+								"text": "license, { list }",
+								"pos": 116
+							}
+						}, {
+							"js.module": {
+								"text": "'.\/lissie'\r",
+								"pos": 139
+							}
+						}
+					],
+					"text": "import license, { list } from '.\/lissie'\r",
+					"pos": 109
+				}
+			}
+		],
+		"text": "#!\/usr\/bin\/env node\r\n\r\nimport meow from 'meow'\r\nimport chalk from 'chalk'\r\nimport map from 'lodash\/fp\/map'\r\nimport license, { list } from '.\/lissie'\r\n\r\nconst cli = meow(`\r\n  Usage\r\n    $ license <license>\r\n  Options\r\n    --author,  -a\r\n    --year,    -y\r\n    --email,   -e\r\n    --project, -p\r\n  Examples\r\n    $ license\r\n    $ license mit\r\n    $ license mit -a \"Zach Orlovsky\"\r\n`, {\r\n  alias: {\r\n    a: 'author',\r\n    y: 'year',\r\n    e: 'email',\r\n    p: 'project'\r\n  }\r\n})\r\n\r\nconst highlight = text => text.replace(\r\n  \/\\{year\\}|\\{author\\}|\\{project\\}|\\{email\\}\/gi,\r\n  matched => chalk.black.bgYellow(matched)\r\n)\r\n\r\nif (cli.input[0] === 'list') {\r\n  list()\r\n    .then(map(l => console.log('⚫', l)))\r\n    .then(() => process.exit())\r\n}\r\n\r\nlicense(cli.input[0] || 'mit', {\r\n  author: cli.flags.author,\r\n  year: cli.flags.year,\r\n  email: cli.flags.email,\r\n  project: cli.flags.project\r\n})\r\n  .then(highlight)\r\n  .then(text => console.log(text))\r\n  .catch(({ message }) => console.log(message))\r\n",
+		"pos": 1
+	}
+}
