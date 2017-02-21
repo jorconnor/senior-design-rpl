@@ -19,9 +19,16 @@ js.block_comments= {js.block_comment_pre js.block_comment }*
 --Dependencies
 alias js.import = "import "
 alias js.from = " from "
-js.member ={ !js.from !statement_end !line_end  .}*
+alias js.as = "as"
+alias js.comma = [,]
+js.member_alias = js.as { !js.comma !js.from !statement_end !line_end  .}*
+js.member_name = { !js.comma !js.as !js.from !statement_end !line_end  .}*
+js.member = {js.member_name js.member_alias?}
 js.module = {!statement_end !line_end .}*
-js.dependencies_single = {js.import js.member js.from js.module}
+js.dependencies_lonemember = {js.import js.member js.from js.module}
+js.dependencies_module = {js.import js.module}
+js.multi_members = {js.member {js.comma js.member}* }
+js.dependencies_multimember = {js.import js.multi_members js.from js.module}
 alias js.dependencies_pre = {!js.import !line_end .}*
 
-js.dependencies = { {js.dependencies_single / js.dependencies_pre} {line_end / statement_end}}*
+js.dependencies = { { js.dependencies_lonemember / js.dependencies_multimember / js.dependencies_module / js.dependencies_pre} {line_end / statement_end}}*
