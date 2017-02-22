@@ -8,9 +8,9 @@ py.line_comment= {py.line_comment_context py.line_comment_body}
 py.line_comments= {{py.line_comment / py.line_comment_body / py.line_comment_pre} .}*
 
 --Dependencies
-alias py.import = "import "
-alias py.from = "from "
-alias py.as = "as "
+alias py.import = "import"
+alias py.from = "from"
+alias py.as = "as"
 
 py.module_name = {![ ] .}*
 py.alias_name = {![ ] .}*
@@ -24,5 +24,6 @@ py.import_module = {py.import py.module {[,] py.module}*}
 py.import_from_parent = {py.parent_module py.import_module}
 py.import_all = {py.parent_module py.import py.all}
 
-py.import = {py.import_all / py.import_from_parent / py.import_module}
-py.dependencies = {py.import {statement_end / line_end}}*
+py.dependency_single = {py.import_all / py.import_from_parent / py.import_module}
+
+py.dependencies = {py.dependency_single {statement_end / line_end}}*
