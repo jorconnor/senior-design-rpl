@@ -7,4 +7,24 @@ py.line_comment_body= {py.line_comment_start py.line_comment_text}
 py.line_comment= {py.line_comment_context py.line_comment_body}
 py.line_comments= {{py.line_comment / py.line_comment_body / py.line_comment_pre} .}*
 
+--Dependencies
+alias py.import = "import "
+alias py.from = "from "
+alias py.as = "as "
+alias py.seperator = ","
 
+py.module_name = {!line_end !py.as !py.seperator .}*
+py.parent_name = {!py.import .}*
+py.alias_name = {!line_end !py.seperator .}*
+
+py.module_alias = {py.as py.alias_name}
+py.module = {py.module_name py.module_alias?}
+py.parent_module = {py.from py.parent_name}
+
+py.import_module = {py.import py.module {py.seperator py.module}*}
+py.import_from_parent = {py.parent_module py.import_module}
+py.import_all = {py.parent_module py.import "\*"}
+
+py.dependency = {py.import_all / py.import_from_parent / py.import_module}
+alias py.dependencies_pre = {!java.import !line_end .}*
+py.dependencies = {{py.dependency / py.dependencies_pre} line_end}*
