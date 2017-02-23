@@ -49,6 +49,8 @@ import java.security.SecureRandom;
 import javax.annotation.Nonnull;import org.apache.commons.lang.StringUtils;import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 
+import static com.google.common.base.Preconditions.*;
+
 /**
  * Remembers the API token for this user, that can be used like a password to login.
  *
