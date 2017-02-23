@@ -15,3 +15,16 @@ g.block_comment_body= {!g.block_comment_end .}*
 g.block_comment= { g.block_comment_start g.block_comment_body g.block_comment_end}
 g.block_comments= {g.block_comment_pre g.block_comment }*
 
+--Dependencies
+alias g.import = "import "
+alias g.indent = {"\t" / " "}*
+g.dependencies_text = {!{["] line_end} .}*
+g.dependencies_single = {{g.import ["]} g.dependencies_text {["]}}
+g.import_list = {g.indent ["] g.dependencies_text {["] line_end} .}*
+g.dependencies_factor = {g.import "(" line_end g.import_list}
+alias g.dependencies_pre = {!g.import !line_end .}*
+
+g.package_text = {!statement_end !line_end .}*
+g.package = {"package " g.package_text}
+
+g.dependencies = {{g.package / g.dependencies_single / g.dependencies_factor / g.dependencies_pre} line_end}*
