@@ -3,12 +3,16 @@ of block comments in go */
 
 package rpc
 
+import "math"
+
 import (
 	"container/list"
 	"fmt"
 	"reflect"
 	"sync"
 )
+
+import "testing"
 
 type Client struct { // Client struct
 	sync.Mutex
