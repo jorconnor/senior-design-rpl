@@ -15,9 +15,10 @@ before_install:
 - sudo apt-get install --yes gcc
 - git clone --recursive https://github.com/jamiejennings/rosie-pattern-language.git /opt/rosie/
 - cd /opt/rosie && make clean && make linux
+- cd $TRAVIS_BUILD_DIR
 
 language: python
 python:
    - "2.7"
-install: pip install -r requirements.txt
-script: regression
+install: pip install -r ./requirements.txt
+script: ./regression.py
