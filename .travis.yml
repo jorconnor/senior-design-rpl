@@ -20,5 +20,5 @@ before_install:
 language: python
 python:
    - "2.7"
-install: pip install -r ./requirements.txt
-script: ./regression.py
+install: sudo pip install -r ./requirements.txt
+script: sudo python ./regression.py
