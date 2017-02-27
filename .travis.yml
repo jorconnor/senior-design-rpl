@@ -13,7 +13,7 @@ before_install:
 - sudo apt-get install --yes make
 - sudo apt-get install --yes libreadline6-dev
 - sudo apt-get install --yes gcc
-- git clone --recursive https://github.com/jamiejennings/rosie-pattern-language.git /opt/rosie/
+- sudo git clone --recursive https://github.com/jamiejennings/rosie-pattern-language.git /opt/rosie/
 - cd /opt/rosie && sudo make clean && sudo make install
 - cd $TRAVIS_BUILD_DIR
 
