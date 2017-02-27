@@ -15,6 +15,7 @@ before_install:
 - sudo apt-get install --yes gcc
 - sudo git clone --recursive https://github.com/jamiejennings/rosie-pattern-language.git /opt/rosie/
 - cd /opt/rosie 
+- sudo make linux
 - sudo make install
 - cd $TRAVIS_BUILD_DIR
 
