@@ -55,7 +55,7 @@ def run_tests():
             except OSError:
                 pass
             with open(resolved_output, 'r') as vOut:
-                with open(out, 'w') as tempOut:
+                with open(out, 'w+') as tempOut:
                     call(["rosie", "-manifest", manifest_file, "-wholefile", "-encode", "json", alias + "." + test, resolved_input], stdout=tempOut)
                 with open(out, "r+") as tempOut:
                     #verified_out = json.dumps(json.loads(vOut.read()).sort())
@@ -81,7 +81,7 @@ def run_tests():
     print(str(testCount) + " tests ran")
     print(str(failures) + " tests failed")
     print("-------------------------------------------------")
-    
+    if(failures > 0): exit(1)
             
 if __name__ == '__main__':
     run_tests()
