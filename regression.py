@@ -8,7 +8,7 @@ import json
 import tempfile
 from jsondiff import diff
 import os
-from subprocess import call
+from subprocess import Popen, PIPE
 
 testfiles = "./testfiles/"
 test_input = testfiles + "$" + "/input/&/?.@"
@@ -45,38 +45,29 @@ def run_tests():
     testCount = 0
     for test,dir in tests.items():
         for lang,alias in langs.items():
-            #matcher = diff_match_patch()
             resolved_input = resolve_input(lang,alias,test,dir)
             resolved_output = resolve_output(lang,test,dir)
             if not os.path.exists(resolved_input): continue
             if not os.path.exists(resolved_output): continue
-            try:
-                os.remove(out)
-            except OSError:
-                pass
             with open(resolved_output, 'r') as vOut:
-                with open(out, 'w+') as tempOut:
-                    call(["rosie", "-manifest", manifest_file, "-wholefile", "-encode", "json", alias + "." + test, resolved_input], stdout=tempOut)
-                with open(out, "r+") as tempOut:
-                    #verified_out = json.dumps(json.loads(vOut.read()).sort())
-                    #new_out = json.dumps(json.loads(tempOut.read()).sort())
+                proc = Popen('rosie -manifest ' + manifest_file + ' -wholefile -encode json ' + alias + "." + test + " " + resolved_input, stdout=PIPE, stderr=PIPE, shell=True)
+                return_code = proc.wait()
+                stdout,sterr = proc.communicate()
+                if(sterr != ''): print(sterr)
+                try:
                     verified_out = json.loads(vOut.read())
-                    new_out = json.loads(tempOut.read())
-                    #verified_out = sorted(json.loads(vOut.read()))
-                    #new_out = sorted(json.loads(tempOut.read()))
-                    #print (json.dumps(verified_out))
-                    #@print (json.dumps(new_out))
-                    # diffs = matcher.diff_main(verified_out,new_out)
-                    #if(len(diffs) != 0):
+                    new_out = json.loads(stdout)
                     diffs = diff(verified_out,new_out)
-                    if(len(diffs) > 0): 
+                    if(len(diffs) > 0 or return_code != 0): 
                         failures += 1
+                        print("-------------------------------------------------")
                         print (test + " test failed for " + lang)
+                except ValueError:
+                    failures += 1
+                    print("-------------------------------------------------")
+                    print (test + " test failed for " + lang)
+                    print(stdout)
             testCount += 1
-            try:
-                os.remove(out)
-            except OSError:
-                pass
     print("-------------------------------------------------")
     print(str(testCount) + " tests ran")
     print(str(failures) + " tests failed")

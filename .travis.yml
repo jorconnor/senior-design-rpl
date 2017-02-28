@@ -6,6 +6,21 @@ branches:
   only:
   - master
   - development
+  - c
+  - cpp
+  - bash
+  - csharp
+  - go
+  - java
+  - javascript
+  - lua
+  - matlab
+  - python
+  - recursive
+  - rosie
+  - ruby
+  - sql
+  - vb
 
 before_install:
 - sudo apt-get update -qq
