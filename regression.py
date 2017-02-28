@@ -62,7 +62,6 @@ def run_tests():
                         failures += 1
                         print("-------------------------------------------------")
                         print (test + " test failed for " + lang)
-                        print(diffs)
                 except ValueError:
                     failures += 1
                     print("-------------------------------------------------")
