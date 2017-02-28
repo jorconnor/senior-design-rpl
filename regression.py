@@ -53,9 +53,6 @@ def run_tests():
                 proc = Popen('rosie -manifest ' + manifest_file + ' -wholefile -encode json ' + alias + "." + test + " " + resolved_input, stdout=PIPE, stderr=PIPE, shell=True)
                 return_code = proc.wait()
                 stdout,sterr = proc.communicate()
-                print(stdout)
-                print()
-                print(vOut.read())
                 if(sterr != ''): print(sterr)
                 try:
                     verified_out = json.loads(vOut.read())
@@ -65,11 +62,11 @@ def run_tests():
                         failures += 1
                         print("-------------------------------------------------")
                         print (test + " test failed for " + lang)
+                        print(diffs)
                 except ValueError:
                     failures += 1
                     print("-------------------------------------------------")
                     print (test + " test failed for " + lang)
-                    print(stdout)
             testCount += 1
     print("-------------------------------------------------")
     print(str(testCount) + " tests ran")
