@@ -53,6 +53,7 @@ def run_tests():
                 proc = Popen('rosie -manifest ' + manifest_file + ' -wholefile -encode json ' + alias + "." + test + " " + resolved_input, stdout=PIPE, stderr=PIPE, shell=True)
                 return_code = proc.wait()
                 stdout,sterr = proc.communicate()
+                print(stdout)
                 if(sterr != ''): print(sterr)
                 try:
                     verified_out = json.loads(vOut.read())
