@@ -54,6 +54,8 @@ def run_tests():
                 return_code = proc.wait()
                 stdout,sterr = proc.communicate()
                 print(stdout)
+                print()
+                print(vOut.read())
                 if(sterr != ''): print(sterr)
                 try:
                     verified_out = json.loads(vOut.read())
