@@ -13,14 +13,14 @@ java.line_comments= {{java.line_comment_link / java.line_comment / java.line_com
 --Block Comments
 alias java.block_comment_start = "/*"
 alias java.block_comment_end = "*/"
-alias java.block_comment_pre= {!java.block_comment_start.}*
+alias java.block_comment_pre= {!java.block_comment_start .}*
 java.block_comment_body= {!java.block_comment_end .}*
 java.block_comment= {java.block_comment_start java.block_comment_body java.block_comment_end}
 java.block_comments= {java.block_comment_pre java.block_comment }*
 
 --Dependencies
 alias java.import = "import "
-alias java.static = "static "
+java.static = "static "
 java.dependencies_text = {!statement_end !line_end .}*
 java.dependencies_single = {java.import java.static? java.dependencies_text}
 alias java.dependencies_pre = {!java.import !line_end .}*
@@ -29,3 +29,24 @@ java.package_text = {!statement_end !line_end .}*
 java.package = {"package " java.package_text}
 
 java.dependencies = {{{java.package / java.dependencies_single} / java.dependencies_pre} {statement_end / line_end}}*
+
+--Function Definitions
+alias java.seperator = ","
+alias java.start_paren = "("
+alias java.end_paren = ")"
+alias java.start_block = "{"
+alias java.end_block = "}"
+alias java.whitespace = [:space:]
+
+java.access_sp = {"public " / "private " / "protected "}
+java.return_type = {!java.whitespace .}*
+java.function_name = {!java.start_paren .}*
+java.single_param = {!java.end_paren .}*
+java.parameters = {java.start_paren java.single_param java.end_paren}
+
+java.function_body_clean = {!java.end_block .}*
+java.function_body = {java.whitespace java.start_block line_end java.function_body_clean java.end_block}
+java.function_call = {java.access_sp? java.static? java.return_type java.function_name java.parameters}
+
+java.function = {{java.function_call java.function_body} / .}*
+--java.function_ = {java.parameters / .}*
