@@ -28,3 +28,16 @@ py.import_all = {py.parent_module py.import "\*"}
 py.dependency = {py.import_all / py.import_from_parent / py.import_module}
 alias py.dependencies_pre = {!java.import !line_end .}*
 py.dependencies = {{py.dependency / py.dependencies_pre} line_end}*
+
+py.expression = {!" " .}*
+py.identifier = {!" " .}* 
+grammar
+   py.function = "def" py.identifier "(" [py.parameters] ")" ":"
+   alias py.defparameter = py.parameter ["=" py.expression]
+   py.parameter = py.identifier / ("(" py.sublist ")")
+   alias py.sublist = py.parameter ("," py.parameter)* [","]
+   py.parameters = (py.defparameter ",")* ("*" py.identifier [, "**" py.identifier] / ("**" py.identifier) / (py.defparameter [","]))
+   py.function_name = py.identifier
+end
+
+py.functions = py.function*
