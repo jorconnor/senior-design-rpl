@@ -18,3 +18,14 @@ vb.dependency_alias = {vb.alias_name vb.import_alias}
 vb.dependency = {vb.import vb.dependency_alias? vb.dependency_name}
 alias vb.dependencies_pre = {!vb.import !line_end .}*
 vb.dependencies = {{vb.dependency / vb.dependencies_pre} line_end}*
+
+-- Functions
+alias vb.def = "Function " / "Sub "
+vb.funcname = { ![:space:] !"(" .}+
+vb.param = { ![:space:] .}+
+vb.datatype = { ![:space:] !"," !")" .}+
+vb.paramstmnt = "Optional"? ("ByVal" / "ByRef") "ParamArray"? vb.param "As" vb.datatype
+vb.paramlist = (vb.paramstmnt ",")* vb.paramstmnt
+vb.funcdef = vb.def vb.funcname "(" vb.paramlist? ")" "As"? vb.datatype?
+vb.funcdefs = {{!vb.funcdef .}* vb.funcdef? .}* {!vb.funcdef .}*
+
