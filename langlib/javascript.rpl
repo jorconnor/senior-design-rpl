@@ -58,6 +58,6 @@ js.multi_members = {js.member {js.comma js.member_text}* }
 alias js.dependencies_multimember = {js.import js.multi_members js.from js.module_text}
 alias js.dependencies_pre = {!js.import !line_end .}*
 
-js.dependencies_single = {js.dependencies_lonemember / js.dependencies_multimember / js.dependencies_module}
+js.dependency = {js.dependencies_lonemember / js.dependencies_multimember / js.dependencies_module}
 
-js.dependencies = { { js.dependencies_single / js.dependencies_pre} {line_end / statement_end}}*
+js.dependencies = { { js.dependency / js.dependencies_pre} {line_end / statement_end}}*
