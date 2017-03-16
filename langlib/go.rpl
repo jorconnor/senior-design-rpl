@@ -28,3 +28,21 @@ g.package_text = {!statement_end !line_end .}*
 g.package = {"package " g.package_text}
 
 g.dependencies = {{g.package / g.dependencies_single / g.dependencies_factor / g.dependencies_pre} line_end}*
+
+--Function Definitions
+g.func = "func "
+alias g.start_paren = "("
+alias g.end_paren = ")"
+alias g.whitespace = [:space:]
+
+g.function_name = {!g.start_paren .}*
+g.single_param = {!g.end_paren ![,] .}*
+alias g.multi_param =  {[,] g.single_param }*
+g.parameters = {g.start_paren g.single_param g.multi_param g.end_paren}
+
+g.single_return = {!g.end_paren ![,] .}*
+alias g.multi_return =  {[,] g.single_return }*
+g.return = {g.whitespace g.start_paren g.single_return g.multi_return g.end_paren}
+g.return_type = {g.whitespace {!"{" .}*}
+
+g.functions = {{g.func g.function_name g.parameters {g.return / g.return_type}?} / .}*
