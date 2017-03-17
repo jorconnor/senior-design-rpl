@@ -42,12 +42,11 @@ java.access_sp = {"public " / "private " / "protected "}
 java.return_type = {!java.whitespace .}*
 java.function_name = {!java.start_paren .}*
 java.single_param = {!java.end_paren ![,] .}*
-alias java.multip_param =  {[,] java.single_param }*
-java.parameters = {java.start_paren java.single_param java.multip_param java.end_paren}
+alias java.multi_param =  {[,] java.single_param }*
+java.parameters = {java.start_paren java.single_param java.multi_param java.end_paren}
 
 java.function_body_clean = {!java.end_block .}*
 java.function_body = {java.whitespace java.start_block line_end java.function_body_clean java.end_block}
 java.function_call = {java.access_sp? java.static? java.return_type java.function_name java.parameters}
 
-java.function = {{java.function_call java.function_body} / .}*
---java.function_ = {java.parameters / .}*
+java.functions = {{java.function_call java.function_body} / .}*
