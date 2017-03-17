@@ -44,5 +44,6 @@ g.single_return = {!g.end_paren ![,] .}*
 alias g.multi_return =  {[,] g.single_return }*
 g.return = {g.whitespace g.start_paren g.single_return g.multi_return g.end_paren}
 g.return_type = {g.whitespace {!"{" .}*}
+g.function_call = {g.func g.function_name g.parameters {g.return / g.return_type}?}
 
-g.functions = {{g.func g.function_name g.parameters {g.return / g.return_type}?} / .}*
+g.functions = {g.function_call / .}*
