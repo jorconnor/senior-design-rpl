@@ -1,0 +1,85 @@
+
+--Inline Comments
+alias js.line_comment_start= "//"
+js.line_comment_text= {!line_end .}*
+alias js.line_comment_pre= {!js.line_comment_start !line_end .}*
+js.line_comment_context= {!js.line_comment_start !line_end .}*
+js.line_comment_body= {js.line_comment_start js.line_comment_text}
+js.line_comment= {js.line_comment_context js.line_comment_body}
+js.line_comments= {{js.line_comment / js.line_comment_body / js.line_comment_pre} .}*
+
+--Block Comments
+alias js.block_comment_start = "/*"
+alias js.block_comment_end = "*/"
+alias js.block_comment_pre= {!js.block_comment_start.}*
+js.block_comment_body= {!js.block_comment_end .}*
+js.block_comment= { js.block_comment_start js.block_comment_body js.block_comment_end}
+js.block_comments= {js.block_comment_pre js.block_comment }*
+
+--Dependencies
+
+--Inline Comments
+alias js.line_comment_start= "//"
+js.line_comment_text= {!line_end .}*
+alias js.line_comment_pre= {!js.line_comment_start !line_end .}*
+js.line_comment_context= {!js.line_comment_start !line_end .}*
+js.line_comment_body= {js.line_comment_start js.line_comment_text}
+js.line_comment= {js.line_comment_context js.line_comment_body}
+js.line_comments= {{js.line_comment / js.line_comment_body / js.line_comment_pre} .}*
+
+--Block Comments
+alias js.block_comment_start = "/*"
+alias js.block_comment_end = "*/"
+alias js.block_comment_pre= {!js.block_comment_start.}*
+js.block_comment_body= {!js.block_comment_end .}*
+js.block_comment= { js.block_comment_start js.block_comment_body js.block_comment_end}
+js.block_comments= {js.block_comment_pre js.block_comment }*
+
+--Dependencies
+alias js.end = ";" / "." 
+alias js.import = "import "
+alias js.from = " from "
+alias js.as = " as "
+alias js.comma = [,]
+alias js.brace_start = {"{"}
+alias js.brace_end = {"}"}
+js.member_alias = { !js.brace_end !js.comma !js.from !statement_end !line_end  .}*
+js.member_name = { !js.brace_end !js.comma !js.as !js.from !statement_end !line_end  .}* 
+alias js.member_alias_text = js.as js.member_alias
+js.member = { js.member_name js.member_alias_text? }
+alias js.member_text = { js.brace_start? js.member js.brace_end? }
+
+js.module = { !statement_end !line_end .}*
+alias js.module_text = {js.module}
+
+alias js.dependencies_lonemember = {js.import js.member_text js.from js.module_text }
+
+js.dependencies_module = {js.import js.module_text}
+js.multi_members = {js.member {js.comma js.member_text}* }
+alias js.dependencies_multimember = {js.import js.multi_members js.from js.module_text}
+alias js.dependencies_pre = {!js.import !line_end .}*
+
+js.dependency = {js.dependencies_lonemember / js.dependencies_multimember / js.dependencies_module}
+
+js.dependencies = { { js.dependency / js.dependencies_pre} {line_end / statement_end}}*
+
+--Function Definitions
+alias js.seperator = ","
+alias js.start_paren = "("
+alias js.end_paren = ")"
+alias js.start_block = "{"
+alias js.end_block = "}"
+alias js.whitespace = [:space:]
+
+alias js.pre_function = {statement_end / line_end / [.] / [=] / "return"  . } 
+alias js.function = {js.pre_function? "function" }
+js.function_name = {!line_end !js.start_paren .}*
+js.single_param = { !js.end_paren ![,] .}+
+alias js.multip_param = (js.single_param ",")* js.single_param
+js.parameters =  "(" js.multip_param? ")" 
+
+alias js.function_body_clean = {!js.end_block .}*
+js.function_body = {js.whitespace js.start_block js.function_body_clean js.end_block}
+js.function_call =  js.function  js.function_name js.parameters 
+
+js.function = { { js.function_call } / .}* 
