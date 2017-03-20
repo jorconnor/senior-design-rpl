@@ -46,7 +46,7 @@ alias java.multi_param =  {[,] java.single_param }*
 java.parameters = {java.start_paren java.single_param java.multi_param java.end_paren}
 
 java.function_body_clean = {!java.end_block .}*
-java.function_body = {java.whitespace java.start_block line_end java.function_body_clean java.end_block}
-java.function_call = {java.access_sp? java.static? java.return_type java.function_name java.parameters}
+java.function_body = {java.whitespace* java.start_block line_end java.function_body_clean java.end_block}
+java.function_call = {java.whitespace* java.access_sp? java.static? java.return_type java.function_name java.parameters}
 
 java.functions = {{java.function_call java.function_body} / .}*
