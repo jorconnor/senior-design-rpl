@@ -21,11 +21,15 @@ vb.dependencies = {{vb.dependency / vb.dependencies_pre} line_end}*
 
 -- Functions
 alias vb.def = "Function " / "Sub "
-vb.funcname = { ![:space:] !"(" .}+
-vb.param = { ![:space:] .}+
-vb.datatype = { ![:space:] !"," !")" .}+
+vb.funcname = [:alnum:]+
+vb.param = [:alnum:]+
+vb.datatype = [:alnum:]+
 vb.paramstmnt = "Optional"? ("ByVal" / "ByRef") "ParamArray"? vb.param "As" vb.datatype
 vb.paramlist = (vb.paramstmnt ",")* vb.paramstmnt
-vb.funcdef = vb.def vb.funcname "(" vb.paramlist? ")" "As"? vb.datatype?
-vb.funcdefs = {{!vb.funcdef .}* vb.funcdef? .}* {!vb.funcdef .}*
+vb.funcdef = vb.def vb.funcname "(" vb.paramlist? ")" ("As" vb.datatype)?
+alias vb.funcend = "End Function" / "End Sub"
+vb.funcbody = {!vb.funcend .}*
+vb.function = {vb.funcdef vb.funcbody vb.funcend}
+vb.functions = {{!vb.function .}* vb.function? .}* {!vb.function .}*
+
 
