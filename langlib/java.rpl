@@ -44,36 +44,30 @@ java.access_sp = {"public " / "private " / "protected "}
 java.return_type = {{!java.invalid_identifier .}+ java.whitespace}
 java.function_name = {!java.start_paren !java.invalid_identifier .}+
 java.single_param = {!java.end_paren ![,] .}*
-alias java.multi_param =  {[,] java.single_param }*
+alias java.multi_param =  {[,] java.single_param}*
 java.parameters = {java.start_paren java.single_param java.multi_param java.end_paren java.whitespace}
 java.exception = {!java.invalid_identifier .}+
 
-java.function_body_clean = {!java.end_block .}*
-java.function_body = {java.whitespace* java.start_block line_end java.function_body_clean java.end_block}
+java.function_body = {java.whitespace* java.start_block line_end {!java.end_block .}* java.end_block}
 java.function_call = {line_end? java.whitespace* java.access_sp? java.static? java.return_type java.function_name java.parameters java.throws? java.exception?}
 
 java.functions = {{java.function_call} / .}*
 
 --Class Definitions
-alias java.seperator = ","
-alias java.start_paren = "("
-alias java.end_paren = ")"
-alias java.start_block = "{"
-alias java.end_block = "}"
-alias java.whitespace = [:space:]
-alias java.invalid_identifier = [^ [:alnum:][_][$]]
-alias java.throws = "throws "
+alias java.class = "class "
+alias java.extends = "extends "
+alias java.implements = "implements "
+java.final = "final "
 
-java.access_sp = {"public " / "private " / "protected "}
-java.return_type = {{!java.invalid_identifier .}+ java.whitespace}
-java.function_name = {!java.start_paren !java.invalid_identifier .}+
-java.single_param = {!java.end_paren ![,] .}*
-alias java.multi_param =  {[,] java.single_param }*
-java.parameters = {java.start_paren java.single_param java.multi_param java.end_paren java.whitespace}
-java.exception = {!java.invalid_identifier .}+
+java.class_name = {!java.invalid_identifier .}+
+java.parent_name = {!java.invalid_identifier .}+
+java.interface_name = {!java.invalid_identifier .}+
+java.single_inter = {!{java.whitespace java.start_block} ![,] .}+
+alias java.multi_inter = {[,] java.single_inter}*
+java.hierarchy = {java.whitespace* java.extends java.parent_name}
+java.implementation = {java.whitespace* java.implements java.single_inter java.multi_inter java.whitespace java.start_block}
 
-java.function_body_clean = {!java.end_block .}*
-java.function_body = {java.whitespace* java.start_block line_end java.function_body_clean java.end_block}
-java.function_call = {line_end? java.whitespace* java.access_sp? java.static? java.return_type java.function_name java.parameters java.throws? java.exception?}
+java.class_body = {java.whitespace* java.start_block line_end {!java.end_block .}* java.end_block}
+java.class_call = {line_end? java.whitespace* java.access_sp? java.static? java.final? java.class java.class_name java.hierarchy? java.implementation?}
 
-java.functions = {{java.function_call} / .}*
+java.classes = {{java.class_call} / .}*

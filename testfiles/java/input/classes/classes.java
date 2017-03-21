@@ -59,7 +59,7 @@ import static com.google.common.base.Preconditions.*;
  * @see ApiTokenFilter
  * @since 1.426
  */
-public class ApiTokenProperty extends UserProperty {
+public class ApiTokenProperty extends UserProperty implements Interface1, Interface2 {
     private volatile Secret apiToken;
     private String test1 = "http://8080:localhost";
     private String test2 = "http://8080:localhost";//This comment should be extracted
