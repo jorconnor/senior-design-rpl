@@ -155,7 +155,7 @@ class wanglandauising(object):
             self.GN[e] = g - self.G[-2] + np.log(2)
         #print(self.GN)
 
-    def check_flatness(self):
+    def check_flatness(self,a=":)"):
         #Determine the average histogram
         avgH = 0.0
         size = 0.0

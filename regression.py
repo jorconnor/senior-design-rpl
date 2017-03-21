@@ -32,6 +32,7 @@ tests = {
           "line_comments" : "comments",
           "block_comments" : "comments",
           "dependencies" : "dependencies"
+          "functions" : "functions"
         }
 
 def resolve_input(lang_dir, lang_alias, test,test_dir):
