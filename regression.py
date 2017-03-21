@@ -31,7 +31,7 @@ langs = { "java" : "java",
 tests = { 
           "line_comments" : "comments",
           "block_comments" : "comments",
-          "dependencies" : "dependencies"
+          "dependencies" : "dependencies",
           "functions" : "functions"
         }
 
