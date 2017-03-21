@@ -53,3 +53,27 @@ java.function_body = {java.whitespace* java.start_block line_end java.function_b
 java.function_call = {line_end? java.whitespace* java.access_sp? java.static? java.return_type java.function_name java.parameters java.throws? java.exception?}
 
 java.functions = {{java.function_call} / .}*
+
+--Class Definitions
+alias java.seperator = ","
+alias java.start_paren = "("
+alias java.end_paren = ")"
+alias java.start_block = "{"
+alias java.end_block = "}"
+alias java.whitespace = [:space:]
+alias java.invalid_identifier = [^ [:alnum:][_][$]]
+alias java.throws = "throws "
+
+java.access_sp = {"public " / "private " / "protected "}
+java.return_type = {{!java.invalid_identifier .}+ java.whitespace}
+java.function_name = {!java.start_paren !java.invalid_identifier .}+
+java.single_param = {!java.end_paren ![,] .}*
+alias java.multi_param =  {[,] java.single_param }*
+java.parameters = {java.start_paren java.single_param java.multi_param java.end_paren java.whitespace}
+java.exception = {!java.invalid_identifier .}+
+
+java.function_body_clean = {!java.end_block .}*
+java.function_body = {java.whitespace* java.start_block line_end java.function_body_clean java.end_block}
+java.function_call = {line_end? java.whitespace* java.access_sp? java.static? java.return_type java.function_name java.parameters java.throws? java.exception?}
+
+java.functions = {{java.function_call} / .}*
