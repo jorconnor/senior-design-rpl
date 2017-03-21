@@ -32,4 +32,23 @@ vb.funcbody = {!vb.funcend .}*
 vb.function = {vb.funcdef vb.funcbody vb.funcend}
 vb.functions = {{!vb.function .}* vb.function? .}* {!vb.function .}*
 
+--Class Defs
+alias vb.accessmodifier = "Public" / "Protected" / "Friend" / "Private" / "Protected Friend"
+alias vb.inheritable = "MustInherit" / "NotInheritable"
+vb.classname = [[:alnum:][_]]+
+alias vb.genericmodifier = "Out" / "In"
+vb.typename = [[:alnum:][_]]+
+vb.typenames = (vb.typename ",")* vb.typename
+vb.constraint = [[:alnum:][_]]+
+vb.constraintlist = "{"? (vb.constraint ",")* vb.constraint "}"?
+vb.typelist = vb.genericmodifier? vb.typenames ("As" vb.constraintlist)?
+vb.parentclass = [[:alnum:][_]]+
+vb.interfacename = [[:alnum:][_.]]+
+vb.interfacenames = (vb.interfacename ",")* vb.interfacename
+vb.classdef = vb.accessmodifier? "Shadows"? vb.inheritable? ("Class" / "Interface") vb.classname ("(" "Of" vb.typelist ")")? ("Inherits" vb.parentclass)? ("Implements" vb.interfacenames)?
+vb.classend = "End Class" / "End Interface"
+vb.classbody = {!vb.classend .}*
+vb.class = vb.classdef vb.classbody vb.classend
+vb.classes = {{!vb.class .}* vb.class .}* {!vb.class .}*
+
 
