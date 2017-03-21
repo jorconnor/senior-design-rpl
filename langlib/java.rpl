@@ -37,7 +37,7 @@ alias java.end_paren = ")"
 alias java.start_block = "{"
 alias java.end_block = "}"
 alias java.whitespace = [:space:]
-alias java.invalid_identifier = [^ [:alnum:][_][$]]
+alias java.invalid_identifier = [^ [:alnum:][_][$][<>]]
 alias java.throws = "throws "
 
 java.access_sp = {"public " / "private " / "protected "}

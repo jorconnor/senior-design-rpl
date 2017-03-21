@@ -158,7 +158,7 @@ public class ApiTokenProperty extends UserProperty implements Interface1, Interf
     }
 
     @Override
-    public UserProperty reconfigure(StaplerRequest req, JSONObject form) throws FormException {
+    public ArrayList<Integer> UserProperty reconfigure(StaplerRequest req, JSONObject form) throws FormException {
         return this;
     }
 
