@@ -71,3 +71,7 @@ java.class_body = {java.whitespace* java.start_block line_end {!java.end_block .
 java.class_call = {line_end? java.whitespace* java.access_sp? java.static? java.final? java.class java.class_name java.hierarchy? java.implementation?}
 
 java.classes = {{java.class_call} / .}*
+
+--String Literals
+java.string = {!["] .}*
+java.strings = {{["] java.string ["]} / .}*
