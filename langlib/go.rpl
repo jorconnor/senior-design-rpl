@@ -47,3 +47,11 @@ g.return_type = {g.whitespace {!"{" .}*}
 g.function_call = {g.func g.function_name g.parameters {g.return / g.return_type}?}
 
 g.functions = {g.function_call / .}*
+
+--Struct Definitions
+alias g.type = "type "
+alias g.struct = "struct "
+alias g.struct_name = {!g.struct .}*
+
+g.struct_def = {g.type g.struct_name g.struct}
+g.structs = {g.struct_def / .}*
