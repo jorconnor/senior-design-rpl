@@ -74,6 +74,7 @@ java.classes = {{java.class_call} / .}*
 
 --Error Handling
 alias java.throws = "throws "
+alias java.throw_new = "throw new "
 alias java.try = "try"
 alias java.catch = "catch"
 
@@ -81,6 +82,9 @@ java.single_throws = {!java.start_block ![,] .}+
 alias java.multi_throws = {[,] java.single_throws}*
 java.throws_name = {java.single_throws java.multi_throws}*
 java.throws_exception = {java.throws java.throws_name}
+
+java.new_exception = {!statement_end .}*
+java.throw_new_exception = {java.throw_new java.new_exception}
 
 alias java.try_call = {java.try java.whitespace+ java.start_block line_end?}
 alias java.end_try_block = {java.end_block java.whitespace+ @java.catch}
@@ -93,7 +97,7 @@ java.catch_exception = {java.catch java.whitespace+ java.start_paren java.catch_
 java.catch_body = {!java.end_block .}*
 java.catch_block = {java.catch_exception java.catch_body}
 
-java.errors = {java.throws_exception / java.try_block / java.catch_block / .}*
+java.errors = {java.throws_exception / java.throw_new_exception / java.try_block / java.catch_block / .}*
 
 --String Literals
 java.string = {!["] .}*

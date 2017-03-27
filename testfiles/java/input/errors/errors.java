@@ -62,6 +62,7 @@ public class Simulator {
 			layer = reader.readLine();
 			if (layer.contains("#")) {
 				layer = layer.substring(0, layer.indexOf("#"));
+				throw new FileNotFoundException();
 			}
 			if (layer.isEmpty()) {
 				break;
