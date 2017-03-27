@@ -72,6 +72,27 @@ java.class_call = {line_end? java.whitespace* java.access_sp? java.static? java.
 
 java.classes = {{java.class_call} / .}*
 
+--Error Handling
+alias java.throws = "throws "
+alias java.try = "try"
+alias java.catch = "catch"
+
+java.throws_name = {!java.start_block .}*
+java.throws_exception = {java.throws java.throws_name}
+
+alias java.try_call = {java.try java.whitespace+ java.start_block line_end?}
+alias java.end_try_block = {java.end_block java.whitespace+ @java.catch}
+java.try_body = {!java.end_try_block .}*
+java.try_block = {java.try_call java.try_body}
+
+java.catch_variable = {!java.end_paren .}*
+java.catch_name = {{!java.whitespace .}* java.whitespace}
+java.catch_exception = {java.catch java.whitespace+ java.start_paren java.catch_name java.catch_variable java.end_paren java.whitespace+ java.start_block}
+java.catch_body = {!java.end_block .}*
+java.catch_block = {java.catch_exception java.catch_body}
+
+java.errors = {java.throws_exception / java.try_block / java.catch_block / .}*
+
 --String Literals
 java.string = {!["] .}*
 java.strings = {{["] java.string ["]} / .}*
