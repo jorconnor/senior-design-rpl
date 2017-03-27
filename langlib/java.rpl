@@ -77,7 +77,9 @@ alias java.throws = "throws "
 alias java.try = "try"
 alias java.catch = "catch"
 
-java.throws_name = {!java.start_block .}*
+java.single_throws = {!java.start_block ![,] .}+
+alias java.multi_throws = {[,] java.single_throws}*
+java.throws_name = {java.single_throws java.multi_throws}*
 java.throws_exception = {java.throws java.throws_name}
 
 alias java.try_call = {java.try java.whitespace+ java.start_block line_end?}

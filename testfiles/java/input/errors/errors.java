@@ -40,7 +40,7 @@ public class Simulator {
 	private static final Map<Integer, Ball> balls = new HashMap<>();
 	private static int layers, length;
 
-	public static void main(final String[] args) throws IOException {
+	public static void main(final String[] args) throws IOException, FileNotFoundException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 		boolean output_states$ = true, debug$ = false;
 		long delay = 0;
