@@ -19,16 +19,17 @@ java.block_comment= {java.block_comment_start java.block_comment_body java.block
 java.block_comments= {java.block_comment_pre java.block_comment }*
 
 --Dependencies
+alias java.space = " "
 alias java.import = "import "
 java.static = "static "
-java.dependencies_text = {!statement_end !line_end .}*
-java.dependencies_single = {java.import java.static? java.dependencies_text}
+java.dependency_text = {!java.space !statement_end !line_end .}*
+java.dependency = {java.import java.space* java.static? java.dependency_text java.space*}
 alias java.dependencies_pre = {!java.import !line_end .}*
 
 java.package_text = {!statement_end !line_end .}*
 java.package = {"package " java.package_text}
 
-java.dependencies = {{{java.package / java.dependencies_single} / java.dependencies_pre} {statement_end / line_end}}*
+java.dependencies = {{{java.package / java.dependency} / java.dependencies_pre} {statement_end / line_end}}*
 
 --Function Definitions
 alias java.seperator = ","
