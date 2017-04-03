@@ -15,3 +15,22 @@ cs.block_comment_body= {!cs.block_comment_end .}*
 cs.block_comment= { cs.block_comment_start cs.block_comment_body cs.block_comment_end}
 cs.block_comments= {cs.block_comment_pre cs.block_comment }*
 
+--Dependencies
+alias cs.using = "using "
+alias cs.static = "static "
+cs.type = {!statement_end !line_end .}*
+cs.alias = {!statement_end !line_end !"=" .}*
+alias cs.alias_statement = {cs.alias "= " cs.type}
+cs.dependency = {cs.using cs.static? {cs.alias_statement / cs.type}}
+alias cs.dependencies_pre = {!cs.using !line_end .}*
+
+cs.dependencies = {{cs.dependency / cs.dependencies_pre} {statement_end / line_end}}*
+
+--Class Defs
+cs.classname = {!":" !"{" ![:space:] .}+
+cs.parentclass = {!":" !"{" ![:space:] !"," .}+
+cs.parentclasslist = (cs.parentclass ",")* cs.parentclass
+alias cs.visibility = "public" / "internal"
+alias cs.declaration = "class" / "interface"
+cs.classdef = cs.visibility? "sealed"? "abstract"? "partial"? "static"? cs.declaration cs.classname (":" cs.parentclasslist)? "{"
+cs.classes = {{!cs.classdef .}* cs.classdef .}* {!cs.classdef .}*

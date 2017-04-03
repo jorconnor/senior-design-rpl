@@ -5,6 +5,22 @@ os:
 branches:
   only:
   - master
+  - development
+  - c
+  - cpp
+  - bash
+  - csharp
+  - go
+  - java
+  - javascript
+  - lua
+  - matlab
+  - python
+  - recursive
+  - rosie
+  - ruby
+  - sql
+  - vb
 
 before_install:
 - sudo apt-get update -qq
@@ -12,8 +28,16 @@ before_install:
 - sudo apt-get install --yes make
 - sudo apt-get install --yes libreadline6-dev
 - sudo apt-get install --yes gcc
-- git clone --recursive https://github.com/jamiejennings/rosie-pattern-language.git /opt/rosie/
-- cd /opt/rosie && make clean && make linux
+- sudo apt-get install python2.7-tk
+- sudo apt-get install python3-tk
+- sudo git clone --recursive https://github.com/jamiejennings/rosie-pattern-language.git /opt/rosie/
+- cd /opt/rosie 
+- sudo make linux
+- sudo make install
+- cd $TRAVIS_BUILD_DIR
 
 language: python
-script: 
+python:
+   - "2.7"
+install: sudo pip install -r ./requirements.txt
+script: sudo python ./regression.py

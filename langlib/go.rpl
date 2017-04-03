@@ -1,17 +1,58 @@
 --Inline Comments
-alias g.line_comment_start= "//"
-g.line_comment_text= {!line_end .}*
-alias g.line_comment_pre= {!g.line_comment_start !line_end .}*
-g.line_comment_context= {!g.line_comment_start !line_end .}*
-g.line_comment_body= {g.line_comment_start g.line_comment_text}
-g.line_comment= {g.line_comment_context g.line_comment_body}
-g.line_comments= {{g.line_comment / g.line_comment_body / g.line_comment_pre} .}*
+alias go.line_comment_start= "//"
+go.line_comment_text= {!line_end .}*
+alias go.line_comment_pre= {!go.line_comment_start !line_end .}*
+go.line_comment_context= {!go.line_comment_start !line_end .}*
+go.line_comment_body= {go.line_comment_start go.line_comment_text}
+go.line_comment= {go.line_comment_context go.line_comment_body}
+go.line_comments= {{go.line_comment / go.line_comment_body / go.line_comment_pre} .}*
 
 --Block Comments
-alias g.block_comment_start = "/*"
-alias g.block_comment_end = "*/"
-alias g.block_comment_pre= {!g.block_comment_start.}*
-g.block_comment_body= {!g.block_comment_end .}*
-g.block_comment= { g.block_comment_start g.block_comment_body g.block_comment_end}
-g.block_comments= {g.block_comment_pre g.block_comment }*
+alias go.block_comment_start = "/*"
+alias go.block_comment_end = "*/"
+alias go.block_comment_pre= {!go.block_comment_start.}*
+go.block_comment_body= {!go.block_comment_end .}*
+go.block_comment= { go.block_comment_start go.block_comment_body go.block_comment_end}
+go.block_comments= {go.block_comment_pre go.block_comment }*
+
+--Dependencies
+alias go.import = "import "
+alias go.indent = {"\t" / " "}*
+go.dependencies_text = {!{["] line_end} .}*
+go.dependencies_single = {{go.import ["]} go.dependencies_text {["]}}
+go.import_list = {go.indent ["] go.dependencies_text {["] line_end} .}*
+go.dependencies_factor = {go.import "(" line_end go.import_list}
+alias go.dependencies_pre = {!go.import !line_end .}*
+
+go.package_text = {!statement_end !line_end .}*
+go.package = {"package " go.package_text}
+
+go.dependencies = {{go.package / go.dependencies_single / go.dependencies_factor / go.dependencies_pre} line_end}*
+
+--Function Definitions
+go.func = "func "
+alias go.start_paren = "("
+alias go.end_paren = ")"
+alias go.whitespace = [:space:]
+
+go.function_name = {!go.start_paren .}*
+go.single_param = {!go.end_paren ![,] .}*
+alias go.multi_param =  {[,] go.single_param }*
+go.parameters = {go.start_paren go.single_param go.multi_param go.end_paren}
+
+go.single_return = {!go.end_paren ![,] .}*
+alias go.multi_return =  {[,] go.single_return }*
+go.return = {go.whitespace go.start_paren go.single_return go.multi_return go.end_paren}
+go.return_type = {go.whitespace {!"{" .}*}
+go.function_call = {go.func go.function_name go.parameters {go.return / go.return_type}?}
+
+go.functions = {go.function_call / .}*
+
+--Struct Definitions
+alias go.type = "type "
+alias go.struct = "struct "
+alias go.struct_name = {!go.struct .}*
+
+go.struct_def = {go.type go.struct_name go.struct}
+go.structs = {go.struct_def / .}*
 

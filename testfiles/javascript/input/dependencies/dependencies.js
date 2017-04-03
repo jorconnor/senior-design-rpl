@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-import meow from 'meow'
-import chalk from 'chalk'
+import meow as cat from 'meow'
+import {chalk} from 'chalk'
 import map from 'lodash/fp/map'
-import license, { list } from './lissie'
+import license as lic,{ list as lis } from './lissie'
+import './lissie'
 
 const cli = meow(`
   Usage
