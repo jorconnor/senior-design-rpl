@@ -7,4 +7,12 @@ r.line_comment_body= {r.line_comment_start r.line_comment_text}
 r.line_comment= {r.line_comment_context r.line_comment_body}
 r.line_comments= {{r.line_comment / r.line_comment_body / r.line_comment_pre} .}*
 
+--Dependencies
+alias r.src = "source"
+alias r.lib = "library"
+r.dependencies_text = {!{")" line_end} .}*
+r.library = {{r.lib "("} r.dependencies_text {")"}}
+r.source = {{r.src "("} r.dependencies_text {")"}}
+alias r.dependencies_pre = {!r.lib !r.src !line_end .}*
 
+r.dependencies = {{r.library / r.source / r.dependencies_pre} line_end}*

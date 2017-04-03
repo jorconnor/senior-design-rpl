@@ -20,3 +20,16 @@ b.comment_body = {!b.block_comment_end .}*
 b.block_comment_comment = { b.block_comment_start b.comment_body b.block_comment_end}
 alias b.block_comment_pre = {!b.block_comment_start .}*
 b.block_comments = {b.block_comment_pre b.block_comment_comment}*
+
+--Function Def
+grammar
+   alias b.string_lit = chars b.string chars
+   alias chars = [\"\']
+   alias b.string = {b.string_lit / .}*
+end
+
+
+b.function_name = {!"()" ![ ] b.string_lit* .}*
+alias b.temp_comment = {!"#" .}
+b.function = {{"function" b.function_name "()"} / {[ ]* b.function_name [ ]* "()"}}
+b.functions = {{!b.function {b.temp_comment / .}}* b.function}*

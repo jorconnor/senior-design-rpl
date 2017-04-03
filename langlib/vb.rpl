@@ -7,4 +7,14 @@ vb.line_comment_body= {vb.line_comment_start vb.line_comment_text}
 vb.line_comment= {vb.line_comment_context vb.line_comment_body}
 vb.line_comments= {{vb.line_comment / vb.line_comment_body / vb.line_comment_pre} .}*
 
+--Dependencies
+alias vb.import = "Imports "
+vb.alias_name = {!"=" .}*
+alias vb.import_alias = "="
 
+vb.dependency_name = {!line_end .}*
+vb.dependency_alias = {vb.alias_name vb.import_alias} 
+
+vb.dependency = {vb.import vb.dependency_alias? vb.dependency_name}
+alias vb.dependencies_pre = {!vb.import !line_end .}*
+vb.dependencies = {{vb.dependency / vb.dependencies_pre} line_end}*

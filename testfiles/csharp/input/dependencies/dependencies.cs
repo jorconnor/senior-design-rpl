@@ -21,6 +21,7 @@
 using System;
 using System.Runtime.Serialization;
 using static System.Math; 
+using Array = System.Collections.ArrayList;
 
 namespace Alphaleonis.Win32.Vss
 {
