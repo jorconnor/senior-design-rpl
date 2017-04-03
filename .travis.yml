@@ -31,7 +31,7 @@ before_install:
 - sudo apt-get install python2.7-tk
 - sudo apt-get install python3-tk
 - sudo git clone --recursive https://github.com/jamiejennings/rosie-pattern-language.git /opt/rosie/
-- cd /opt/rosie
+- cd /opt/rosie 
 - sudo make linux
 - sudo make install
 - cd $TRAVIS_BUILD_DIR
@@ -41,3 +41,4 @@ python:
    - "2.7"
 install: sudo pip install -r ./requirements.txt
 script: sudo python ./regression.py
+
