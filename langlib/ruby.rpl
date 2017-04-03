@@ -1,0 +1,32 @@
+--Inline Comments
+alias rb.line_comment_start= "#"
+rb.line_comment_text= {!line_end .}*
+alias rb.line_comment_pre= {!rb.line_comment_start !line_end .}*
+rb.line_comment_context= {!rb.line_comment_start !line_end .}*
+rb.line_comment_body= {rb.line_comment_start rb.line_comment_text}
+rb.line_comment= {rb.line_comment_context rb.line_comment_body}
+rb.line_comments= {{rb.line_comment / rb.line_comment_body / rb.line_comment_pre} .}*
+
+--Block Comments
+
+--- Block comments in ruby start with a "=begin" on a new line
+--- and end with a "=end" on a new line. Both "=begin" and "=end"
+--- must appear first on a line.
+
+alias rb.block_comment_start = "\n=begin"
+alias rb.block_comment_end = "\n=end"
+
+rb.comment_body = {!rb.block_comment_end .}*
+rb.block_comment_comment = {rb.block_comment_start rb.comment_body rb.block_comment_end}
+alias rb.block_comment_pre = {!rb.block_comment_start .}*
+rb.block_comments = {rb.block_comment_pre rb.block_comment_comment}*
+
+--Dependencies
+alias rb.load = "load " / "require " / "require_relative "
+rb.module = {!["'] .}*
+alias rb.module_lit = ["'] rb.module
+rb.dependency = {rb.load rb.module_lit ["']}
+alias rb.dependencies_pre = {!rb.load !line_end .}*
+
+rb.dependencies = {{rb.dependency / rb.dependencies_pre} line_end}*
+

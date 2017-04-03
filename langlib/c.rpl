@@ -1,0 +1,51 @@
+--Inline Comments
+alias c.line_comment_start= "//"
+c.line_comment_text= {!line_end .}*
+alias c.line_comment_pre= {!c.line_comment_start !line_end .}*
+c.line_comment_context= {!c.line_comment_start !line_end .}*
+c.line_comment_body= {c.line_comment_start c.line_comment_text}
+c.line_comment= {c.line_comment_context c.line_comment_body}
+c.line_comments= {{c.line_comment / c.line_comment_body / c.line_comment_pre} .}*
+
+--Block Comments
+alias c.block_comment_start = "/*"
+alias c.block_comment_end = "*/"
+alias c.block_comment_pre= {!c.block_comment_start.}*
+alias c.block_comment_body_a = {!c.block_comment_end .}*
+c.block_comment_body= {!c.block_comment_end .}*
+alias c.block_comment_a = { c.block_comment_start c.block_comment_body_a c.block_comment_end}
+c.block_comment= { c.block_comment_start c.block_comment_body c.block_comment_end}
+c.block_comments= {c.block_comment_pre c.block_comment }*
+c.block_comment_sing_al = c.block_comment_pre c.block_comment_a
+
+
+--Dependencies
+alias c.include = "#include "
+c.header = {{!">" !["]} .}*
+alias import_lit = {"<" / ["]} c.header
+c.dependency = {c.include import_lit {">" / ["]}}
+alias c.dependencies_pre = {!c.include !line_end .}*
+
+c.dependencies = {{c.dependency / c.dependencies_pre} line_end}*
+
+--Function Definitions
+alias c.seperator = ","
+alias c.start_paren = "("
+alias c.end_paren = ")"
+alias c.start_block = "{"
+alias c.end_block = "}"
+alias c.whitespace = [:space:]
+alias c.pointer = "*"
+
+c.static = "static"
+c.return_type = {!line_end .}*
+c.function_name = {!line_end !c.start_paren .}*
+c.single_param = {!line_end !c.end_paren ![,] .}*
+alias c.multip_param =  {[,] c.single_param }*
+c.parameters = {c.start_paren c.single_param c.multip_param c.end_paren}
+
+alias c.function_body_clean = {!c.end_block .}*
+c.function_body = {c.whitespace c.start_block c.function_body_clean c.end_block}
+c.function_call =  c.static? c.return_type c.pointer? c.function_name c.parameters 
+c.function = {c.function_call c.function_body}
+c.functions = {c.function / .}*

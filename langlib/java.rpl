@@ -1,0 +1,28 @@
+--Inline Comments
+alias java.line_comment_start= "//"
+java.line_comment_text= {!line_end .}*
+alias java.line_comment_pre= {!java.line_comment_start !line_end .}*
+java.line_comment_context= {!java.line_comment_start !line_end .}*
+java.line_comment_body= {java.line_comment_start java.line_comment_text}
+java.line_comment= {java.line_comment_context java.line_comment_body}
+java.line_comments= {{java.line_comment / java.line_comment_body / java.line_comment_pre} .}*
+
+--Block Comments
+alias java.block_comment_start = "/*"
+alias java.block_comment_end = "*/"
+alias java.block_comment_pre= {!java.block_comment_start.}*
+java.block_comment_body= {!java.block_comment_end .}*
+java.block_comment= {java.block_comment_start java.block_comment_body java.block_comment_end}
+java.block_comments= {java.block_comment_pre java.block_comment }*
+
+--Dependencies
+alias java.import = "import "
+alias java.static = "static "
+java.dependencies_text = {!statement_end !line_end .}*
+java.dependencies_single = {java.import java.static? java.dependencies_text}
+alias java.dependencies_pre = {!java.import !line_end .}*
+
+java.package_text = {!statement_end !line_end .}*
+java.package = {"package " java.package_text}
+
+java.dependencies = {{{java.package / java.dependencies_single} / java.dependencies_pre} {statement_end / line_end}}*
