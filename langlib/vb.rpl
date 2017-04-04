@@ -18,3 +18,37 @@ vb.dependency_alias = {vb.alias_name vb.import_alias}
 vb.dependency = {vb.import vb.dependency_alias? vb.dependency_name}
 alias vb.dependencies_pre = {!vb.import !line_end .}*
 vb.dependencies = {{vb.dependency / vb.dependencies_pre} line_end}*
+
+-- Functions
+alias vb.def = "Function " / "Sub "
+vb.funcname = [:alnum:]+
+vb.param = [:alnum:]+
+vb.datatype = [:alnum:]+
+vb.paramstmnt = "Optional"? ("ByVal" / "ByRef") "ParamArray"? vb.param "As" vb.datatype
+vb.paramlist = (vb.paramstmnt ",")* vb.paramstmnt
+vb.funcdef = vb.def vb.funcname "(" vb.paramlist? ")" ("As" vb.datatype)?
+alias vb.funcend = "End Function" / "End Sub"
+vb.funcbody = {!vb.funcend .}*
+vb.function = {vb.funcdef vb.funcbody vb.funcend}
+vb.functions = {{!vb.function .}* vb.function? .}* {!vb.function .}*
+
+--Class Defs
+alias vb.accessmodifier = "Public" / "Protected" / "Friend" / "Private" / "Protected Friend"
+alias vb.inheritable = "MustInherit" / "NotInheritable"
+vb.classname = [[:alnum:][_]]+
+alias vb.genericmodifier = "Out" / "In"
+vb.typename = [[:alnum:][_]]+
+vb.typenames = (vb.typename ",")* vb.typename
+vb.constraint = [[:alnum:][_]]+
+vb.constraintlist = "{"? (vb.constraint ",")* vb.constraint "}"?
+vb.typelist = vb.genericmodifier? vb.typenames ("As" vb.constraintlist)?
+vb.parentclass = [[:alnum:][_]]+
+vb.interfacename = [[:alnum:][_.]]+
+vb.interfacenames = (vb.interfacename ",")* vb.interfacename
+vb.classdef = vb.accessmodifier? "Shadows"? vb.inheritable? ("Class" / "Interface") vb.classname ("(" "Of" vb.typelist ")")? ("Inherits" vb.parentclass)? ("Implements" vb.interfacenames)?
+vb.classend = "End Class" / "End Interface"
+vb.classbody = {!vb.classend .}*
+vb.class = vb.classdef vb.classbody vb.classend
+vb.classes = {{!vb.class .}* vb.class .}* {!vb.class .}*
+
+
