@@ -18,7 +18,6 @@ c.block_comment= { c.block_comment_start c.block_comment_body c.block_comment_en
 c.block_comments= {c.block_comment_pre c.block_comment }*
 c.block_comment_sing_al = c.block_comment_pre c.block_comment_a
 
-
 --Dependencies
 alias c.include = "#include "
 c.header = {{!">" !["]} .}*
@@ -46,6 +45,6 @@ c.parameters = {c.start_paren c.single_param c.multip_param c.end_paren}
 
 alias c.function_body_clean = {!c.end_block .}*
 c.function_body = {c.whitespace c.start_block c.function_body_clean c.end_block}
-c.function_call =  c.static? c.return_type c.pointer? c.function_name c.parameters 
+c.function_call =  c.static? c.return_type c.pointer? c.function_name c.parameters
 c.function = {c.function_call c.function_body}
 c.functions = {c.function / .}*
