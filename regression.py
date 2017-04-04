@@ -65,7 +65,6 @@ def run_tests():
                         test = splitext(test_file)[0]
                         pattern = copy.copy(test)
                         re.sub(r'_u\d_v\d', '', pattern)
-                        print(pattern)
                         proc = Popen('rosie -manifest ' + manifest_file + ' -wholefile -encode json ' + alias + "." + pattern + " " + resolved_input, stdout=PIPE, stderr=PIPE, shell=True)
                         return_code = proc.wait()
                         stdout,sterr = proc.communicate()
