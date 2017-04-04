@@ -68,8 +68,14 @@ def run_tests():
                     print (test + " test failed for " + lang)
             testCount += 1
     print("-------------------------------------------------")
-    print(str(testCount) + " tests ran")
-    print(str(failures) + " tests failed")
+    if(testCount == 1):
+        print(str(testCount) + " test ran")
+    else:
+        print(str(testCount) + " tests ran")
+    if(failures == 1):
+        print(str(failures) + " test failed")
+    else:
+        print(str(failures) + " tests failed")
     print("-------------------------------------------------")
     if(failures > 0): exit(1)
             
