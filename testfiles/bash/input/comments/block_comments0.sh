@@ -13,4 +13,3 @@ echo not comment 3
 <<'COMMENT'
 echo comment 3
 COMMENT
-
