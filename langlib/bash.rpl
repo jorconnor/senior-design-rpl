@@ -9,7 +9,7 @@ b.line_comments= {{b.line_comment / b.line_comment_body / b.line_comment_pre} .}
 
 --Block Comments
 
---- There doesn't seem to be standard block comments in BASH but
+--- There doesn't seem to be standard block comments in BASH but 
 --- things of the form <<ANYWORD\n ...comment... \nANYWORD are commonly used.
 --- Because of this I'm picking out some commonly used "ANYWORDS".
 
@@ -27,6 +27,7 @@ grammar
    alias chars = [\"\']
    alias b.string = {b.string_lit / .}*
 end
+
 
 b.function_name = {!"()" ![ ] b.string_lit* .}*
 alias b.temp_comment = {!"#" .}
