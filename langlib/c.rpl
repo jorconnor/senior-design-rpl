@@ -11,12 +11,12 @@ c.line_comments= {{c.line_comment / c.line_comment_body / c.line_comment_pre} .}
 alias c.block_comment_start = "/*"
 alias c.block_comment_end = "*/"
 alias c.block_comment_pre= {!c.block_comment_start.}*
-alias c.block_comment_body_a = {!c.block_comment_end .}*
+--alias c.block_comment_body_a = {!c.block_comment_end .}*
 c.block_comment_body= {!c.block_comment_end .}*
-alias c.block_comment_a = { c.block_comment_start c.block_comment_body_a c.block_comment_end}
+--alias c.block_comment_a = { c.block_comment_start c.block_comment_body_a c.block_comment_end}
 c.block_comment= { c.block_comment_start c.block_comment_body c.block_comment_end}
 c.block_comments= {c.block_comment_pre c.block_comment }*
-c.block_comment_sing_al = c.block_comment_pre c.block_comment_a
+--c.block_comment_sing_al = c.block_comment_pre c.block_comment_a
 
 --Dependencies
 alias c.include = "#include "
