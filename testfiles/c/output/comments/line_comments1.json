@@ -1,28 +1,28 @@
 {
     "c.line_comments": {
-        "text": "#include \"radix_tree.h\"\r\n#include <stdlib.h>\r\n#include <stdio.h>\r\n\r\n#define RT_BRANCH_FACTOR_BIT\t\t(6)\r\n#define RT_BRANCH_FACTOR\t\t\t(1 << RT_BRANCH_FACTOR_BIT)\r\n#define RT_BRANCH_FACTOR_MASK\t\t(RT_BRANCH_FACTOR - 1)\r\n#define RT_MAX_HEIGHT\t\t\t\t(11)\t//  div_round_up (64, 6)\r\n\r\nint initialized = 0;\r\nint max_height;\r\nstatic unsigned long max_index [RT_MAX_HEIGHT];\r\n\r\nstruct radix_node {\r\n\tunsigned int height;\r\n\tunsigned int offset;\t\t\t\t// for shrinking\r\n\tunsigned int child_count;\r\n\tunion {\r\n\t\tstruct radix_node *parent;\r\n\t\tstruct list_head head;\t\t\t// for radix tree deletion\r\n\t};\r\n\tstruct radix_node *slots [RT_BRANCH_FACTOR];\r\n};\r\n\r\nstatic inline long div_round_up (long n, long d) {\r\n\tlong tmp = n + d - 1;\r\n\treturn tmp / d;\r\n}\r\n\r\nstatic inline void initialize_max_index (void) {\r\n\tmax_height = (int) div_round_up (sizeof (unsigned long) << 3, RT_BRANCH_FACTOR_BIT);\r\n\tint i;\r\n\tunsigned long last = 1;\r\n\t//puts (\"max index -----\");\r\n\tfor (i = 0; i < max_height; ++i) {\r\n\t\tmax_index[i] = last << RT_BRANCH_FACTOR_BIT;\r\n\t\tlast = max_index[i];\r\n\t\t--max_index[i];\r\n\t\t//printf (\"%lu\\n\", max_index[i]);\r\n\t}\r\n}\r\n\r\nstatic inline struct radix_data_node * new_radix_data_node (unsigned long key, void *data) {\r\n\tstruct radix_data_node *retval = (struct radix_data_node*) malloc (sizeof (struct radix_data_node));\r\n\tif (retval == NULL)\r\n\t\treturn NULL;\r\n\r\n\tretval->key = key;\r\n\tretval->data = data;\r\n\tINIT_LIST_HEAD (&retval->iter_head);\r\n\treturn retval;\r\n}\r\n\r\nstatic inline struct radix_node * new_radix_node (struct radix_node *parent,\r\n\t\tunsigned int height,\r\n\t\tunsigned int offset) {\r\n\tstruct radix_node *retval = (struct radix_node*) malloc (sizeof (struct radix_node));\r\n\tif (retval == NULL)\r\n\t\treturn NULL;\r\n\r\n\tint i;\r\n\tstruct radix_node **slots = retval->slots;\r\n\tfor (i = 0; i < RT_BRANCH_FACTOR; ++i)\r\n\t\tslots[i] = NULL;\r\n\r\n\tretval->height = height;\r\n\tretval->offset = offset;\r\n\tretval->child_count = 0;\r\n\tretval->parent = parent;\r\n\treturn retval;\r\n}\r\n\r\nstruct radix_tree * new_radix_tree () {\r\n\tstruct radix_tree *retval = (struct radix_tree*) malloc (sizeof (struct radix_tree));\r\n\tif (retval == NULL)\r\n\t\treturn NULL;\r\n\r\n\tif (!initialized) {\r\n\t\tinitialize_max_index ();\r\n\t\tinitialized = 1;\r\n\t}\r\n\r\n\tretval->size = 0;\r\n\tretval->root = new_radix_node (NULL, 0, 0);\r\n\tINIT_LIST_HEAD (&retval->head);\r\n\tif (retval->root == NULL) {\r\n\t\tfree (retval);\r\n\t\tretval = NULL;\r\n\t}\r\n\treturn retval;\r\n}\r\n\r\nstatic inline void delete_radix_data_node (struct radix_data_node *data) {\r\n\tlist_del (&data->iter_head);\r\n\tfree (data);\r\n}\r\n\r\nstatic inline void delete_radix_node (struct radix_node *node) {\r\n\tfree (node);\r\n}\r\n\r\n// BFS delete, no recursion\r\nvoid delete_radix_tree (struct radix_tree * tree) {\r\n\tstruct radix_node * node, *slot, **slots;\r\n\tstruct list_head rhead = LIST_HEAD_INIT (rhead);\r\n\tint i;\r\n\r\n\tnode = tree->root;\r\n\r\n\t// empty tree, don't traverse\r\n\tif (node == NULL)\r\n\t\tgoto out_skip_traversal;\r\n\r\n\t// enqueue root node\r\n\tlist_add_tail (&node->head, &rhead);\r\n\r\n\t// while queue is not empty\r\n\twhile (rhead.next != &rhead) {\r\n\t\t// pop head\r\n\t\tnode = container_of (rhead.next, struct radix_node, head);\r\n\t\tlist_del (&node->head);\r\n\t\tslots = node->slots;\r\n\t\tif (node->height > 0) {\r\n\t\t\tfor (i = 0, slot = slots[i];\r\n\t\t\t\t\ti < RT_BRANCH_FACTOR;\r\n\t\t\t\t\t++i, slot = slots[i])\r\n\t\t\t\tif (slot) {\r\n\t\t\t\t\tlist_add_tail (&slot->head, &rhead);\r\n\t\t\t\t}\r\n\t\t} else if (node->height == 0) {\r\n\t\t\t// if node->height == 0 -> children are data node, free the struct\r\n\t\t\tfor (i = 0, slot = slots[i];\r\n\t\t\t\t\ti < RT_BRANCH_FACTOR;\r\n\t\t\t\t\t++i, slot = slots[i])\r\n\t\t\t\tif (slot) {\r\n\t\t\t\t\tfree (slot);\r\n\t\t\t\t}\r\n\t\t} // else { TODO: dump some shits to debug this damn thing; }\r\n\t\tfree (node);\r\n\t}\r\n\r\nout_skip_traversal:\r\n\tfree (tree);\r\n}\r\n\r\nstatic inline struct radix_node * _rt_extend (struct radix_node *root) {\r\n\tstruct radix_node *retval = new_radix_node (NULL, root->height + 1, 0);\r\n\tif (retval == NULL)\r\n\t\treturn NULL;\r\n\tretval->slots[0] = root;\r\n\t++retval->child_count;\r\n\troot->parent = retval;\r\n\treturn retval;\r\n}\r\n\r\n/**\r\n * shrink the tree from the leaf nodes\r\n */\r\nstatic inline void _rt_shrink_node (struct radix_node *node) {\r\n\tstruct radix_node *parent;\r\n\t/**\r\n\t * Only shrink radix node without children\r\n\t */\r\n\twhile (node->child_count == 0) {\r\n\t\tparent = node->parent;\r\n\t\tif (parent == NULL)\r\n\t\t\treturn;\r\n\t\tparent->slots[node->offset] = NULL;\r\n\t\t--parent->child_count;\r\n\t\tdelete_radix_node (node);\r\n\t\tnode = parent;\r\n\t}\r\n}\r\n\r\n/**\r\n * reduce tree height by shrinking from the root node\r\n */\r\nstatic inline void _rt_shrink_tree (struct radix_tree *tree) {\r\n\tstruct radix_node *rnode = tree->root;\r\n\t/**\r\n\t * 1. Only shrink non-leaf root\r\n\t * 2. Don't shrink branching root\r\n\t * 3. Only shrink when root acts as zero prefix\r\n\t */\r\n\twhile (rnode->height > 0 &&\r\n\t\t\trnode->child_count == 1 &&\r\n\t\t\trnode->slots[0] != NULL)\r\n\t{\r\n\t\ttree->root = rnode->slots[0];\r\n\t\tdelete_radix_node (rnode);\r\n\t\trnode = tree->root;\r\n\t}\r\n}\r\n\r\n\r\nvoid * radix_tree_insert (struct radix_tree *tree, unsigned long key, void *data) {\r\n\tvoid * retval = NULL;\r\n\tstruct radix_data_node *dnode;\r\n\tstruct radix_node *parent, *slot, **slots;\r\n\tregister unsigned int height, index, shift;\r\n\r\n\tslot = tree->root;\r\n\twhile (key > max_index[slot->height]) {\r\n\t\tslot = _rt_extend (slot);\r\n\t\tif (slot == NULL) {\r\n\t\t\t// TODO: Why ??? No memory ???\r\n\t\t\tputs (\"no memory\");\r\n\t\t\tgoto out_error_extend;\r\n\t\t}\r\n\t\ttree->root = slot;\r\n\t}\r\n\r\n\tparent = tree->root;\r\n\tslot = NULL;\r\n\tslots = parent->slots;\r\n\theight = parent->height;\r\n\tshift = height * RT_BRANCH_FACTOR_BIT;\r\n\r\n\twhile (height > 0) {\r\n\t\tindex = (key >> shift) & RT_BRANCH_FACTOR_MASK;\r\n\t\tslot = slots[index];\r\n\t\tif (slot == NULL) {\r\n\t\t\t// grow slot\r\n\t\t\tslot = new_radix_node (parent, height - 1, index);\r\n\t\t\tif (slot == NULL) {\r\n\t\t\t\t// TODO: Fuck the memory problem\r\n\t\t\t\tputs (\"no memory\");\r\n\t\t\t\tgoto out_error;\r\n\t\t\t} else {\r\n\t\t\t\tslots[index] = slot;\r\n\t\t\t\t++parent->child_count;\r\n\t\t\t}\r\n\t\t}\r\n\r\n\t\t// move down a level;\r\n\t\tslots = slot->slots;\r\n\t\tparent = slot;\r\n\t\tshift -= RT_BRANCH_FACTOR_BIT;\r\n\t\t--height;\r\n\t}\r\n\r\n\tindex = key & RT_BRANCH_FACTOR_MASK;\r\n\tif (slots[index] == NULL) { // insert if not exist\r\n\t\tdnode = new_radix_data_node (key, data);\r\n\t\tif (dnode == NULL) {\r\n\t\t\t// TODO: Fuck the memory problem\r\n\t\t\tputs (\"no memory\");\r\n\t\t\tgoto out_error;\r\n\t\t} else {\r\n\t\t\t++parent->child_count;\r\n\t\t\t++tree->size;\r\n\r\n\t\t\tslots[index] = (struct radix_node*) dnode;\r\n\t\t\tlist_add_tail (&dnode->iter_head, &tree->head);\r\n\t\t}\r\n\t}\r\n\tretval = slots[index];\r\n\r\nout:\r\n\treturn retval;\r\n\r\nout_error:\r\n\t_rt_shrink_node (parent);\r\n\r\nout_error_extend:\r\n\t_rt_shrink_tree (tree);\r\n\tretval = NULL;\r\n\tgoto out;\r\n}\r\n\r\nstatic inline struct radix_node * _rt_find_slot (struct radix_tree *tree, unsigned long key) {\r\n\tstruct radix_node *retval = NULL;\r\n\tstruct radix_node *slot, **slots;\r\n\tregister unsigned int height, index, shift;\r\n\r\n\tif (key > max_index[tree->root->height])\r\n\t\tgoto out;\r\n\r\n\tslot = tree->root;\r\n\tslots = slot->slots;\r\n\theight = slot->height;\r\n\tshift = height * RT_BRANCH_FACTOR_BIT;\r\n\r\n\twhile (height > 0) {\r\n\t\tindex = (key >> shift) & RT_BRANCH_FACTOR_MASK;\r\n\t\tslot = slots[index];\r\n\t\tif (slot == NULL)\r\n\t\t\tgoto out;\r\n\t\tslots = slot->slots;\r\n\t\tshift -= RT_BRANCH_FACTOR_BIT;\r\n\t\t--height;\r\n\t}\r\n\r\n\tretval = slot;\r\n\r\nout:\r\n\treturn retval;\r\n}\r\n\r\nstruct radix_data_node * radix_tree_find (struct radix_tree *tree, unsigned long key) {\r\n\tstruct radix_data_node *retval = NULL;\r\n\tstruct radix_node *slot;\r\n\tunsigned int index;\r\n\r\n\tslot = _rt_find_slot (tree, key);\r\n\tif (slot == NULL)\r\n\t\tgoto out;\r\n\r\n\tindex = key & RT_BRANCH_FACTOR_MASK;\r\n\tretval = (struct radix_data_node *) slot->slots[index];\r\n\r\nout:\r\n\treturn retval;\r\n}\r\n// return the data associated with the key\r\nvoid * radix_tree_delete (struct radix_tree *tree, unsigned long key) {\r\n\tvoid * retval = NULL;\r\n\tunsigned int index;\r\n\tstruct radix_data_node *dnode;\r\n\tstruct radix_node *slot = _rt_find_slot (tree, key);\r\n\tif (slot == NULL)\r\n\t\tgoto out;\r\n\r\n\tindex = key & RT_BRANCH_FACTOR_MASK;\r\n\tdnode = (struct radix_data_node *) slot->slots[index];\r\n\tif (dnode == NULL)\r\n\t\tgoto out;\r\n\r\n\tretval = dnode->data;\r\n\tdelete_radix_data_node (dnode);\r\n\tslot->slots[index] = NULL;\r\n\t--slot->child_count;\r\n\t_rt_shrink_node (slot);\r\n\t_rt_shrink_tree (tree);\r\n\r\nout:\r\n\treturn retval;\r\n}\r\n\r\n// DFS radix tree dump\r\nvoid radix_tree_dfs_dump (struct radix_node *node, unsigned long prefix) {\r\n\tstruct radix_node **slots = node->slots, *slot;\r\n\tunsigned int height = node->height;\r\n\tint i, j, k;\r\n\r\n\tfor (i = 0; i < RT_BRANCH_FACTOR; ++i) {\r\n\t\tslot = slots[i];\r\n\t\tif (slot) {\r\n\t\t\tif (height > 0) { // internal nodes\r\n\t\t\t\tradix_tree_dfs_dump (slot, prefix | (i << (RT_BRANCH_FACTOR_BIT * height)));\r\n\t\t\t} else { // leaf node, data node\r\n\t\t\t\tstruct radix_data_node * dnode = (struct radix_data_node *) slot;\r\n\t\t\t\tprefix |= i;\r\n\t\t\t\tprintf (\"0x%lx->(0x%lx, %p)\\n\", prefix, dnode->key, dnode->data);\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}\r\n\r\nvoid radix_tree_dump (struct radix_tree *tree) {\r\n\tstruct radix_node * node, *slot, **slots;\r\n\tstruct list_head rhead = LIST_HEAD_INIT (rhead);\r\n\tint i, empty;\r\n\r\n\tnode = tree->root;\r\n\tradix_tree_dfs_dump (node, 0);\r\n}\r\n",
+        "text": "#include \"radix_tree.h\"\n#include <stdlib.h>\n#include <stdio.h>\n\n#define RT_BRANCH_FACTOR_BIT\t\t(6)\n#define RT_BRANCH_FACTOR\t\t\t(1 << RT_BRANCH_FACTOR_BIT)\n#define RT_BRANCH_FACTOR_MASK\t\t(RT_BRANCH_FACTOR - 1)\n#define RT_MAX_HEIGHT\t\t\t\t(11)\t//  div_round_up (64, 6)\n\nint initialized = 0;\nint max_height;\nstatic unsigned long max_index [RT_MAX_HEIGHT];\n\nstruct radix_node {\n\tunsigned int height;\n\tunsigned int offset;\t\t\t\t// for shrinking\n\tunsigned int child_count;\n\tunion {\n\t\tstruct radix_node *parent;\n\t\tstruct list_head head;\t\t\t// for radix tree deletion\n\t};\n\tstruct radix_node *slots [RT_BRANCH_FACTOR];\n};\n\nstatic inline long div_round_up (long n, long d) {\n\tlong tmp = n + d - 1;\n\treturn tmp / d;\n}\n\nstatic inline void initialize_max_index (void) {\n\tmax_height = (int) div_round_up (sizeof (unsigned long) << 3, RT_BRANCH_FACTOR_BIT);\n\tint i;\n\tunsigned long last = 1;\n\t//puts (\"max index -----\");\n\tfor (i = 0; i < max_height; ++i) {\n\t\tmax_index[i] = last << RT_BRANCH_FACTOR_BIT;\n\t\tlast = max_index[i];\n\t\t--max_index[i];\n\t\t//printf (\"%lu\\n\", max_index[i]);\n\t}\n}\n\nstatic inline struct radix_data_node * new_radix_data_node (unsigned long key, void *data) {\n\tstruct radix_data_node *retval = (struct radix_data_node*) malloc (sizeof (struct radix_data_node));\n\tif (retval == NULL)\n\t\treturn NULL;\n\n\tretval->key = key;\n\tretval->data = data;\n\tINIT_LIST_HEAD (&retval->iter_head);\n\treturn retval;\n}\n\nstatic inline struct radix_node * new_radix_node (struct radix_node *parent,\n\t\tunsigned int height,\n\t\tunsigned int offset) {\n\tstruct radix_node *retval = (struct radix_node*) malloc (sizeof (struct radix_node));\n\tif (retval == NULL)\n\t\treturn NULL;\n\n\tint i;\n\tstruct radix_node **slots = retval->slots;\n\tfor (i = 0; i < RT_BRANCH_FACTOR; ++i)\n\t\tslots[i] = NULL;\n\n\tretval->height = height;\n\tretval->offset = offset;\n\tretval->child_count = 0;\n\tretval->parent = parent;\n\treturn retval;\n}\n\nstruct radix_tree * new_radix_tree () {\n\tstruct radix_tree *retval = (struct radix_tree*) malloc (sizeof (struct radix_tree));\n\tif (retval == NULL)\n\t\treturn NULL;\n\n\tif (!initialized) {\n\t\tinitialize_max_index ();\n\t\tinitialized = 1;\n\t}\n\n\tretval->size = 0;\n\tretval->root = new_radix_node (NULL, 0, 0);\n\tINIT_LIST_HEAD (&retval->head);\n\tif (retval->root == NULL) {\n\t\tfree (retval);\n\t\tretval = NULL;\n\t}\n\treturn retval;\n}\n\nstatic inline void delete_radix_data_node (struct radix_data_node *data) {\n\tlist_del (&data->iter_head);\n\tfree (data);\n}\n\nstatic inline void delete_radix_node (struct radix_node *node) {\n\tfree (node);\n}\n\n// BFS delete, no recursion\nvoid delete_radix_tree (struct radix_tree * tree) {\n\tstruct radix_node * node, *slot, **slots;\n\tstruct list_head rhead = LIST_HEAD_INIT (rhead);\n\tint i;\n\n\tnode = tree->root;\n\n\t// empty tree, don't traverse\n\tif (node == NULL)\n\t\tgoto out_skip_traversal;\n\n\t// enqueue root node\n\tlist_add_tail (&node->head, &rhead);\n\n\t// while queue is not empty\n\twhile (rhead.next != &rhead) {\n\t\t// pop head\n\t\tnode = container_of (rhead.next, struct radix_node, head);\n\t\tlist_del (&node->head);\n\t\tslots = node->slots;\n\t\tif (node->height > 0) {\n\t\t\tfor (i = 0, slot = slots[i];\n\t\t\t\t\ti < RT_BRANCH_FACTOR;\n\t\t\t\t\t++i, slot = slots[i])\n\t\t\t\tif (slot) {\n\t\t\t\t\tlist_add_tail (&slot->head, &rhead);\n\t\t\t\t}\n\t\t} else if (node->height == 0) {\n\t\t\t// if node->height == 0 -> children are data node, free the struct\n\t\t\tfor (i = 0, slot = slots[i];\n\t\t\t\t\ti < RT_BRANCH_FACTOR;\n\t\t\t\t\t++i, slot = slots[i])\n\t\t\t\tif (slot) {\n\t\t\t\t\tfree (slot);\n\t\t\t\t}\n\t\t} // else { TODO: dump some shits to debug this damn thing; }\n\t\tfree (node);\n\t}\n\nout_skip_traversal:\n\tfree (tree);\n}\n\nstatic inline struct radix_node * _rt_extend (struct radix_node *root) {\n\tstruct radix_node *retval = new_radix_node (NULL, root->height + 1, 0);\n\tif (retval == NULL)\n\t\treturn NULL;\n\tretval->slots[0] = root;\n\t++retval->child_count;\n\troot->parent = retval;\n\treturn retval;\n}\n\n/**\n * shrink the tree from the leaf nodes\n */\nstatic inline void _rt_shrink_node (struct radix_node *node) {\n\tstruct radix_node *parent;\n\t/**\n\t * Only shrink radix node without children\n\t */\n\twhile (node->child_count == 0) {\n\t\tparent = node->parent;\n\t\tif (parent == NULL)\n\t\t\treturn;\n\t\tparent->slots[node->offset] = NULL;\n\t\t--parent->child_count;\n\t\tdelete_radix_node (node);\n\t\tnode = parent;\n\t}\n}\n\n/**\n * reduce tree height by shrinking from the root node\n */\nstatic inline void _rt_shrink_tree (struct radix_tree *tree) {\n\tstruct radix_node *rnode = tree->root;\n\t/**\n\t * 1. Only shrink non-leaf root\n\t * 2. Don't shrink branching root\n\t * 3. Only shrink when root acts as zero prefix\n\t */\n\twhile (rnode->height > 0 &&\n\t\t\trnode->child_count == 1 &&\n\t\t\trnode->slots[0] != NULL)\n\t{\n\t\ttree->root = rnode->slots[0];\n\t\tdelete_radix_node (rnode);\n\t\trnode = tree->root;\n\t}\n}\n\n\nvoid * radix_tree_insert (struct radix_tree *tree, unsigned long key, void *data) {\n\tvoid * retval = NULL;\n\tstruct radix_data_node *dnode;\n\tstruct radix_node *parent, *slot, **slots;\n\tregister unsigned int height, index, shift;\n\n\tslot = tree->root;\n\twhile (key > max_index[slot->height]) {\n\t\tslot = _rt_extend (slot);\n\t\tif (slot == NULL) {\n\t\t\t// TODO: Why ??? No memory ???\n\t\t\tputs (\"no memory\");\n\t\t\tgoto out_error_extend;\n\t\t}\n\t\ttree->root = slot;\n\t}\n\n\tparent = tree->root;\n\tslot = NULL;\n\tslots = parent->slots;\n\theight = parent->height;\n\tshift = height * RT_BRANCH_FACTOR_BIT;\n\n\twhile (height > 0) {\n\t\tindex = (key >> shift) & RT_BRANCH_FACTOR_MASK;\n\t\tslot = slots[index];\n\t\tif (slot == NULL) {\n\t\t\t// grow slot\n\t\t\tslot = new_radix_node (parent, height - 1, index);\n\t\t\tif (slot == NULL) {\n\t\t\t\t// TODO: Fuck the memory problem\n\t\t\t\tputs (\"no memory\");\n\t\t\t\tgoto out_error;\n\t\t\t} else {\n\t\t\t\tslots[index] = slot;\n\t\t\t\t++parent->child_count;\n\t\t\t}\n\t\t}\n\n\t\t// move down a level;\n\t\tslots = slot->slots;\n\t\tparent = slot;\n\t\tshift -= RT_BRANCH_FACTOR_BIT;\n\t\t--height;\n\t}\n\n\tindex = key & RT_BRANCH_FACTOR_MASK;\n\tif (slots[index] == NULL) { // insert if not exist\n\t\tdnode = new_radix_data_node (key, data);\n\t\tif (dnode == NULL) {\n\t\t\t// TODO: Fuck the memory problem\n\t\t\tputs (\"no memory\");\n\t\t\tgoto out_error;\n\t\t} else {\n\t\t\t++parent->child_count;\n\t\t\t++tree->size;\n\n\t\t\tslots[index] = (struct radix_node*) dnode;\n\t\t\tlist_add_tail (&dnode->iter_head, &tree->head);\n\t\t}\n\t}\n\tretval = slots[index];\n\nout:\n\treturn retval;\n\nout_error:\n\t_rt_shrink_node (parent);\n\nout_error_extend:\n\t_rt_shrink_tree (tree);\n\tretval = NULL;\n\tgoto out;\n}\n\nstatic inline struct radix_node * _rt_find_slot (struct radix_tree *tree, unsigned long key) {\n\tstruct radix_node *retval = NULL;\n\tstruct radix_node *slot, **slots;\n\tregister unsigned int height, index, shift;\n\n\tif (key > max_index[tree->root->height])\n\t\tgoto out;\n\n\tslot = tree->root;\n\tslots = slot->slots;\n\theight = slot->height;\n\tshift = height * RT_BRANCH_FACTOR_BIT;\n\n\twhile (height > 0) {\n\t\tindex = (key >> shift) & RT_BRANCH_FACTOR_MASK;\n\t\tslot = slots[index];\n\t\tif (slot == NULL)\n\t\t\tgoto out;\n\t\tslots = slot->slots;\n\t\tshift -= RT_BRANCH_FACTOR_BIT;\n\t\t--height;\n\t}\n\n\tretval = slot;\n\nout:\n\treturn retval;\n}\n\nstruct radix_data_node * radix_tree_find (struct radix_tree *tree, unsigned long key) {\n\tstruct radix_data_node *retval = NULL;\n\tstruct radix_node *slot;\n\tunsigned int index;\n\n\tslot = _rt_find_slot (tree, key);\n\tif (slot == NULL)\n\t\tgoto out;\n\n\tindex = key & RT_BRANCH_FACTOR_MASK;\n\tretval = (struct radix_data_node *) slot->slots[index];\n\nout:\n\treturn retval;\n}\n// return the data associated with the key\nvoid * radix_tree_delete (struct radix_tree *tree, unsigned long key) {\n\tvoid * retval = NULL;\n\tunsigned int index;\n\tstruct radix_data_node *dnode;\n\tstruct radix_node *slot = _rt_find_slot (tree, key);\n\tif (slot == NULL)\n\t\tgoto out;\n\n\tindex = key & RT_BRANCH_FACTOR_MASK;\n\tdnode = (struct radix_data_node *) slot->slots[index];\n\tif (dnode == NULL)\n\t\tgoto out;\n\n\tretval = dnode->data;\n\tdelete_radix_data_node (dnode);\n\tslot->slots[index] = NULL;\n\t--slot->child_count;\n\t_rt_shrink_node (slot);\n\t_rt_shrink_tree (tree);\n\nout:\n\treturn retval;\n}\n\n// DFS radix tree dump\nvoid radix_tree_dfs_dump (struct radix_node *node, unsigned long prefix) {\n\tstruct radix_node **slots = node->slots, *slot;\n\tunsigned int height = node->height;\n\tint i, j, k;\n\n\tfor (i = 0; i < RT_BRANCH_FACTOR; ++i) {\n\t\tslot = slots[i];\n\t\tif (slot) {\n\t\t\tif (height > 0) { // internal nodes\n\t\t\t\tradix_tree_dfs_dump (slot, prefix | (i << (RT_BRANCH_FACTOR_BIT * height)));\n\t\t\t} else { // leaf node, data node\n\t\t\t\tstruct radix_data_node * dnode = (struct radix_data_node *) slot;\n\t\t\t\tprefix |= i;\n\t\t\t\tprintf (\"0x%lx->(0x%lx, %p)\\n\", prefix, dnode->key, dnode->data);\n\t\t\t}\n\t\t}\n\t}\n}\n\nvoid radix_tree_dump (struct radix_tree *tree) {\n\tstruct radix_node * node, *slot, **slots;\n\tstruct list_head rhead = LIST_HEAD_INIT (rhead);\n\tint i, empty;\n\n\tnode = tree->root;\n\tradix_tree_dfs_dump (node, 0);\n}\n",
         "pos": 1,
         "subs": [
             {
                 "c.line_comment": {
-                    "text": "#define RT_MAX_HEIGHT\t\t\t\t(11)\t//  div_round_up (64, 6)\r",
-                    "pos": 215,
+                    "text": "#define RT_MAX_HEIGHT\t\t\t\t(11)\t//  div_round_up (64, 6)",
+                    "pos": 208,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "#define RT_MAX_HEIGHT\t\t\t\t(11)\t",
-                                "pos": 215
+                                "pos": 208
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "//  div_round_up (64, 6)\r",
-                                "pos": 245,
+                                "text": "//  div_round_up (64, 6)",
+                                "pos": 238,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": "  div_round_up (64, 6)\r",
-                                            "pos": 247
+                                            "text": "  div_round_up (64, 6)",
+                                            "pos": 240
                                         }
                                     }
                                 ]
@@ -33,24 +33,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\tunsigned int offset;\t\t\t\t// for shrinking\r",
-                    "pos": 407,
+                    "text": "\tunsigned int offset;\t\t\t\t// for shrinking",
+                    "pos": 392,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\tunsigned int offset;\t\t\t\t",
-                                "pos": 407
+                                "pos": 392
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// for shrinking\r",
-                                "pos": 432,
+                                "text": "// for shrinking",
+                                "pos": 417,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " for shrinking\r",
-                                            "pos": 434
+                                            "text": " for shrinking",
+                                            "pos": 419
                                         }
                                     }
                                 ]
@@ -61,24 +61,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\t\tstruct list_head head;\t\t\t// for radix tree deletion\r",
-                    "pos": 518,
+                    "text": "\t\tstruct list_head head;\t\t\t// for radix tree deletion",
+                    "pos": 499,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\t\tstruct list_head head;\t\t\t",
-                                "pos": 518
+                                "pos": 499
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// for radix tree deletion\r",
-                                "pos": 545,
+                                "text": "// for radix tree deletion",
+                                "pos": 526,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " for radix tree deletion\r",
-                                            "pos": 547
+                                            "text": " for radix tree deletion",
+                                            "pos": 528
                                         }
                                     }
                                 ]
@@ -89,24 +89,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\t//puts (\"max index -----\");\r",
-                    "pos": 902,
+                    "text": "\t//puts (\"max index -----\");",
+                    "pos": 869,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\t",
-                                "pos": 902
+                                "pos": 869
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "//puts (\"max index -----\");\r",
-                                "pos": 903,
+                                "text": "//puts (\"max index -----\");",
+                                "pos": 870,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": "puts (\"max index -----\");\r",
-                                            "pos": 905
+                                            "text": "puts (\"max index -----\");",
+                                            "pos": 872
                                         }
                                     }
                                 ]
@@ -117,24 +117,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\t\t//printf (\"%lu\\n\", max_index[i]);\r",
-                    "pos": 1060,
+                    "text": "\t\t//printf (\"%lu\\n\", max_index[i]);",
+                    "pos": 1022,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\t\t",
-                                "pos": 1060
+                                "pos": 1022
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "//printf (\"%lu\\n\", max_index[i]);\r",
-                                "pos": 1062,
+                                "text": "//printf (\"%lu\\n\", max_index[i]);",
+                                "pos": 1024,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": "printf (\"%lu\\n\", max_index[i]);\r",
-                                            "pos": 1064
+                                            "text": "printf (\"%lu\\n\", max_index[i]);",
+                                            "pos": 1026
                                         }
                                     }
                                 ]
@@ -145,24 +145,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "// BFS delete, no recursion\r",
-                    "pos": 2601,
+                    "text": "// BFS delete, no recursion",
+                    "pos": 2500,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "",
-                                "pos": 2601
+                                "pos": 2500
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// BFS delete, no recursion\r",
-                                "pos": 2601,
+                                "text": "// BFS delete, no recursion",
+                                "pos": 2500,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " BFS delete, no recursion\r",
-                                            "pos": 2603
+                                            "text": " BFS delete, no recursion",
+                                            "pos": 2502
                                         }
                                     }
                                 ]
@@ -173,24 +173,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\t// empty tree, don't traverse\r",
-                    "pos": 2812,
+                    "text": "\t// empty tree, don't traverse",
+                    "pos": 2703,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\t",
-                                "pos": 2812
+                                "pos": 2703
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// empty tree, don't traverse\r",
-                                "pos": 2813,
+                                "text": "// empty tree, don't traverse",
+                                "pos": 2704,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " empty tree, don't traverse\r",
-                                            "pos": 2815
+                                            "text": " empty tree, don't traverse",
+                                            "pos": 2706
                                         }
                                     }
                                 ]
@@ -201,24 +201,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\t// enqueue root node\r",
-                    "pos": 2894,
+                    "text": "\t// enqueue root node",
+                    "pos": 2781,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\t",
-                                "pos": 2894
+                                "pos": 2781
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// enqueue root node\r",
-                                "pos": 2895,
+                                "text": "// enqueue root node",
+                                "pos": 2782,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " enqueue root node\r",
-                                            "pos": 2897
+                                            "text": " enqueue root node",
+                                            "pos": 2784
                                         }
                                     }
                                 ]
@@ -229,24 +229,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\t// while queue is not empty\r",
-                    "pos": 2958,
+                    "text": "\t// while queue is not empty",
+                    "pos": 2842,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\t",
-                                "pos": 2958
+                                "pos": 2842
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// while queue is not empty\r",
-                                "pos": 2959,
+                                "text": "// while queue is not empty",
+                                "pos": 2843,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " while queue is not empty\r",
-                                            "pos": 2961
+                                            "text": " while queue is not empty",
+                                            "pos": 2845
                                         }
                                     }
                                 ]
@@ -257,24 +257,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\t\t// pop head\r",
-                    "pos": 3021,
+                    "text": "\t\t// pop head",
+                    "pos": 2903,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\t\t",
-                                "pos": 3021
+                                "pos": 2903
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// pop head\r",
-                                "pos": 3023,
+                                "text": "// pop head",
+                                "pos": 2905,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " pop head\r",
-                                            "pos": 3025
+                                            "text": " pop head",
+                                            "pos": 2907
                                         }
                                     }
                                 ]
@@ -285,24 +285,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\t\t\t// if node->height == 0 -> children are data node, free the struct\r",
-                    "pos": 3367,
+                    "text": "\t\t\t// if node->height == 0 -> children are data node, free the struct",
+                    "pos": 3237,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\t\t\t",
-                                "pos": 3367
+                                "pos": 3237
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// if node->height == 0 -> children are data node, free the struct\r",
-                                "pos": 3370,
+                                "text": "// if node->height == 0 -> children are data node, free the struct",
+                                "pos": 3240,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " if node->height == 0 -> children are data node, free the struct\r",
-                                            "pos": 3372
+                                            "text": " if node->height == 0 -> children are data node, free the struct",
+                                            "pos": 3242
                                         }
                                     }
                                 ]
@@ -313,24 +313,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\t\t} // else { TODO: dump some shits to debug this damn thing; }\r",
-                    "pos": 3570,
+                    "text": "\t\t} // else { TODO: dump some shits to debug this damn thing; }",
+                    "pos": 3433,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\t\t} ",
-                                "pos": 3570
+                                "pos": 3433
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// else { TODO: dump some shits to debug this damn thing; }\r",
-                                "pos": 3574,
+                                "text": "// else { TODO: dump some shits to debug this damn thing; }",
+                                "pos": 3437,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " else { TODO: dump some shits to debug this damn thing; }\r",
-                                            "pos": 3576
+                                            "text": " else { TODO: dump some shits to debug this damn thing; }",
+                                            "pos": 3439
                                         }
                                     }
                                 ]
@@ -341,24 +341,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\t\t\t// TODO: Why ??? No memory ???\r",
-                    "pos": 5243,
+                    "text": "\t\t\t// TODO: Why ??? No memory ???",
+                    "pos": 5038,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\t\t\t",
-                                "pos": 5243
+                                "pos": 5038
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// TODO: Why ??? No memory ???\r",
-                                "pos": 5246,
+                                "text": "// TODO: Why ??? No memory ???",
+                                "pos": 5041,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " TODO: Why ??? No memory ???\r",
-                                            "pos": 5248
+                                            "text": " TODO: Why ??? No memory ???",
+                                            "pos": 5043
                                         }
                                     }
                                 ]
@@ -369,24 +369,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\t\t\t// grow slot\r",
-                    "pos": 5616,
+                    "text": "\t\t\t// grow slot",
+                    "pos": 5394,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\t\t\t",
-                                "pos": 5616
+                                "pos": 5394
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// grow slot\r",
-                                "pos": 5619,
+                                "text": "// grow slot",
+                                "pos": 5397,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " grow slot\r",
-                                            "pos": 5621
+                                            "text": " grow slot",
+                                            "pos": 5399
                                         }
                                     }
                                 ]
@@ -397,24 +397,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\t\t\t\t// TODO: Fuck the memory problem\r",
-                    "pos": 5712,
+                    "text": "\t\t\t\t// TODO: Fuck the memory problem",
+                    "pos": 5487,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\t\t\t\t",
-                                "pos": 5712
+                                "pos": 5487
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// TODO: Fuck the memory problem\r",
-                                "pos": 5716,
+                                "text": "// TODO: Fuck the memory problem",
+                                "pos": 5491,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " TODO: Fuck the memory problem\r",
-                                            "pos": 5718
+                                            "text": " TODO: Fuck the memory problem",
+                                            "pos": 5493
                                         }
                                     }
                                 ]
@@ -425,24 +425,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\t\t// move down a level;\r",
-                    "pos": 5876,
+                    "text": "\t\t// move down a level;",
+                    "pos": 5642,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\t\t",
-                                "pos": 5876
+                                "pos": 5642
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// move down a level;\r",
-                                "pos": 5878,
+                                "text": "// move down a level;",
+                                "pos": 5644,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " move down a level;\r",
-                                            "pos": 5880
+                                            "text": " move down a level;",
+                                            "pos": 5646
                                         }
                                     }
                                 ]
@@ -453,24 +453,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\tif (slots[index] == NULL) { // insert if not exist\r",
-                    "pos": 6035,
+                    "text": "\tif (slots[index] == NULL) { // insert if not exist",
+                    "pos": 5793,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\tif (slots[index] == NULL) { ",
-                                "pos": 6035
+                                "pos": 5793
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// insert if not exist\r",
-                                "pos": 6064,
+                                "text": "// insert if not exist",
+                                "pos": 5822,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " insert if not exist\r",
-                                            "pos": 6066
+                                            "text": " insert if not exist",
+                                            "pos": 5824
                                         }
                                     }
                                 ]
@@ -481,24 +481,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\t\t\t// TODO: Fuck the memory problem\r",
-                    "pos": 6156,
+                    "text": "\t\t\t// TODO: Fuck the memory problem",
+                    "pos": 5911,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\t\t\t",
-                                "pos": 6156
+                                "pos": 5911
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// TODO: Fuck the memory problem\r",
-                                "pos": 6159,
+                                "text": "// TODO: Fuck the memory problem",
+                                "pos": 5914,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " TODO: Fuck the memory problem\r",
-                                            "pos": 6161
+                                            "text": " TODO: Fuck the memory problem",
+                                            "pos": 5916
                                         }
                                     }
                                 ]
@@ -509,24 +509,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "// return the data associated with the key\r",
-                    "pos": 7597,
+                    "text": "// return the data associated with the key",
+                    "pos": 7283,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "",
-                                "pos": 7597
+                                "pos": 7283
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// return the data associated with the key\r",
-                                "pos": 7597,
+                                "text": "// return the data associated with the key",
+                                "pos": 7283,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " return the data associated with the key\r",
-                                            "pos": 7599
+                                            "text": " return the data associated with the key",
+                                            "pos": 7285
                                         }
                                     }
                                 ]
@@ -537,24 +537,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "// DFS radix tree dump\r",
-                    "pos": 8207,
+                    "text": "// DFS radix tree dump",
+                    "pos": 7868,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "",
-                                "pos": 8207
+                                "pos": 7868
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// DFS radix tree dump\r",
-                                "pos": 8207,
+                                "text": "// DFS radix tree dump",
+                                "pos": 7868,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " DFS radix tree dump\r",
-                                            "pos": 8209
+                                            "text": " DFS radix tree dump",
+                                            "pos": 7870
                                         }
                                     }
                                 ]
@@ -565,24 +565,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\t\t\tif (height > 0) { // internal nodes\r",
-                    "pos": 8490,
+                    "text": "\t\t\tif (height > 0) { // internal nodes",
+                    "pos": 8142,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\t\t\tif (height > 0) { ",
-                                "pos": 8490
+                                "pos": 8142
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// internal nodes\r",
-                                "pos": 8511,
+                                "text": "// internal nodes",
+                                "pos": 8163,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " internal nodes\r",
-                                            "pos": 8513
+                                            "text": " internal nodes",
+                                            "pos": 8165
                                         }
                                     }
                                 ]
@@ -593,24 +593,24 @@
             },
             {
                 "c.line_comment": {
-                    "text": "\t\t\t} else { // leaf node, data node\r",
-                    "pos": 8612,
+                    "text": "\t\t\t} else { // leaf node, data node",
+                    "pos": 8262,
                     "subs": [
                         {
                             "c.line_comment_context": {
                                 "text": "\t\t\t} else { ",
-                                "pos": 8612
+                                "pos": 8262
                             }
                         },
                         {
                             "c.line_comment_body": {
-                                "text": "// leaf node, data node\r",
-                                "pos": 8624,
+                                "text": "// leaf node, data node",
+                                "pos": 8274,
                                 "subs": [
                                     {
                                         "c.line_comment_text": {
-                                            "text": " leaf node, data node\r",
-                                            "pos": 8626
+                                            "text": " leaf node, data node",
+                                            "pos": 8276
                                         }
                                     }
                                 ]
