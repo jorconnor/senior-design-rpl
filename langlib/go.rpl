@@ -28,3 +28,31 @@ go.package_text = {!statement_end !line_end .}*
 go.package = {"package " go.package_text}
 
 go.dependencies = {{go.package / go.dependencies_single / go.dependencies_factor / go.dependencies_pre} line_end}*
+
+--Function Definitions
+go.func = "func "
+alias go.start_paren = "("
+alias go.end_paren = ")"
+alias go.whitespace = [:space:]
+
+go.function_name = {!go.start_paren .}*
+go.single_param = {!go.end_paren ![,] .}*
+alias go.multi_param =  {[,] go.single_param }*
+go.parameters = {go.start_paren go.single_param go.multi_param go.end_paren}
+
+go.single_return = {!go.end_paren ![,] .}*
+alias go.multi_return =  {[,] go.single_return }*
+go.return = {go.whitespace go.start_paren go.single_return go.multi_return go.end_paren}
+go.return_type = {go.whitespace {!"{" .}*}
+go.function_call = {go.func go.function_name go.parameters {go.return / go.return_type}?}
+
+go.functions = {go.function_call / .}*
+
+--Struct Definitions
+alias go.type = "type "
+alias go.struct = "struct "
+alias go.struct_name = {!go.struct .}*
+
+go.struct_def = {go.type go.struct_name go.struct}
+go.structs = {go.struct_def / .}*
+

@@ -58,6 +58,27 @@ js.multi_members = {js.member {js.comma js.member_text}* }
 alias js.dependencies_multimember = {js.import js.multi_members js.from js.module_text}
 alias js.dependencies_pre = {!js.import !line_end .}*
 
-js.dependencies_single = {js.dependencies_lonemember / js.dependencies_multimember / js.dependencies_module}
+js.dependency = {js.dependencies_lonemember / js.dependencies_multimember / js.dependencies_module}
 
-js.dependencies = { { js.dependencies_single / js.dependencies_pre} {line_end / statement_end}}*
+js.dependencies = { { js.dependency / js.dependencies_pre} {line_end / statement_end}}*
+
+--Function Definitions
+alias js.seperator = ","
+alias js.start_paren = "("
+alias js.end_paren = ")"
+alias js.start_block = "{"
+alias js.end_block = "}"
+alias js.whitespace = [:space:]
+
+alias js.pre_function = {statement_end / line_end / [.] / [=] / "return"  . } 
+alias js.function = {js.pre_function? "function" }
+js.function_name = {!line_end !js.start_paren .}*
+js.single_param = { !js.end_paren ![,] .}+
+alias js.multip_param = (js.single_param ",")* js.single_param
+js.parameters =  "(" js.multip_param? ")" 
+
+alias js.function_body_clean = {!js.end_block .}*
+js.function_body = {js.whitespace js.start_block js.function_body_clean js.end_block}
+js.function_call =  js.function  js.function_name js.parameters 
+
+js.function = { { js.function_call } / .}* 

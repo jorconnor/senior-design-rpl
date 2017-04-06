@@ -222,7 +222,7 @@ function omz_urlencode() {
 #
 # Usage:
 #   omz_urldecode <urlstring>  - prints decoded string followed by a newline
-function omz_urldecode {
+omz_urldecode() {
   emulate -L zsh
   local encoded_url=$1
 
