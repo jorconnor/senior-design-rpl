@@ -12,7 +12,6 @@ from os import listdir,walk
 from os.path import isfile,join,exists,basename,splitext
 from subprocess import Popen, PIPE
 from macpath import split
-from string import digits
 
 testfiles = "./testfiles/"
 basic_path = testfiles + "$"
@@ -65,7 +64,7 @@ def run_tests():
                     with open(resolved_output, 'r') as vOut:
                         test = splitext(test_file)[0]
                         pattern = copy.copy(test)
-                        pattern = pattern.translate(None,digits)
+                        re.sub(r'_u\d_v\d', '', pattern)
                         proc = Popen('rosie -manifest ' + manifest_file + ' -wholefile -encode json ' + alias + "." + pattern + " " + resolved_input, stdout=PIPE, stderr=PIPE, shell=True)
                         return_code = proc.wait()
                         stdout,sterr = proc.communicate()
