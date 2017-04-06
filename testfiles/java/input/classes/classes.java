@@ -59,7 +59,7 @@ import static com.google.common.base.Preconditions.*;
  * @see ApiTokenFilter
  * @since 1.426
  */
-public class ApiTokenProperty extends UserProperty {
+public class ApiTokenProperty extends UserProperty implements Interface1, Interface2 {
     private volatile Secret apiToken;
     private String test1 = "http://8080:localhost";
     private String test2 = "http://8080:localhost";//This comment should be extracted
@@ -70,10 +70,10 @@ public class ApiTokenProperty extends UserProperty {
      * If enabled, it restores the original Jenkins behavior (SECURITY-200).
      * @since 1.638
      */
-    private static final boolean SHOW_TOKEN_TO_ADMINS = 
+    private static final boolean SHOW_TOKEN_TO_ADMINS =
             SystemProperties.getBoolean(ApiTokenProperty.class.getName() + ".showTokenToAdmins");
-    
-    
+
+
     @DataBoundConstructor
     public ApiTokenProperty() {
         _changeApiToken();
@@ -91,17 +91,17 @@ public class ApiTokenProperty extends UserProperty {
      * Gets the API token.
      * The method performs security checks since 1.638. Only the current user and SYSTEM may see it.
      * Users with {@link Jenkins#ADMINISTER} may be allowed to do it using {@link #SHOW_TOKEN_TO_ADMINS}.
-     * 
+     *
      * @return API Token. Never null, but may be {@link Messages#ApiTokenProperty_ChangeToken_TokenIsHidden()}
      *         if the user has no appropriate permissions.
      * @since 1.426, and since 1.638 the method performs security checks
      */
     @Nonnull
     public String getApiToken() {
-        return hasPermissionToSeeToken() ? getApiTokenInsecure() 
+        return hasPermissionToSeeToken() ? getApiTokenInsecure()
                 : Messages.ApiTokenProperty_ChangeToken_TokenIsHidden();
     }
-    
+
     @Nonnull
     @Restricted(NoExternalUse.class)
     /*package*/ String getApiTokenInsecure() {
@@ -120,7 +120,7 @@ public class ApiTokenProperty extends UserProperty {
         return MessageDigest.isEqual(password.getBytes(Charset.forName("US-ASCII")),
                 token.getBytes(Charset.forName("US-ASCII")));
     }
-    
+
     private boolean hasPermissionToSeeToken() {
         final Jenkins jenkins = Jenkins.getInstance();
 
@@ -128,18 +128,18 @@ public class ApiTokenProperty extends UserProperty {
         if (SHOW_TOKEN_TO_ADMINS && jenkins.hasPermission(Jenkins.ADMINISTER)) {
             return true;
         }
-        
-        
+
+
         final User current = User.current();
         if (current == null) { // Anonymous
             return false;
         }
-        
+
         // SYSTEM user is always eligible to see tokens
         if (Jenkins.getAuthentication() == ACL.SYSTEM) {
             return true;
         }
-             
+
         //TODO: replace by IdStrategy in newer Jenkins versions
         //return User.idStrategy().equals(user.getId(), current.getId());
         return StringUtils.equals(user.getId(), current.getId());
@@ -158,7 +158,7 @@ public class ApiTokenProperty extends UserProperty {
     }
 
     @Override
-    public UserProperty reconfigure(StaplerRequest req, JSONObject form) throws FormException {
+    public ArrayList<Integer> UserProperty reconfigure(StaplerRequest req, JSONObject form) throws FormException {
         return this;
     }
 
@@ -189,8 +189,8 @@ public class ApiTokenProperty extends UserProperty {
                 p.changeApiToken();
             }
             rsp.setHeader("script","document.getElementById('apiToken').value='"+p.getApiToken()+"'");
-            return HttpResponses.html(p.hasPermissionToSeeToken() 
-                    ? Messages.ApiTokenProperty_ChangeToken_Success() 
+            return HttpResponses.html(p.hasPermissionToSeeToken()
+                    ? Messages.ApiTokenProperty_ChangeToken_Success()
                     : Messages.ApiTokenProperty_ChangeToken_SuccessHidden());
         }
     }
