@@ -1,0 +1,260 @@
+{
+    "py.line_comments": {
+        "text": "# coding: utf-8\r\n\r\nclass menuitem:\r\n    def __init__(self, parent, name, url, active = True, template = None):\r\n        self.name = name\r\n        self.url = url\r\n        self.parent = parent\r\n        self.active = active # this is an inline comment\r\n        self.full_url = self.compute_full_url()\r\n        if template == None:\r\n            self.template = parent.template + ('' if name == '' else '/' + name)\r\n        elif template.startswith('/'):\r\n            self.template = template[1:-1]\r\n        else:\r\n            self.template = parent.template + '/' + template\r\n\r\n    def compute_full_url(self):\r\n        if self.url.startswith('http'):\r\n            return self.url\r\n        return self.parent.full_url + self.url\r\n\r\nclass dummymenuitem(menuitem):\r\n    def __init__(self):\r\n        menuitem.__init__(self, rootmenuitem(), name = 'none', url = '')\r\n\r\nclass rootmenuitem(menuitem):\r\n    def __init__(self):\r\n        menuitem.__init__(self, parent = None, name = '', url = '', active = False, template = '/')\r\n\r\n    def compute_full_url(self):\r\n        return '/'\r\n\r\nclass globalmenuitem(menuitem):\r\n    def __init__(self, name, url, icon, alt, active = True, template = None):\r\n        menuitem.__init__(self, parent = rootmenuitem(), name = name, url = url, active = active, template = template)\r\n        self.icon = icon\r\n        self.alt = alt\r\n\r\nclass contentmenuitem(menuitem):\r\n    def __init__(self, parent, name, url, text, visible = True, cols = 3, template = None):\r\n        menuitem.__init__(self, parent, name, url, template = template)\r\n        self.text = text\r\n        self.cols = cols\r\n        self.visible = visible\r\n\r\ndef find_active_item(path, items):\r\n    best_fit = None\r\n    for item in items:\r\n        if path == item.url.rstrip('/') or path.startswith(item.url):\r\n            if best_fit is None or len(item.url) > len(best_fit.url):\r\n                best_fit = item\r\n    return best_fit or dummymenuitem()\r\n\r\ndef menu(path):\r\n    global_menu = [\r\n        # globalmenuitem(name = 'home',    url = '',  icon = 'icon-yoursway.png', template = 'index', alt = 'Home'),\r\n        # globalmenuitem(name = 'consulting', url = 'consulting/', icon = 'icon-consulting.png',  alt = 'Consulting'),\r\n        globalmenuitem(name = 'consulting', url = '', icon = 'icon-yoursway.png',  alt = 'YourSway'),\r\n        # globalmenuitem(name = 'ide',     url = 'ide/', active = False, icon = 'icon-ide.png',      alt = 'YourSway IDE'),\r\n        # globalmenuitem(name = 'taskus',  url = 'taskus/',  icon = 'icon-taskus.png',   alt = 'Taskus'),\r\n        globalmenuitem(name = 'free', url = 'free/', icon = 'icon-free.png',  alt = 'Free Tools'),\r\n        globalmenuitem(name = 'aboutus', url = 'aboutus/', icon = 'icon-aboutus.png',  alt = 'About Us'),\r\n        globalmenuitem(name = 'blog', url = 'http://blog.yoursway.com/', icon = 'icon-blog.png',  alt = 'Blog'),\r\n    ]\r\n\r\n    path = path.lstrip('/')\r\n\r\n    active_global_item = find_active_item(path, global_menu)\r\n    path = path[len(active_global_item.url) : -1]\r\n\r\n    if active_global_item.name == 'taskus':\r\n        content_menu = [\r\n            contentmenuitem(parent = active_global_item, name = '', url = '', template = 'overview', text = \"5 easy rules\", cols = 4),\r\n            contentmenuitem(parent = active_global_item, name = 'screencast', url = 'screencast/', text = 'Screencast', cols = 4),\r\n            contentmenuitem(parent = active_global_item, name = 'qa', url = 'qa/', text = 'Productivity Q&A', cols = 6),\r\n            contentmenuitem(parent = active_global_item, name = 'support', url = 'support/', text = 'Support', cols = 4),\r\n        ]\r\n    elif active_global_item.name == 'free':\r\n        content_menu = [\r\n        contentmenuitem(parent = active_global_item, name = '', url = '', template = 'overview', text = \"Overview\", cols = 4),\r\n        contentmenuitem(parent = active_global_item, name = 'ProjectSync', url = 'ProjectSync/', text = 'ProjectSync', cols = 4),\r\n        # contentmenuitem(parent = active_global_item, name = 'ide-features', url = 'ide/features', text = '', visible = False),\r\n        # contentmenuitem(parent = active_global_item, name = 'mashups', url = 'mashups/', text = 'Desktop & Web app', cols = 7),\r\n        # contentmenuitem(parent = active_global_item, name = 'iphone', url = 'iphone/', text = 'iPhone app', cols = 4),\r\n        ]\r\n    elif active_global_item.name == 'consulting':\r\n        content_menu = [\r\n        contentmenuitem(parent = active_global_item, name = '', url = '', template = 'overview', text = \"Overview\", cols = 4),\r\n        contentmenuitem(parent = active_global_item, name = 'ide', url = 'ide/', text = 'I want an IDE', cols = 5),\r\n        contentmenuitem(parent = active_global_item, name = 'ide-features', url = 'ide/features', text = '', visible = False),\r\n        contentmenuitem(parent = active_global_item, name = 'mashups', url = 'mashups/', text = 'Desktop & Web app', cols = 7),\r\n        contentmenuitem(parent = active_global_item, name = 'iphone', url = 'iphone/', text = 'iPhone app', cols = 4),        ]\r\n    else:\r\n        content_menu = []\r\n\r\n    remaining_content_menu_cols = 23 - sum([item.cols for item in content_menu if item.visible])\r\n\r\n    active_content_item = find_active_item(path, content_menu)\r\n    if isinstance(active_content_item, dummymenuitem):\r\n        active_item = active_global_item\r\n    else:\r\n        active_item = active_content_item\r\n\r\n    visible_content_menu_items = [item for item in content_menu if item.visible]\r\n\r\n    return (active_item, dict(global_menu = global_menu,\r\n        content_menu = visible_content_menu_items,\r\n        active_global_item = active_global_item.name,\r\n        active_content_item = active_content_item.name,\r\n        remaining_content_menu_cols = remaining_content_menu_cols,\r\n    ))\r\n",
+        "subs": [
+            {
+                "py.line_comment": {
+                    "text": "# coding: utf-8\r",
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 1
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "# coding: utf-8\r",
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": " coding: utf-8\r",
+                                            "pos": 2
+                                        }
+                                    }
+                                ],
+                                "pos": 1
+                            }
+                        }
+                    ],
+                    "pos": 1
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "        self.active = active # this is an inline comment\r",
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "        self.active = active ",
+                                "pos": 193
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "# this is an inline comment\r",
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": " this is an inline comment\r",
+                                            "pos": 223
+                                        }
+                                    }
+                                ],
+                                "pos": 222
+                            }
+                        }
+                    ],
+                    "pos": 193
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "        # globalmenuitem(name = 'home',    url = '',  icon = 'icon-yoursway.png', template = 'index', alt = 'Home'),\r",
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "        ",
+                                "pos": 1981
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "# globalmenuitem(name = 'home',    url = '',  icon = 'icon-yoursway.png', template = 'index', alt = 'Home'),\r",
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": " globalmenuitem(name = 'home',    url = '',  icon = 'icon-yoursway.png', template = 'index', alt = 'Home'),\r",
+                                            "pos": 1990
+                                        }
+                                    }
+                                ],
+                                "pos": 1989
+                            }
+                        }
+                    ],
+                    "pos": 1981
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "        # globalmenuitem(name = 'consulting', url = 'consulting/', icon = 'icon-consulting.png',  alt = 'Consulting'),\r",
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "        ",
+                                "pos": 2099
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "# globalmenuitem(name = 'consulting', url = 'consulting/', icon = 'icon-consulting.png',  alt = 'Consulting'),\r",
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": " globalmenuitem(name = 'consulting', url = 'consulting/', icon = 'icon-consulting.png',  alt = 'Consulting'),\r",
+                                            "pos": 2108
+                                        }
+                                    }
+                                ],
+                                "pos": 2107
+                            }
+                        }
+                    ],
+                    "pos": 2099
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "        # globalmenuitem(name = 'ide',     url = 'ide/', active = False, icon = 'icon-ide.png',      alt = 'YourSway IDE'),\r",
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "        ",
+                                "pos": 2322
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "# globalmenuitem(name = 'ide',     url = 'ide/', active = False, icon = 'icon-ide.png',      alt = 'YourSway IDE'),\r",
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": " globalmenuitem(name = 'ide',     url = 'ide/', active = False, icon = 'icon-ide.png',      alt = 'YourSway IDE'),\r",
+                                            "pos": 2331
+                                        }
+                                    }
+                                ],
+                                "pos": 2330
+                            }
+                        }
+                    ],
+                    "pos": 2322
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "        # globalmenuitem(name = 'taskus',  url = 'taskus/',  icon = 'icon-taskus.png',   alt = 'Taskus'),\r",
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "        ",
+                                "pos": 2447
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "# globalmenuitem(name = 'taskus',  url = 'taskus/',  icon = 'icon-taskus.png',   alt = 'Taskus'),\r",
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": " globalmenuitem(name = 'taskus',  url = 'taskus/',  icon = 'icon-taskus.png',   alt = 'Taskus'),\r",
+                                            "pos": 2456
+                                        }
+                                    }
+                                ],
+                                "pos": 2455
+                            }
+                        }
+                    ],
+                    "pos": 2447
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "        # contentmenuitem(parent = active_global_item, name = 'ide-features', url = 'ide/features', text = '', visible = False),\r",
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "        ",
+                                "pos": 3955
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "# contentmenuitem(parent = active_global_item, name = 'ide-features', url = 'ide/features', text = '', visible = False),\r",
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": " contentmenuitem(parent = active_global_item, name = 'ide-features', url = 'ide/features', text = '', visible = False),\r",
+                                            "pos": 3964
+                                        }
+                                    }
+                                ],
+                                "pos": 3963
+                            }
+                        }
+                    ],
+                    "pos": 3955
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "        # contentmenuitem(parent = active_global_item, name = 'mashups', url = 'mashups/', text = 'Desktop & Web app', cols = 7),\r",
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "        ",
+                                "pos": 4085
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "# contentmenuitem(parent = active_global_item, name = 'mashups', url = 'mashups/', text = 'Desktop & Web app', cols = 7),\r",
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": " contentmenuitem(parent = active_global_item, name = 'mashups', url = 'mashups/', text = 'Desktop & Web app', cols = 7),\r",
+                                            "pos": 4094
+                                        }
+                                    }
+                                ],
+                                "pos": 4093
+                            }
+                        }
+                    ],
+                    "pos": 4085
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "        # contentmenuitem(parent = active_global_item, name = 'iphone', url = 'iphone/', text = 'iPhone app', cols = 4),\r",
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "        ",
+                                "pos": 4216
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "# contentmenuitem(parent = active_global_item, name = 'iphone', url = 'iphone/', text = 'iPhone app', cols = 4),\r",
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": " contentmenuitem(parent = active_global_item, name = 'iphone', url = 'iphone/', text = 'iPhone app', cols = 4),\r",
+                                            "pos": 4225
+                                        }
+                                    }
+                                ],
+                                "pos": 4224
+                            }
+                        }
+                    ],
+                    "pos": 4216
+                }
+            }
+        ],
+        "pos": 1
+    }
+}

@@ -1,0 +1,512 @@
+{
+    "py.line_comments": {
+        "pos": 1,
+        "subs": [
+            {
+                "py.line_comment": {
+                    "pos": 1,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 1,
+                                "text": ""
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 1,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 2,
+                                            "text": "-------------------------------------------------------------------------------"
+                                        }
+                                    }
+                                ],
+                                "text": "#-------------------------------------------------------------------------------"
+                            }
+                        }
+                    ],
+                    "text": "#-------------------------------------------------------------------------------"
+                }
+            },
+            {
+                "py.line_comment": {
+                    "pos": 82,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 82,
+                                "text": ""
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 82,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 83,
+                                            "text": " Name:        Application"
+                                        }
+                                    }
+                                ],
+                                "text": "# Name:        Application"
+                            }
+                        }
+                    ],
+                    "text": "# Name:        Application"
+                }
+            },
+            {
+                "py.line_comment": {
+                    "pos": 109,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 109,
+                                "text": ""
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 109,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 110,
+                                            "text": " Purpose:"
+                                        }
+                                    }
+                                ],
+                                "text": "# Purpose:"
+                            }
+                        }
+                    ],
+                    "text": "# Purpose:"
+                }
+            },
+            {
+                "py.line_comment": {
+                    "pos": 120,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 120,
+                                "text": ""
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 120,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 121,
+                                            "text": ""
+                                        }
+                                    }
+                                ],
+                                "text": "#"
+                            }
+                        }
+                    ],
+                    "text": "#"
+                }
+            },
+            {
+                "py.line_comment": {
+                    "pos": 122,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 122,
+                                "text": ""
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 122,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 123,
+                                            "text": " Author:      Daniel Beall"
+                                        }
+                                    }
+                                ],
+                                "text": "# Author:      Daniel Beall"
+                            }
+                        }
+                    ],
+                    "text": "# Author:      Daniel Beall"
+                }
+            },
+            {
+                "py.line_comment": {
+                    "pos": 150,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 150,
+                                "text": ""
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 150,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 151,
+                                            "text": ""
+                                        }
+                                    }
+                                ],
+                                "text": "#"
+                            }
+                        }
+                    ],
+                    "text": "#"
+                }
+            },
+            {
+                "py.line_comment": {
+                    "pos": 152,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 152,
+                                "text": ""
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 152,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 153,
+                                            "text": " Created:     30/08/2013"
+                                        }
+                                    }
+                                ],
+                                "text": "# Created:     30/08/2013"
+                            }
+                        }
+                    ],
+                    "text": "# Created:     30/08/2013"
+                }
+            },
+            {
+                "py.line_comment": {
+                    "pos": 178,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 178,
+                                "text": ""
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 178,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 179,
+                                            "text": " Copyright:   None! :)"
+                                        }
+                                    }
+                                ],
+                                "text": "# Copyright:   None! :)"
+                            }
+                        }
+                    ],
+                    "text": "# Copyright:   None! :)"
+                }
+            },
+            {
+                "py.line_comment": {
+                    "pos": 202,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 202,
+                                "text": ""
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 202,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 203,
+                                            "text": " Licence:     MIT"
+                                        }
+                                    }
+                                ],
+                                "text": "# Licence:     MIT"
+                            }
+                        }
+                    ],
+                    "text": "# Licence:     MIT"
+                }
+            },
+            {
+                "py.line_comment": {
+                    "pos": 221,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 221,
+                                "text": ""
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 221,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 222,
+                                            "text": "-------------------------------------------------------------------------------"
+                                        }
+                                    }
+                                ],
+                                "text": "#-------------------------------------------------------------------------------"
+                            }
+                        }
+                    ],
+                    "text": "#-------------------------------------------------------------------------------"
+                }
+            },
+            {
+                "py.line_comment": {
+                    "pos": 556,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 556,
+                                "text": ""
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 556,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 557,
+                                            "text": "open a txt file"
+                                        }
+                                    }
+                                ],
+                                "text": "#open a txt file"
+                            }
+                        }
+                    ],
+                    "text": "#open a txt file"
+                }
+            },
+            {
+                "py.line_comment": {
+                    "pos": 782,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 782,
+                                "text": ""
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 782,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 783,
+                                            "text": "save to a text file"
+                                        }
+                                    }
+                                ],
+                                "text": "#save to a text file"
+                            }
+                        }
+                    ],
+                    "text": "#save to a text file"
+                }
+            },
+            {
+                "py.line_comment": {
+                    "pos": 1713,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 1713,
+                                "text": ""
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 1713,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 1714,
+                                            "text": " makes Menu Bars"
+                                        }
+                                    }
+                                ],
+                                "text": "# makes Menu Bars"
+                            }
+                        }
+                    ],
+                    "text": "# makes Menu Bars"
+                }
+            },
+            {
+                "py.line_comment": {
+                    "pos": 2237,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 2237,
+                                "text": ""
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 2237,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 2238,
+                                            "text": " displays About my app"
+                                        }
+                                    }
+                                ],
+                                "text": "# displays About my app"
+                            }
+                        }
+                    ],
+                    "text": "# displays About my app"
+                }
+            },
+            {
+                "py.line_comment": {
+                    "pos": 2477,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 2477,
+                                "text": ""
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 2477,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 2478,
+                                            "text": "output when button is pressed"
+                                        }
+                                    }
+                                ],
+                                "text": "#output when button is pressed"
+                            }
+                        }
+                    ],
+                    "text": "#output when button is pressed"
+                }
+            },
+            {
+                "py.line_comment": {
+                    "pos": 2530,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 2530,
+                                "text": "        "
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 2538,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 2539,
+                                            "text": "take input from text box"
+                                        }
+                                    }
+                                ],
+                                "text": "#take input from text box"
+                            }
+                        }
+                    ],
+                    "text": "        #take input from text box"
+                }
+            },
+            {
+                "py.line_comment": {
+                    "pos": 3222,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 3222,
+                                "text": "    "
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 3226,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 3227,
+                                            "text": "output from a text file"
+                                        }
+                                    }
+                                ],
+                                "text": "#output from a text file"
+                            }
+                        }
+                    ],
+                    "text": "    #output from a text file"
+                }
+            },
+            {
+                "py.line_comment": {
+                    "pos": 3931,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "pos": 3931,
+                                "text": "    "
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "pos": 3935,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "pos": 3936,
+                                            "text": "clear Text Area"
+                                        }
+                                    }
+                                ],
+                                "text": "#clear Text Area"
+                            }
+                        }
+                    ],
+                    "text": "    #clear Text Area"
+                }
+            }
+        ],
+        "text": "#-------------------------------------------------------------------------------\n# Name:        Application\n# Purpose:\n#\n# Author:      Daniel Beall\n#\n# Created:     30/08/2013\n# Copyright:   None! :)\n# Licence:     MIT\n#-------------------------------------------------------------------------------\n\nfrom Tkinter import *\nfrom tkFileDialog import askopenfilename\nimport tkMessageBox\nclass Application(Frame):\n\n\n\n    def __init__(self, master):\n        Frame.__init__(self,master)\n        self.grid()\n        self.create_widgets()\n        self.topbar()\n\n#open a txt file\n    def filesystem_access(self):\n        filename = open(askopenfilename(filetypes=[(\"allfiles\",\"*\"),(\"textfiles\",\"*.txt\")]))\n        fetchedstring = filename.read()\n        self.outputfromfile(fetchedstring)\n#save to a text file\n    def savetofilesystem(self):\n          filename = open(askopenfilename(filetypes=[(\"textfiles - will overwrite\",\"*.txt\")]),\"w\")\n          filename.write(self.text.get(0.0,END))\n\n    def create_widgets(self):\n        self.instruction = Label(self, text = \"Insert Text in Box\")\n        self.instruction.grid(row = 0,  column =0, columnspan = 2, sticky = W)\n\n        self.phonenumberletters = Entry(self)\n        self.phonenumberletters.grid(row = 1, column = 1, sticky = W)\n\n        self.submit_button = Button(self, text = \"Submit\", command = self.reveal)\n        self.submit_button.grid(row =2, column = 0, sticky =W)\n\n        self.delete_button = Button(self, text = \"Clear\", command = self.delete)\n        self.delete_button.grid(row =2, column = 1, sticky =W)\n\n        self.text = Text(self, width = 35, height = 15, wrap = WORD)\n        self.text.grid(row = 3, column = 0, columnspan =2, sticky = W)\n\n\n\n# makes Menu Bars\n    def topbar(self):\n        menubar = Menu(root)\n\n        filemenu = Menu(menubar, tearoff=0)\n        filemenu.add_command(label=\"Open\", command=self.filesystem_access)\n        filemenu.add_command(label=\"Save\", command=self.savetofilesystem)\n\n        menubar.add_cascade(label=\"File\", menu=filemenu)\n\n        helpmenu = Menu(menubar, tearoff=0)\n        helpmenu.add_command(label=\"About\", command=self.hello)\n        menubar.add_cascade(label=\"Help\", menu=helpmenu)\n\n\n        root.config(menu=menubar)\n\n# displays About my app\n    def hello(self):\n        tkMessageBox.showinfo(\"Help - Phone Verter <2013>\", \"Version 1.5 \\n Licensed Under the MIT license \\n Built and maintained by Daniel Beall \\n Contact: thedan16@users.sourceforge.net  \")\n\n#output when button is pressed\n    def reveal(self):\n        #take input from text box\n        phonestring = self.phonenumberletters.get().lower()\n        phone = {\"a\": \"2\", \"b\": \"2\", \"c\": \"2\", \"d\": \"3\", \"e\": \"3\", \"f\" : \"3\", \"g\": \"4\", \"h\": \"4\", \"i\": \"4\",\n        \"j\": \"5\", \"k\": \"5\", \"l\": \"5\", \"m\": \"6\", \"n\": \"6\", \"o\": \"6\", \"p\": \"7\", \"q\": \"7\",\"r\": \"7\", \"s\": \"7\", \"t\": \"8\", \"u\": \"8\", \"v\": \"8\", \"w\": \"9\", \"x\": \"9\", \"y\": \"9\", \"z\": \"9\"}\n        finalstring = \"\"\n        for z in range(0, len(phonestring)):\n            if phone.has_key(phonestring[z])  == True:\n                finalstring = finalstring + phone[phonestring[z]]\n            else:\n                finalstring = finalstring + phonestring[z]\n\n        self.text.insert(0.0, finalstring)\n\n    #output from a text file\n    def outputfromfile(self, fileinput):\n        phonestring = fileinput.lower()\n        phone = {\"a\": \"2\", \"b\": \"2\", \"c\": \"2\", \"d\": \"3\", \"e\": \"3\", \"f\" : \"3\", \"g\": \"4\", \"h\": \"4\", \"i\": \"4\",\n        \"j\": \"5\", \"k\": \"5\", \"l\": \"5\", \"m\": \"6\", \"n\": \"6\", \"o\": \"6\", \"p\": \"7\", \"q\": \"7\",\"r\": \"7\", \"s\": \"7\", \"t\": \"8\", \"u\": \"8\", \"v\": \"8\", \"w\": \"9\", \"x\": \"9\", \"y\": \"9\", \"z\": \"9\"}\n        finalstring = \"\"\n        for z in range(0, len(phonestring)):\n            if phone.has_key(phonestring[z])  == True:\n                finalstring = finalstring + phone[phonestring[z]]\n            else:\n                finalstring = finalstring + phonestring[z]\n\n        self.text.insert(0.0, finalstring)\n\n\n    #clear Text Area\n    def delete(self):\n        self.text.delete(0.0, END)\n\n\n\nroot = Tk()\nroot.title(\"PhoneVerter\")\nroot.geometry(\"350x400\")\napp = Application(root)\n\nroot.mainloop()\n"
+    }
+}

@@ -1,0 +1,764 @@
+{
+    "py.line_comments": {
+        "text": "\n#Copyright (c) 2011 David Tremouilles\n\n#Permission is hereby granted, free of charge, to any person\n#obtaining a copy of this software and associated documentation\n#files (the \"Software\"), to deal in the Software without\n#restriction, including without limitation the rights to use,\n#copy, modify, merge, publish, distribute, sublicense, and/or sell\n#copies of the Software, and to permit persons to whom the\n#Software is furnished to do so, subject to the following\n#conditions:\n\n#The above copyright notice and this permission notice shall be\n#included in all copies or substantial portions of the Software.\n\n#THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,\n#EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES\n#OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\n#NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT\n#HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,\n#WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING\n#FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR\n#OTHER DEALINGS IN THE SOFTWARE.\n\n\"\"\"Python setup script to generate\nwindows executable for Satellite\n\"\"\"\n\nfrom esky.bdist_esky import Executable\nfrom distutils.core import setup\nfrom satellitelib import __version__\n\n\n######################## py2exe setup options ################################\n\noptions = {\n    'bdist_esky': {\n    'includes': [],\n    'excludes': ['sip', 'PyQt4', 'PyQt4.QtGui', 'PyQt4.Qt',\n                 'PyQt4.QtGui', 'PyQt4.QtCore', 'PyQt4.QtSvg',\n                 '_gtkagg', '_tkagg', '_agg2', '_cairo',\n                 '_cocoaagg', '_fltkagg', '_gtk', '_gtkcairo',\n                 '_ssl', 'bsddb', 'curses',\n                 'email', 'pywin.debugger',\n                 'pywin.debugger.dbgcon', 'pywin.dialogs', 'tcl',\n                 'Tkconstants', 'Tkinter', 'wx'], }}\n\n# since matplotlib v1\nimport matplotlib\nmatplotlibdata_files = matplotlib.get_py2exe_datafiles()\n#del matplotlibdata_files[-1]\n\ndata_files = [('Microsoft.VC90.CRT', ('Microsoft.VC90.CRT.manifest',\n              'msvcr90.dll', 'msvcm90.dll', 'msvcp90.dll'))]\n\ndata_files = data_files + matplotlibdata_files #Inline comments to catch\n\n\nrun_sat = Executable(\n    'satellite.py',\n    #  give our app the standard Python icon\n    icon='satellite.ico',\n    #  we could make the app gui-only by setting this to True\n    gui_only=True,\n    #  any other keyword args would be passed on to py2exe\n)\n\nsetup(\n    options=options,\n    scripts=[run_sat],\n    # use out build_installer class as extended py2exe build\n    name=\"Satellite\",\n    version=__version__,\n    description=\"\",\n    author=\"David Trmouilles, Dimitri Linten\",\n    author_email=\"david.trem@gmail.com, dimitri.linten@gmail.com\",\n    url=\"http://code.google.com/p/esdanalysistools/\",\n    data_files=data_files\n)\n",
+        "pos": 1,
+        "subs": [
+            {
+                "py.line_comment": {
+                    "text": "#Copyright (c) 2011 David Tremouilles",
+                    "pos": 2,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 2
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#Copyright (c) 2011 David Tremouilles",
+                                "pos": 2,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "Copyright (c) 2011 David Tremouilles",
+                                            "pos": 3
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#Permission is hereby granted, free of charge, to any person",
+                    "pos": 41,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 41
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#Permission is hereby granted, free of charge, to any person",
+                                "pos": 41,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "Permission is hereby granted, free of charge, to any person",
+                                            "pos": 42
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#obtaining a copy of this software and associated documentation",
+                    "pos": 102,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 102
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#obtaining a copy of this software and associated documentation",
+                                "pos": 102,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "obtaining a copy of this software and associated documentation",
+                                            "pos": 103
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#files (the \"Software\"), to deal in the Software without",
+                    "pos": 166,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 166
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#files (the \"Software\"), to deal in the Software without",
+                                "pos": 166,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "files (the \"Software\"), to deal in the Software without",
+                                            "pos": 167
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#restriction, including without limitation the rights to use,",
+                    "pos": 223,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 223
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#restriction, including without limitation the rights to use,",
+                                "pos": 223,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "restriction, including without limitation the rights to use,",
+                                            "pos": 224
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#copy, modify, merge, publish, distribute, sublicense, and/or sell",
+                    "pos": 285,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 285
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#copy, modify, merge, publish, distribute, sublicense, and/or sell",
+                                "pos": 285,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "copy, modify, merge, publish, distribute, sublicense, and/or sell",
+                                            "pos": 286
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#copies of the Software, and to permit persons to whom the",
+                    "pos": 352,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 352
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#copies of the Software, and to permit persons to whom the",
+                                "pos": 352,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "copies of the Software, and to permit persons to whom the",
+                                            "pos": 353
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#Software is furnished to do so, subject to the following",
+                    "pos": 411,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 411
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#Software is furnished to do so, subject to the following",
+                                "pos": 411,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "Software is furnished to do so, subject to the following",
+                                            "pos": 412
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#conditions:",
+                    "pos": 469,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 469
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#conditions:",
+                                "pos": 469,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "conditions:",
+                                            "pos": 470
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#The above copyright notice and this permission notice shall be",
+                    "pos": 483,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 483
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#The above copyright notice and this permission notice shall be",
+                                "pos": 483,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "The above copyright notice and this permission notice shall be",
+                                            "pos": 484
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#included in all copies or substantial portions of the Software.",
+                    "pos": 547,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 547
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#included in all copies or substantial portions of the Software.",
+                                "pos": 547,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "included in all copies or substantial portions of the Software.",
+                                            "pos": 548
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,",
+                    "pos": 613,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 613
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,",
+                                "pos": 613,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,",
+                                            "pos": 614
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES",
+                    "pos": 678,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 678
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES",
+                                "pos": 678,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES",
+                                            "pos": 679
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND",
+                    "pos": 743,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 743
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND",
+                                "pos": 743,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND",
+                                            "pos": 744
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT",
+                    "pos": 801,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 801
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT",
+                                "pos": 801,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT",
+                                            "pos": 802
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,",
+                    "pos": 862,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 862
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,",
+                                "pos": 862,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,",
+                                            "pos": 863
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING",
+                    "pos": 924,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 924
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING",
+                                "pos": 924,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING",
+                                            "pos": 925
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR",
+                    "pos": 986,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 986
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR",
+                                "pos": 986,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR",
+                                            "pos": 987
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#OTHER DEALINGS IN THE SOFTWARE.",
+                    "pos": 1049,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 1049
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#OTHER DEALINGS IN THE SOFTWARE.",
+                                "pos": 1049,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "OTHER DEALINGS IN THE SOFTWARE.",
+                                            "pos": 1050
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "######################## py2exe setup options ################################",
+                    "pos": 1267,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 1267
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "######################## py2exe setup options ################################",
+                                "pos": 1267,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "####################### py2exe setup options ################################",
+                                            "pos": 1268
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "# since matplotlib v1",
+                    "pos": 1850,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 1850
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "# since matplotlib v1",
+                                "pos": 1850,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": " since matplotlib v1",
+                                            "pos": 1851
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "#del matplotlibdata_files[-1]",
+                    "pos": 1947,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "",
+                                "pos": 1947
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#del matplotlibdata_files[-1]",
+                                "pos": 1947,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "del matplotlibdata_files[-1]",
+                                            "pos": 1948
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "data_files = data_files + matplotlibdata_files #Inline comments to catch",
+                    "pos": 2109,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "data_files = data_files + matplotlibdata_files ",
+                                "pos": 2109
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#Inline comments to catch",
+                                "pos": 2156,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "Inline comments to catch",
+                                            "pos": 2157
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "    #  give our app the standard Python icon",
+                    "pos": 2226,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "    ",
+                                "pos": 2226
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#  give our app the standard Python icon",
+                                "pos": 2230,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "  give our app the standard Python icon",
+                                            "pos": 2231
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "    #  we could make the app gui-only by setting this to True",
+                    "pos": 2297,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "    ",
+                                "pos": 2297
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#  we could make the app gui-only by setting this to True",
+                                "pos": 2301,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "  we could make the app gui-only by setting this to True",
+                                            "pos": 2302
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "    #  any other keyword args would be passed on to py2exe",
+                    "pos": 2378,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "    ",
+                                "pos": 2378
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "#  any other keyword args would be passed on to py2exe",
+                                "pos": 2382,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": "  any other keyword args would be passed on to py2exe",
+                                            "pos": 2383
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "py.line_comment": {
+                    "text": "    # use out build_installer class as extended py2exe build",
+                    "pos": 2491,
+                    "subs": [
+                        {
+                            "py.line_comment_context": {
+                                "text": "    ",
+                                "pos": 2491
+                            }
+                        },
+                        {
+                            "py.line_comment_body": {
+                                "text": "# use out build_installer class as extended py2exe build",
+                                "pos": 2495,
+                                "subs": [
+                                    {
+                                        "py.line_comment_text": {
+                                            "text": " use out build_installer class as extended py2exe build",
+                                            "pos": 2496
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
