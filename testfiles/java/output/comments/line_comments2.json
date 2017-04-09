@@ -1,0 +1,56 @@
+{
+	"java.line_comments" : {
+		"pos" : 1,
+		"subs" : [{
+				"java.line_comment" : {
+					"pos" : 5849,
+					"subs" : [{
+							"java.line_comment_context" : {
+								"pos" : 5849,
+								"text" : "\t\t"
+							}
+						}, {
+							"java.line_comment_body" : {
+								"pos" : 5851,
+								"subs" : [{
+										"java.line_comment_text" : {
+											"pos" : 5853,
+											"text" : " load the styled attributes and set their properties"
+										}
+									}
+								],
+								"text" : "\/\/ load the styled attributes and set their properties"
+							}
+						}
+					],
+					"text" : "\t\t\/\/ load the styled attributes and set their properties"
+				}
+			}, {
+				"java.line_comment" : {
+					"pos" : 7682,
+					"subs" : [{
+							"java.line_comment_context" : {
+								"pos" : 7682,
+								"text" : "\t\t"
+							}
+						}, {
+							"java.line_comment_body" : {
+								"pos" : 7684,
+								"subs" : [{
+										"java.line_comment_text" : {
+											"pos" : 7686,
+											"text" : " the view has now all properties and can be drawn"
+										}
+									}
+								],
+								"text" : "\/\/ the view has now all properties and can be drawn"
+							}
+						}
+					],
+					"text" : "\t\t\/\/ the view has now all properties and can be drawn"
+				}
+			}
+		],
+		"text" : "\/**\n\nCopyright (C) 2013, Johannes Bjerva\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and\/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n*\/\npackage de.passsy.holocircularprogressbar;\n\nimport android.annotation.SuppressLint;\nimport android.content.Context;\nimport android.content.res.TypedArray;\nimport android.graphics.Canvas;\nimport android.graphics.Color;\nimport android.graphics.Paint;\nimport android.graphics.RectF;\nimport android.os.Build;\nimport android.os.Bundle;\nimport android.os.Parcelable;\nimport android.util.AttributeSet;\nimport android.view.Gravity;\nimport android.view.View;\n\n\/**\n * The Class HoloCircularProgressBar.\n * \n * @author Pascal.Welsch\n * @since 05.03.2013\n *\/\npublic class HoloCircularProgressBar extends View {\n\n\t\/**\n\t * The Constant TAG.\n\t *\/\n\tprivate static final String TAG = \"CircularProgressBar\";\n\n\t\/**\n\t * This is a test. used to save the super state on configuration change\n\t *\/\n\tprivate static final String INSTNACE_STATE_SAVEDSTATE = \"saved_state\";\n\n\t\/**\n\t * used to save the progress on configuration changes\n\t *\/\n\tprivate static final String INSTNACE_STATE_PROGRESS = \"progress\";\n\n\t\/**\n\t * used to save the marker progress on configuration changes\n\t *\/\n\tprivate static final String INSTNACE_STATE_MARKER_PROGRESS = \"marker_progress\";\n\n\t\/**\n\t * true if not all properties are set. then the view isn't drawn and there\n\t * are no errors in the LayoutEditor\n\t *\/\n\tprivate boolean mIsInitializing = true;\n\n\t\/**\n\t * the paint for the background.\n\t *\/\n\tprivate Paint mBackgroundColorPaint = new Paint();\n\n\t\/**\n\t * The stroke width used to paint the circle.\n\t *\/\n\tprivate int mCircleStrokeWidth = 10;\n\n\t\/**\n\t * The pointer width (in pixels).\n\t *\/\n\tprivate int mThumbRadius = 20;\n\n\t\/**\n\t * The rectangle enclosing the circle.\n\t *\/\n\tprivate final RectF mCircleBounds = new RectF();\n\n\t\/**\n\t * Radius of the circle\n\t * \n\t * <p>\n\t * Note: (Re)calculated in {@link #onMeasure(int, int)}.\n\t * <\/p>\n\t *\/\n\tprivate float mRadius;\n\n\t\/**\n\t * the color of the progress.\n\t *\/\n\tprivate int mProgressColor;\n\n\t\/**\n\t * paint for the progress.\n\t *\/\n\tprivate final Paint mProgressColorPaint;\n\n\t\/**\n\t * The color of the progress background.\n\t *\/\n\tprivate int mProgressBackgroundColor;\n\n\t\/**\n\t * The current progress.\n\t *\/\n\tprivate float mProgress = 0.3f;\n\n\t\/**\n\t * The Thumb color paint.\n\t *\/\n\tprivate Paint mThumbColorPaint = new Paint();\n\n\t\/**\n\t * The Marker progress.\n\t *\/\n\tprivate float mMarkerProgress = 0.0f;\n\n\t\/**\n\t * The Marker color paint.\n\t *\/\n\tprivate final Paint mMarkerColorPaint;\n\n\t\/**\n\t * flag if the marker should be visible\n\t *\/\n\tprivate boolean mIsMarkerEnabled = false;\n\n\t\/**\n\t * The gravity of the view. Where should the Circle be drawn within the\n\t * given bounds\n\t * \n\t * {@link #computeInsets(int, int)}\n\t *\/\n\tprivate final int mGravity;\n\n\t\/**\n\t * The Horizontal inset calcualted in {@link #computeInsets(int, int)}\n\t * depends on {@link #mGravity}.\n\t *\/\n\tprivate int mHorizontalInset = 0;\n\n\t\/**\n\t * The Vertical inset calcualted in {@link #computeInsets(int, int)} depends\n\t * on {@link #mGravity}..\n\t *\/\n\tprivate int mVerticalInset = 0;\n\n\t\/**\n\t * The Translation offset x which gives us the ability to use our own\n\t * coordinates system.\n\t *\/\n\tprivate float mTranslationOffsetX;\n\n\t\/**\n\t * The Translation offset y which gives us the ability to use our own\n\t * coordinates system.\n\t *\/\n\tprivate float mTranslationOffsetY;\n\n\t\/**\n\t * The Thumb pos x.\n\t * \n\t * Care. the position is not the position of the rotated thumb. The position\n\t * is only calculated in {@link #onMeasure(int, int)}\n\t *\/\n\tprivate float mThumbPosX;\n\n\t\/**\n\t * The Thumb pos y.\n\t * \n\t * Care. the position is not the position of the rotated thumb. The position\n\t * is only calculated in {@link #onMeasure(int, int)}\n\t *\/\n\tprivate float mThumbPosY;\n\n\t\/**\n\t * the overdraw is true if the progress is over 1.0.\n\t * \n\t *\/\n\tprivate boolean mOverrdraw = false;\n\n\t\/**\n\t * Instantiates a new holo circular progress bar.\n\t * \n\t * @param context\n\t *            the context\n\t *\/\n\tpublic HoloCircularProgressBar(final Context context) {\n\t\tthis(context, null);\n\t}\n\n\t\/**\n\t * Instantiates a new holo circular progress bar.\n\t * \n\t * @param context\n\t *            the context\n\t * @param attrs\n\t *            the attrs\n\t *\/\n\tpublic HoloCircularProgressBar(final Context context,\n\t\t\tfinal AttributeSet attrs) {\n\t\tthis(context, attrs, R.attr.circularProgressBarStyle);\n\t}\n\n\t\/**\n\t * Instantiates a new holo circular progress bar.\n\t * \n\t * @param context\n\t *            the context\n\t * @param attrs\n\t *            the attrs\n\t * @param defStyle\n\t *            the def style\n\t *\/\n\tpublic HoloCircularProgressBar(final Context context,\n\t\t\tfinal AttributeSet attrs, final int defStyle) {\n\t\tsuper(context, attrs, defStyle);\n\n\t\t\/\/ load the styled attributes and set their properties\n\t\tfinal TypedArray attributes = context.obtainStyledAttributes(attrs,\n\t\t\t\tR.styleable.HoloCircularProgressBar, defStyle, 0);\n\n\t\tsetProgressColor(attributes.getColor(\n\t\t\t\tR.styleable.HoloCircularProgressBar_progress_color, Color.CYAN));\n\t\tsetProgressBackgroundColor(attributes.getColor(\n\t\t\t\tR.styleable.HoloCircularProgressBar_progress_background_color,\n\t\t\t\tColor.MAGENTA));\n\t\tsetProgress(attributes.getFloat(\n\t\t\t\tR.styleable.HoloCircularProgressBar_progress, 0.0f));\n\t\tsetMarkerProgress(attributes.getFloat(\n\t\t\t\tR.styleable.HoloCircularProgressBar_marker_progress, 0.0f));\n\t\tsetWheelSize((int) attributes.getDimension(\n\t\t\t\tR.styleable.HoloCircularProgressBar_stroke_width, 10));\n\t\tmGravity = attributes.getInt(\n\t\t\t\tR.styleable.HoloCircularProgressBar_gravity, Gravity.CENTER);\n\n\t\tattributes.recycle();\n\n\t\tmThumbRadius = mCircleStrokeWidth * 2;\n\n\t\tmBackgroundColorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);\n\t\tmBackgroundColorPaint.setColor(mProgressBackgroundColor);\n\t\tmBackgroundColorPaint.setStyle(Paint.Style.STROKE);\n\t\tmBackgroundColorPaint.setStrokeWidth(mCircleStrokeWidth);\n\n\t\tmMarkerColorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);\n\t\tmMarkerColorPaint.setColor(mProgressBackgroundColor);\n\t\tmMarkerColorPaint.setStyle(Paint.Style.STROKE);\n\t\tmMarkerColorPaint.setStrokeWidth(mCircleStrokeWidth \/ 2);\n\n\t\tmProgressColorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);\n\t\tmProgressColorPaint.setColor(mProgressColor);\n\t\tmProgressColorPaint.setStyle(Paint.Style.STROKE);\n\t\tmProgressColorPaint.setStrokeWidth(mCircleStrokeWidth);\n\n\t\tmThumbColorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);\n\t\tmThumbColorPaint.setColor(mProgressColor);\n\t\tmThumbColorPaint.setStyle(Paint.Style.FILL_AND_STROKE);\n\t\tmThumbColorPaint.setStrokeWidth(mCircleStrokeWidth);\n\n\t\t\/\/ the view has now all properties and can be drawn\n\t\tmIsInitializing = false;\n\n\t}\n\n\t\/**\n\t * Compute insets. _______________________ |_________dx\/2_________|\n"
+	}
+}

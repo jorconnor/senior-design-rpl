@@ -1,15 +1,37 @@
+----------------------------------------------------
+--String Literals
+--
+--Currently matches for typical java string and character literals.
+--Does allow for escaped single and double quotes
+--A "aliased" version is provided to allow for suppressed output in other patterns
+----------------------------------------------------
+alias java.string_alias = ["] {([\\] / !["]) .}* ["]
+java.string = ["] {([\\] / !["]) .}* ["]
+
+alias java.char_alias = ['] {([\\] / ![']) .} ['] 
+java.char =  ['] {([\\] / ![']) .} [']
+
+----------------------------------------------------
 --Inline Comments
+--
+--Matches for inline java comments starting with "//". 
+--Output provides the context of the comment i.e. the text listed on the same line,
+--Values escaped within string literals are ignored.
+----------------------------------------------------
 alias java.line_comment_start= "//"
-alias java.catch_star_line_comment_start = {{!line_end !java.line_comment_start .}* java.line_comment_start}
-alias java.catch_star_quote = {{!line_end !["] .}* ["]}
 java.line_comment_text= {!line_end .}*
-alias java.line_comment_link = {{!java.line_comment_start !["] !line_end.}* ["] java.catch_star_line_comment_start java.catch_star_quote}
-alias java.line_comment_pre= {!java.line_comment_start !line_end .}*
-java.line_comment_context= {!java.line_comment_start !line_end .}*
+alias java.line_comment_pre= {java.string_alias? !java.line_comment_start !line_end .}*
+java.line_comment_context= {java.string_alias? !java.line_comment_start !line_end .}*
 java.line_comment_body= {java.line_comment_start java.line_comment_text}
 java.line_comment= {java.line_comment_context java.line_comment_body}
-java.line_comments= {{java.line_comment_link / java.line_comment / java.line_comment_body / java.line_comment_pre} .}*
+java.line_comments= {{ java.line_comment / java.line_comment_body / java.line_comment_pre} .}*
 
+----------------------------------------------------
+--Block Comments
+--
+--Matches for java block comments starting with "/*" and ending with "*/". 
+--Output simply provides the contents of the comment.
+----------------------------------------------------
 --Block Comments
 alias java.block_comment_start = "/*"
 alias java.block_comment_end = "*/"
