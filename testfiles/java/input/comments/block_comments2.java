@@ -265,10 +265,6 @@ public class HoloCircularProgressBar extends View {
 	}
 
 	/**
-	 * Compute insets. _______________________ |_________dx/2_________|
-	 * |......|.´''''`.|......| |-dx/2-|| View ||-dx/2-|
-	 * |______|`.____.´|______| |________ dx/2_________|
-	 * 
 	 * @param dx
 	 *            the dx the horizontal unfilled space
 	 * @param dy
