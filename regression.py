@@ -4,14 +4,11 @@ Created on Feb 8, 2017
 @author: Jordan
 '''
 
-import json
-import tempfile
-import re,copy
+import copy
 from jsondiff import diff
-from os import listdir,walk
-from os.path import isfile,join,exists,basename,splitext
+from os import walk
+from os.path import exists,splitext
 from subprocess import Popen, PIPE
-from macpath import split
 from string import digits
 
 testfiles = "./testfiles/"
@@ -66,15 +63,12 @@ def run_tests():
                         test = splitext(test_file)[0]
                         pattern = copy.copy(test)
                         pattern = pattern.translate(None,digits)
-                        proc = Popen('rosie -manifest ' + manifest_file + ' -wholefile -encode json ' + alias + "." + pattern + " " + resolved_input, stdout=PIPE, stderr=PIPE, shell=True)
-                        return_code = proc.wait()
-                        stdout,sterr = proc.communicate()
-                        if(sterr != ''): print(sterr)
+                        proc = Popen('rosie -manifest ' + manifest_file + ' -wholefile -encode json ' + alias + "." + pattern + " " + resolved_input, stdout=PIPE, stderr=PIPE,shell=True)
+                        stdout,stderr = proc.communicate()
+                        if(stderr != ''): print(stderr)
                         try:
-                            verified_out = json.loads(vOut.read())
-                            new_out = json.loads(stdout)
-                            diffs = diff(verified_out,new_out)
-                            if(len(diffs) > 0 or return_code != 0): 
+                            diffs = diff(vOut,stdout.replace("\\r",""))
+                            if len(diffs) > 0: 
                                 failures += 1
                                 print("-------------------------------------------------")
                                 print (test + " test failed for " + lang)
