@@ -4,12 +4,13 @@ Created on Feb 8, 2017
 @author: Jordan
 '''
 
-import copy
-from jsondiff import diff
+import copy,json
 from os import walk
 from os.path import exists,splitext
 from subprocess import Popen, PIPE
 from string import digits
+import difflib
+import sys
 
 testfiles = "./testfiles/"
 basic_path = testfiles + "$"
@@ -47,9 +48,23 @@ def resolve_output(lang_dir,test,test_dir):
     test_base = splitext(test)[0]
     return test_output.replace("$", lang_dir).replace("&", test_dir).replace("?",test_base)
 
+class HtmlPrinter:
+    
+    def __init__(self,id):
+        self.ts = id
+        self.file=open("./test" + str(self.ts) + ".html", 'w')
+        
+    def add_table(self,test,html):
+        self.file.write("<h1>" + test + "</h1>")
+        self.file.write(html)
+        
+    def close(self):
+        self.file.close()
+
 def run_tests():
     failures = 0
     testCount = 0
+    printer = HtmlPrinter(sys.argv[1])
     for dir in tests:
         for lang,alias in langs.items():
             base_path = resolve_base_input(lang,dir)
@@ -64,11 +79,19 @@ def run_tests():
                         pattern = copy.copy(test)
                         pattern = pattern.translate(None,digits)
                         proc = Popen('rosie -manifest ' + manifest_file + ' -wholefile -encode json ' + alias + "." + pattern + " " + resolved_input, stdout=PIPE, stderr=PIPE,shell=True)
-                        stdout,stderr = proc.communicate()
+                        stdout = ''
+                        stderr = ''
+                        for line in proc.stdout: stdout += line
+                        for line in proc.stderr: stderr += line
                         if(stderr != ''): print(stderr)
                         try:
-                            diffs = diff(vOut,stdout.replace("\\r",""))
-                            if len(diffs) > 0: 
+                            json1 = json.loads(vOut.read())
+                            json2 = json.loads(stdout)
+                            jsonOut1 = json.dumps(json1,indent=2, sort_keys=True)
+                            jsonOut2 = json.dumps(json2,indent=2, sort_keys=True)
+                            if jsonOut1 != jsonOut2:
+                                differ = difflib.HtmlDiff()
+                                printer.add_table(lang + " : " + test, ''.join(differ.make_file(jsonOut1.splitlines(True),jsonOut2.splitlines(True))))
                                 failures += 1
                                 print("-------------------------------------------------")
                                 print (test + " test failed for " + lang)
@@ -87,7 +110,9 @@ def run_tests():
     else:
         print(str(failures) + " tests failed")
     print("-------------------------------------------------")
+    printer.close()
     if(failures > 0): exit(1)
+    
             
 if __name__ == '__main__':
     run_tests()
