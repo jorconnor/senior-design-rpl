@@ -45,15 +45,4 @@ python:
 install: sudo pip install -r ./requirements.txt
 script: sudo python ./regression.py $TRAVIS_BUILD_NUMBER
 after_failure: |
-  if [ -n "$GITHUB_API_KEY" ]; then
-    cd "$TRAVIS_BUILD_DIR"
-    # This generates a `web` directory containing the website.
-    sudo mkdir web
-    sudo cd web
-    sudo git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/jorconnor/senior-design-rpl.wiki.git  gh-pages > /dev/null
-    cd gh-pages
-    sudo cp -Rf $HOME/results$TRAVIS_BUILD_NUMBER.html
-    sudo git add -f .
-    sudo git commit -m "Travis build $TRAVIS_BUILD_NUMBER pushed to gh-pages"
-    sudo git push -fq https://${GH_TOKEN}@github.com/jorconnor/senior-design-rpl.wiki.git gh-pages > /dev/null
-  fi
+   curl -F file=result$TRAVIS_BUILD_NUMBER.html -F channels=$results -F token=xoxp-127368995062-126013225137-168053931076-a335e8d171069fe01cf3ed2024ccd113 https://slack.com/api/files.upload

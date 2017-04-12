@@ -52,7 +52,7 @@ class HtmlPrinter:
     
     def __init__(self,id):
         self.ts = id
-        self.file=open("./test" + str(self.ts) + ".html", 'w')
+        self.file=open("./result" + str(self.ts) + ".html", 'w')
         
     def add_table(self,test,html):
         self.file.write("<h1>" + test + "</h1>")
