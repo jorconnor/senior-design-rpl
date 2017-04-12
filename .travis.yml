@@ -45,4 +45,4 @@ python:
 install: sudo pip install -r ./requirements.txt
 script: sudo python ./regression.py $TRAVIS_BUILD_NUMBER
 after_failure: |
-   curl -F file=@result$TRAVIS_BUILD_NUMBER.html -F channels=#results -F token=xoxp-127368995062-126013225137-168053931076-a335e8d171069fe01cf3ed2024ccd113 https://slack.com/api/files.upload
+   curl -F file=@result$TRAVIS_BUILD_NUMBER.html -F channels=#results -F token=$SLACK_TOKEN https://slack.com/api/files.upload
