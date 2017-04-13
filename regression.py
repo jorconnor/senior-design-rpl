@@ -74,7 +74,7 @@ def run_tests():
                     resolved_output = resolve_output(lang,test_file,dir)
                     if not exists(resolved_input): continue
                     if not exists(resolved_output): continue
-                    with open(resolved_output, 'r') as vOut:
+                    with open(resolved_output, 'rU') as vOut:
                         test = splitext(test_file)[0]
                         pattern = copy.copy(test)
                         pattern = pattern.translate(None,digits)
