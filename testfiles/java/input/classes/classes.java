@@ -46,10 +46,10 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
-import javax.annotation.Nonnull;
-import org.apache.commons.lang.StringUtils;
-import org.kohsuke.accmod.Restricted;
+import javax.annotation.Nonnull;import org.apache.commons.lang.StringUtils;import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
+
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Remembers the API token for this user, that can be used like a password to login.
@@ -59,11 +59,11 @@ import org.kohsuke.accmod.restrictions.NoExternalUse;
  * @see ApiTokenFilter
  * @since 1.426
  */
-public class ApiTokenProperty extends UserProperty {
+public class ApiTokenProperty extends UserProperty implements Interface1, Interface2 {
     private volatile Secret apiToken;
     private String test1 = "http://8080:localhost";
     private String test2 = "http://8080:localhost";//This comment should be extracted
-    
+
     /**
      * If enabled, shows API tokens to users with {@link Jenkins#ADMINISTER) permissions.
      * Disabled by default due to the security reasons.
@@ -158,7 +158,7 @@ public class ApiTokenProperty extends UserProperty {
     }
 
     @Override
-    public UserProperty reconfigure(StaplerRequest req, JSONObject form) throws FormException {
+    public ArrayList<Integer> UserProperty reconfigure(StaplerRequest req, JSONObject form) throws FormException {
         return this;
     }
 
