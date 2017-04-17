@@ -4,14 +4,13 @@ Created on Feb 8, 2017
 @author: Jordan
 '''
 
-import json
-import tempfile
-import re,copy
-from jsondiff import diff
-from os import listdir,walk
-from os.path import isfile,join,exists,basename,splitext
+import copy,json
+from os import walk
+from os.path import exists,splitext
 from subprocess import Popen, PIPE
-from macpath import split
+from string import digits
+import difflib
+import sys
 
 testfiles = "./testfiles/"
 basic_path = testfiles + "$"
@@ -49,9 +48,23 @@ def resolve_output(lang_dir,test,test_dir):
     test_base = splitext(test)[0]
     return test_output.replace("$", lang_dir).replace("&", test_dir).replace("?",test_base)
 
+class HtmlPrinter:
+    
+    def __init__(self,id):
+        self.ts = id
+        self.file=open("./result" + str(self.ts) + ".html", 'w')
+        
+    def add_table(self,test,html):
+        self.file.write("<h1>" + test + "</h1>")
+        self.file.write(html)
+        
+    def close(self):
+        self.file.close()
+
 def run_tests():
     failures = 0
     testCount = 0
+    printer = HtmlPrinter(sys.argv[1])
     for dir in tests:
         for lang,alias in langs.items():
             base_path = resolve_base_input(lang,dir)
@@ -61,19 +74,24 @@ def run_tests():
                     resolved_output = resolve_output(lang,test_file,dir)
                     if not exists(resolved_input): continue
                     if not exists(resolved_output): continue
-                    with open(resolved_output, 'r') as vOut:
+                    with open(resolved_output, 'rU') as vOut:
                         test = splitext(test_file)[0]
                         pattern = copy.copy(test)
-                        re.sub(r'_u\d_v\d', '', pattern)
-                        proc = Popen('rosie -manifest ' + manifest_file + ' -wholefile -encode json ' + alias + "." + pattern + " " + resolved_input, stdout=PIPE, stderr=PIPE, shell=True)
-                        return_code = proc.wait()
-                        stdout,sterr = proc.communicate()
-                        if(sterr != ''): print(sterr)
+                        pattern = pattern.translate(None,digits)
+                        proc = Popen('rosie -manifest ' + manifest_file + ' -wholefile -encode json ' + alias + "." + pattern + " " + resolved_input, stdout=PIPE, stderr=PIPE,shell=True)
+                        stdout = ''
+                        stderr = ''
+                        for line in proc.stdout: stdout += line
+                        for line in proc.stderr: stderr += line
+                        if(stderr != ''): print(stderr)
                         try:
-                            verified_out = json.loads(vOut.read())
-                            new_out = json.loads(stdout)
-                            diffs = diff(verified_out,new_out)
-                            if(len(diffs) > 0 or return_code != 0): 
+                            json1 = json.loads(vOut.read())
+                            json2 = json.loads(stdout)
+                            jsonOut1 = json.dumps(json1,indent=2, sort_keys=True)
+                            jsonOut2 = json.dumps(json2,indent=2, sort_keys=True)
+                            if jsonOut1 != jsonOut2:
+                                differ = difflib.HtmlDiff()
+                                printer.add_table(lang + " : " + test, ''.join(differ.make_file(jsonOut1.splitlines(True),jsonOut2.splitlines(True))))
                                 failures += 1
                                 print("-------------------------------------------------")
                                 print (test + " test failed for " + lang)
@@ -92,7 +110,9 @@ def run_tests():
     else:
         print(str(failures) + " tests failed")
     print("-------------------------------------------------")
+    printer.close()
     if(failures > 0): exit(1)
+    
             
 if __name__ == '__main__':
     run_tests()
