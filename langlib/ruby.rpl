@@ -30,3 +30,19 @@ alias rb.dependencies_pre = {!rb.load !line_end .}*
 
 rb.dependencies = {{rb.dependency / rb.dependencies_pre} line_end}*
 
+--Functions
+alias rb.def = "def "
+rb.funcname = {!"(" ![:space:] !";" .}+
+rb.param = {!")" !"," !";" ![:space:] !"=" .}+
+rb.paramval = {!")" !"," !";" ![:space:] .}+
+rb.paramdef = rb.param "=" rb.paramval
+rb.paramlist = {{ [ \t]* {rb.paramdef / rb.param} [ \t]* ","}* [ \t]* {rb.paramdef / rb.param}}
+rb.funcdef = {rb.def rb.funcname "("? rb.paramlist? ")"? (line_end / ";")}
+rb.functions = {{!rb.funcdef .}* rb.funcdef? .}* {!rb.funcdef .}*
+
+--Class Defs
+rb.classname = [[:alnum:][_]]+
+rb.superclass = [[:alnum:][_]]+
+rb.class = {"class" [:space:]+ rb.classname ([:space:]* "<" [:space:]* rb.superclass)? {!line_end .}* line_end}
+rb.classes = {{!rb.class .}* rb.class .}* {!rb.class .}*
+

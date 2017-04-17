@@ -1,0 +1,38 @@
+{
+	"java.strings" : {
+		"subs" : [{
+				"java.string" : {
+					"text" : "\"Software\"",
+					"pos" : 214
+				}
+			}, {
+				"java.string" : {
+					"text" : "\"AS IS\"",
+					"pos" : 701
+				}
+			}, {
+				"java.string" : {
+					"text" : "\"US-ASCII\"",
+					"pos" : 2094
+				}
+			}, {
+				"java.string" : {
+					"text" : "\"US-ASCII\"",
+					"pos" : 2156
+				}
+			}, {
+				"java.string" : {
+					"text" : "\"This is string 1\"",
+					"pos" : 2595
+				}
+			}, {
+				"java.string" : {
+					"text" : "\"This is string 2\"",
+					"pos" : 3414
+				}
+			}
+		],
+		"text" : "\/*\r\n * The MIT License\r\n *\r\n * Copyright (c) 2011, CloudBees, Inc.\r\n *\r\n * Permission is hereby granted, free of charge, to any person obtaining a copy\r\n * of this software and associated documentation files (the \"Software\"), to deal\r\n * in the Software without restriction, including without limitation the rights\r\n * to use, copy, modify, merge, publish, distribute, sublicense, and\/or sell\r\n * copies of the Software, and to permit persons to whom the Software is\r\n * furnished to do so, subject to the following conditions:\r\n *\r\n * The above copyright notice and this permission notice shall be included in\r\n * all copies or substantial portions of the Software.\r\n *\r\n * THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\r\n * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\r\n * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\r\n * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\r\n * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\r\n * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\r\n * THE SOFTWARE.\r\n *\/\r\npackage jenkins.security;\r\n\r\nimport hudson.Extension;\r\nimport jenkins.util.SystemProperties;\r\nimport hudson.Util;\r\nimport hudson.model.Descriptor.FormException;\r\nimport hudson.model.User;\r\nimport hudson.model.UserProperty;\r\nimport hudson.model.UserPropertyDescriptor;\r\nimport hudson.security.ACL;\r\nimport hudson.util.HttpResponses;\r\nimport hudson.util.Secret;\r\n\r\npublic class ApiTokenProperty extends UserProperty {\r\n\r\n    \/**\r\n     * We don't let the external code set the API token,\r\n     * but for the initial value of the token we need to compute the seed by ourselves.\r\n     *\/\r\n    \/*package*\/ ApiTokenProperty(String seed) {\r\n        apiToken = Secret.fromString(seed);\r\n    }\r\n    boolean matchesPassword(String password, String username) {\r\n        String token = getApiTokenInsecure();\r\n        \/\/ String.equals isn't constant time, but this is\r\n        return MessageDigest.isEqual(password.getBytes(Charset.forName(\"US-ASCII\")),\r\n                token.getBytes(Charset.forName(\"US-ASCII\")));\r\n    }\r\n\r\n    private boolean hasPermissionToSeeToken(String temp) {\r\n        final Jenkins jenkins = Jenkins.getInstance();\r\n\r\n        \/\/ Administrators can do whatever they want\r\n        if (SHOW_TOKEN_TO_ADMINS && jenkins.hasPermission(Jenkins.ADMINISTER)) {\r\n            return true;\r\n        }\r\n\r\n\r\n        final User current = User.current();\r\n        if (current == null) { \/\/ Anonymous\r\n            String string1 = \"This is string 1\";\r\n            return false;\r\n        }\r\n\r\n        \/\/ SYSTEM user is always eligible to see tokens\r\n        if (Jenkins.getAuthentication() == ACL.SYSTEM) {\r\n            return true;\r\n        }\r\n\r\n        \/\/TODO: replace by IdStrategy in newer Jenkins versions\r\n        \/\/return User.idStrategy().equals(user.getId(), current.getId());\r\n        return StringUtils.equals(user.getId(), current.getId());\r\n    }\r\n\r\n    public static void changeApiToken() throws IOException {\r\n        user.checkPermission(Jenkins.ADMINISTER);\r\n        _changeApiToken();\r\n        user.save();\r\n    }\r\n\r\n    private void _changeApiToken() {\r\n        byte[] random = new byte[16];   \/\/ 16x8=128bit worth of randomness, since we use md5 digest as the API token\r\n        RANDOM.nextBytes(random);\r\n        String string2 = \"This is string 2\";\r\n        apiToken = Secret.fromString(Util.toHexString(random));\r\n    }\r\n\r\n    @Override\r\n    public ArrayList<Integer> reconfigure(StaplerRequest req, JSONObject form) throws FormException {\r\n        return this;\r\n    }\r\n}\r\n",
+		"pos" : 1
+	}
+}

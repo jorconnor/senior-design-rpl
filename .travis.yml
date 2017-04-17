@@ -1,7 +1,10 @@
-# 
+#
 os:
   - linux
 
+notifications:
+  slack: seniordesignibm2-2017:Jgiti7Vp36oyhMfFkJTHGZyg
+  
 branches:
   only:
   - master
@@ -40,4 +43,6 @@ language: python
 python:
    - "2.7"
 install: sudo pip install -r ./requirements.txt
-script: sudo python ./regression.py
+script: sudo python ./regression.py $TRAVIS_BUILD_NUMBER
+after_failure: |
+   curl -F file=@result$TRAVIS_BUILD_NUMBER.html -F channels=#results -F token=$SLACK_TOKEN https://slack.com/api/files.upload
