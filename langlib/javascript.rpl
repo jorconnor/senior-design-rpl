@@ -85,7 +85,7 @@ alias js.function_body_clean = {!js.end_block .}*
 js.function_body = {js.whitespace js.start_block js.function_body_clean js.end_block}
 js.function_call =  js.function  js.function_name js.parameters 
 
-js.function = { { js.function_call } / .}* 
+js.functions = { { js.function_call } / .}* 
 
 --Exceptions
 alias js.throw = "throw "
