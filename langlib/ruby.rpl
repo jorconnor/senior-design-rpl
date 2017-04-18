@@ -49,7 +49,7 @@ rb.block_comments = {rb.block_comment_pre rb.block_comment_comment}*
 -- Matches dependencies declared with "load", "require", or
 -- "require_relative".
 --
--- Run: rb.dependencies
+-- Run: rosie -wholefile rb.dependencies <ruby-source-file>
 -- Structure: rb.dependencies       // Parent pattern to match all dependencies in a file
 --                \- rb.dependency  // Matches a single dependency
 --                    \- rb.module  // Name of the module being imported
