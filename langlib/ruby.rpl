@@ -1,27 +1,60 @@
---Inline Comments
+-------------------------------
+-- Inline Comments
+--
+-- Matches in line comments starting with a '#'. Also
+-- captures the code preceeding the comment on the same line.
+--
+-- Run: rosie -wholefile rb.line_comments <ruby-source-file>
+-- Structure: rb.line_comments                      // Parent pattern to extract all comments from file
+--                \- rb.line_comment                // Matches a single line comment
+--                    \- rb.line_comment_context    // The code on the line preceeding the comment
+--                    \- rb.line_comment_body       // Matches the whole comment text
+--                        \- rb.line_comment_text   // The text of the comment
+-------------------------------
+
 alias rb.line_comment_start= "#"
 rb.line_comment_text= {!line_end .}*
 alias rb.line_comment_pre= {!rb.line_comment_start !line_end .}*
 rb.line_comment_context= {!rb.line_comment_start !line_end .}*
 rb.line_comment_body= {rb.line_comment_start rb.line_comment_text}
 rb.line_comment= {rb.line_comment_context rb.line_comment_body}
+
 rb.line_comments= {{rb.line_comment / rb.line_comment_body / rb.line_comment_pre} .}*
 
---Block Comments
-
---- Block comments in ruby start with a "=begin" on a new line
---- and end with a "=end" on a new line. Both "=begin" and "=end"
---- must appear first on a line.
+-------------------------------
+-- Block Comments
+--
+-- Matches block comments. Block comments in ruby 
+-- start with a "=begin" on a new line and end with 
+-- a "=end" on a new line. Both "=begin" and "=end"
+-- must appear first on a line.
+--
+-- Run: rosie -wholefile rb.block_comments <ruby-source-file>
+-- Structure: rb.block_comments                // Parent pattern to match all block comments
+--                \- rb.block_comment_comment  // Matches a single block comment
+--                    \- rb.comment_body       // Matches the body of a block comment
+-------------------------------
 
 alias rb.block_comment_start = "\n=begin"
 alias rb.block_comment_end = "\n=end"
-
 rb.comment_body = {!rb.block_comment_end .}*
 rb.block_comment_comment = {rb.block_comment_start rb.comment_body rb.block_comment_end}
 alias rb.block_comment_pre = {!rb.block_comment_start .}*
+
 rb.block_comments = {rb.block_comment_pre rb.block_comment_comment}*
 
---Dependencies
+-------------------------------
+-- Dependencies
+--
+-- Matches dependencies declared with "load", "require", or
+-- "require_relative".
+--
+-- Run: rb.dependencies
+-- Structure: rb.dependencies       // Parent pattern to match all dependencies in a file
+--                \- rb.dependency  // Matches a single dependency
+--                    \- rb.module  // Name of the module being imported
+-------------------------------
+
 alias rb.load = "load " / "require " / "require_relative "
 rb.module = {!["'] .}*
 alias rb.module_lit = ["'] rb.module
@@ -30,7 +63,23 @@ alias rb.dependencies_pre = {!rb.load !line_end .}*
 
 rb.dependencies = {{rb.dependency / rb.dependencies_pre} line_end}*
 
---Functions
+-------------------------------
+-- Functions
+--
+-- Pattern to match function definitions. Does not
+-- capture function bodies.
+--
+-- Run: rosie -wholefile rb.functions <ruby-source-file>
+-- Structure: rb.functions                    // Parent pattern that matches all function definitions
+--                \- rb.funcdef               // Matches an entire function definition
+--                    \- rb.funcname          // Name of the function
+--                    \- rb.paramlist         // Matches a list of parameters
+--                        \- rb.paramdef      // Catches parameter defintions in the paramlist
+--                            \- rb.param     // The name of the parameter being defined
+--                            \- rb.paramval  // The assigned value of a parameter definition
+--                        \- rb.param         // The text of a non assignment parameter
+-------------------------------
+
 alias rb.def = "def "
 rb.funcname = {!"(" ![:space:] !";" .}+
 rb.param = {!")" !"," !";" ![:space:] !"=" .}+
@@ -38,11 +87,25 @@ rb.paramval = {!")" !"," !";" ![:space:] .}+
 rb.paramdef = rb.param "=" rb.paramval
 rb.paramlist = {{ [ \t]* {rb.paramdef / rb.param} [ \t]* ","}* [ \t]* {rb.paramdef / rb.param}}
 rb.funcdef = {rb.def rb.funcname "("? rb.paramlist? ")"? (line_end / ";")}
+
 rb.functions = {{!rb.funcdef .}* rb.funcdef? .}* {!rb.funcdef .}*
 
---Class Defs
+-------------------------------
+-- Class Defs
+--
+-- Pattern to match all class definitions.
+-- Does not match class bodies.
+--
+-- Run: rosie -wholefile rb.classes <ruby-source-file>
+-- Structure: rb.classes                // Parent pattern to match all class definitions in a file
+--                \- rb.class           // Matches an entire class definition
+--                    \- rb.classname   // Name of the class being defined
+--                    \- rb.superclass  // Name of the super class if there is one
+-------------------------------
+
 rb.classname = [[:alnum:][_]]+
 rb.superclass = [[:alnum:][_]]+
 rb.class = {"class" [:space:]+ rb.classname ([:space:]* "<" [:space:]* rb.superclass)? {!line_end .}* line_end}
+
 rb.classes = {{!rb.class .}* rb.class .}* {!rb.class .}*
 
