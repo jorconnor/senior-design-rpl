@@ -1,0 +1,182 @@
+{
+    "js.dependencies": {
+        "pos": 1,
+        "text": "#!/usr/bin/env node\n\nimport meow as cat from 'meow'\nimport {chalk} from 'chalk'\nimport map from 'lodash/fp/map'\nimport license as lic,{ list as lis } from './lissie'\nimport './lissie'\n\nconst cli = meow(`\n  Usage\n    $ license <license>\n  Options\n    --author,  -a\n    --year,    -y\n    --email,   -e\n    --project, -p\n  Examples\n    $ license\n    $ license mit\n    $ license mit -a \"Zach Orlovsky\"\n`, {\n  alias: {\n    a: 'author',\n    y: 'year',\n    e: 'email',\n    p: 'project'\n  }\n})\n\nconst highlight = text => text.replace(\n  /\\{year\\}|\\{author\\}|\\{project\\}|\\{email\\}/gi,\n  matched => chalk.black.bgYellow(matched)\n)\n\nif (cli.input[0] === 'list') {\n  list()\n    .then(map(l => console.log('⚫', l)))\n    .then(() => process.exit())\n}\n\nlicense(cli.input[0] || 'mit', {\n  author: cli.flags.author,\n  year: cli.flags.year,\n  email: cli.flags.email,\n  project: cli.flags.project\n})\n  .then(highlight)\n  .then(text => console.log(text))\n  .catch(({ message }) => console.log(message))\n",
+        "subs": [
+            {
+                "js.dependency": {
+                    "pos": 22,
+                    "text": "import meow as cat from 'meow'",
+                    "subs": [
+                        {
+                            "js.member": {
+                                "pos": 29,
+                                "text": "meow as cat",
+                                "subs": [
+                                    {
+                                        "js.member_name": {
+                                            "pos": 29,
+                                            "text": "meow"
+                                        }
+                                    },
+                                    {
+                                        "js.member_alias": {
+                                            "pos": 37,
+                                            "text": "cat"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "js.module": {
+                                "pos": 46,
+                                "text": "'meow'"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "js.dependency": {
+                    "pos": 53,
+                    "text": "import {chalk} from 'chalk'",
+                    "subs": [
+                        {
+                            "js.member": {
+                                "pos": 61,
+                                "text": "chalk",
+                                "subs": [
+                                    {
+                                        "js.member_name": {
+                                            "pos": 61,
+                                            "text": "chalk"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "js.module": {
+                                "pos": 73,
+                                "text": "'chalk'"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "js.dependency": {
+                    "pos": 81,
+                    "text": "import map from 'lodash/fp/map'",
+                    "subs": [
+                        {
+                            "js.member": {
+                                "pos": 88,
+                                "text": "map",
+                                "subs": [
+                                    {
+                                        "js.member_name": {
+                                            "pos": 88,
+                                            "text": "map"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "js.module": {
+                                "pos": 97,
+                                "text": "'lodash/fp/map'"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "js.dependency": {
+                    "pos": 113,
+                    "text": "import license as lic,{ list as lis } from './lissie'",
+                    "subs": [
+                        {
+                            "js.multi_members": {
+                                "pos": 120,
+                                "text": "license as lic,{ list as lis }",
+                                "subs": [
+                                    {
+                                        "js.member": {
+                                            "pos": 120,
+                                            "text": "license as lic",
+                                            "subs": [
+                                                {
+                                                    "js.member_name": {
+                                                        "pos": 120,
+                                                        "text": "license"
+                                                    }
+                                                },
+                                                {
+                                                    "js.member_alias": {
+                                                        "pos": 131,
+                                                        "text": "lic"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "js.member": {
+                                            "pos": 136,
+                                            "text": " list as lis ",
+                                            "subs": [
+                                                {
+                                                    "js.member_name": {
+                                                        "pos": 136,
+                                                        "text": " list"
+                                                    }
+                                                },
+                                                {
+                                                    "js.member_alias": {
+                                                        "pos": 145,
+                                                        "text": "lis "
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "js.module": {
+                                "pos": 156,
+                                "text": "'./lissie'"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "js.dependency": {
+                    "pos": 167,
+                    "text": "import './lissie'",
+                    "subs": [
+                        {
+                            "js.dependencies_module": {
+                                "pos": 167,
+                                "text": "import './lissie'",
+                                "subs": [
+                                    {
+                                        "js.module": {
+                                            "pos": 174,
+                                            "text": "'./lissie'"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
