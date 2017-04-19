@@ -1,3 +1,7 @@
+--String Literals
+alias js.string_start = ["] / [']
+js.string_text = { !js.string_start {"\\\"" / "\\\'" /.}}*
+js.strings = { { js.string_start js.string_text js.string_start }/ .}*
 
 --Inline Comments
 alias js.line_comment_start= "//"
@@ -81,4 +85,13 @@ alias js.function_body_clean = {!js.end_block .}*
 js.function_body = {js.whitespace js.start_block js.function_body_clean js.end_block}
 js.function_call =  js.function  js.function_name js.parameters 
 
-js.function = { { js.function_call } / .}* 
+js.functions = { { js.function_call } / .}* 
+
+--Exceptions
+alias js.throw = "throw "
+alias js.new = "new "
+js.exception = { !statement_end .}*
+js.exceptions = {{ js.throw js.new? js.exception statement_end } / .}*
+
+
+
