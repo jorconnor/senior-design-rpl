@@ -1,1 +1,230 @@
-{"go.functions":{"subs":[{"go.function_def":{"subs":[{"go.func":{"pos":279,"text":"func "}},{"go.function_name":{"pos":284,"text":"MakeRpc"}},{"go.parameters":{"subs":[{"go.single_param":{"pos":292,"text":"rpcName string"}},{"go.single_param":{"pos":307,"text":" fptr interface{}"}}],"pos":291,"text":"(rpcName string, fptr interface{})"}},{"go.return":{"subs":[{"go.single_return":{"pos":327,"text":"err error"}}],"pos":326,"text":"(err error)"}}],"pos":279,"text":"func MakeRpc(rpcName string, fptr interface{}) (err error)"}},{"go.function_def":{"subs":[{"go.func":{"pos":975,"text":"func "}},{"go.function_name":{"pos":980,"text":"doThing"}},{"go.parameters":{"subs":[{"go.single_param":{"pos":988,"text":""}}],"pos":987,"text":"()"}}],"pos":975,"text":"func doThing() "}},{"go.function_def":{"subs":[{"go.func":{"pos":1082,"text":"func "}},{"go.function_name":{"pos":1087,"text":"pcheck"}},{"go.parameters":{"subs":[{"go.single_param":{"pos":1094,"text":"e error"}}],"pos":1093,"text":"(e error)"}}],"pos":1082,"text":"func pcheck(e error) "}},{"go.function_def":{"subs":[{"go.func":{"pos":1141,"text":"func "}},{"go.function_name":{"pos":1146,"text":"min"}},{"go.parameters":{"subs":[{"go.single_param":{"pos":1150,"text":"a"}},{"go.single_param":{"pos":1152,"text":" b int"}}],"pos":1149,"text":"(a, b int)"}},{"go.return":{"subs":[{"go.single_return":{"pos":1161,"text":"int"}},{"go.single_return":{"pos":1165,"text":" int"}}],"pos":1160,"text":"(int, int)"}}],"pos":1141,"text":"func min(a, b int) (int, int)"}},{"go.function_def":{"subs":[{"go.func":{"pos":1218,"text":"func "}},{"go.function_name":{"pos":1223,"text":"max"}},{"go.parameters":{"subs":[{"go.single_param":{"pos":1227,"text":"a"}},{"go.single_param":{"pos":1229,"text":" b int"}}],"pos":1226,"text":"(a, b int)"}}],"pos":1218,"text":"func max(a, b int) "}}],"pos":1,"text":"\/* This file is sourced under MIT license from siddontang\/go *\/\n\npackage rpc\n\nimport (\n\t\"container\/list\"\n\t\"fmt\"\n\t\"reflect\"\n\t\"sync\"\n)\n\ntype Client struct { \/\/ Client struct\n\tsync.Mutex\n\n\tnetwork string\n\taddr    string\n\n\tmaxIdleConns int\n\n\tconns *list.List\n}\n\n\/\/ MakeRpc function\nfunc MakeRpc(rpcName string, fptr interface{}) (err error) {\n\tdefer func() {\n\t\tif e := recover(); e != nil {\n\t\t\terr = fmt.Errorf(\"make rpc error\")\n\t\t}\n\t}()\n\n\tfn := reflect.ValueOf(fptr).Elem()\n\n\tnOut := fn.Type().NumOut()\n\tif nOut == 0 || fn.Type().Out(nOut-1).Kind() != reflect.Interface {\n\t\terr = fmt.Errorf(\"%s return final output param must be error interface\", rpcName)\n\t\treturn\n\t}\n\n\t_, b := fn.Type().Out(nOut - 1).MethodByName(\"Error\")\n\tif !b {\n\t\terr = fmt.Errorf(\"%s return final output param must be error interface\", rpcName)\n\t\treturn\n\t}\n\n\tf := func(in []reflect.Value) []reflect.Value {\n\t\treturn c.call(fn, rpcName, in)\n\t}\n\n\tv := reflect.MakeFunc(fn.Type(), f)\n\tfn.Set(v)\n\n\treturn\n}\n\n\nfunc doThing() {\n\ta, b int\n}\n\n\n\/* Following functions are sourced under MIT license from brentp\/goleft *\/\n\nfunc pcheck(e error) {\n\tif e != nil {\n\t\tlog.Fatal(e)\n\t}\n}\n\nfunc min(a, b int) (int, int) {\n\tif a < b {\n\t\treturn a, b\n\t}\n\treturn a, b\n}\n\nfunc max(a, b int) int {\n\tif a > b {\n\t\treturn a\n\t}\n\treturn b\n}\n"}}
+{
+    "go.functions": {
+        "subs": [
+            {
+                "go.function_def": {
+                    "subs": [
+                        {
+                            "go.func": {
+                                "pos": 279,
+                                "text": "func "
+                            }
+                        },
+                        {
+                            "go.function_name": {
+                                "pos": 284,
+                                "text": "MakeRpc"
+                            }
+                        },
+                        {
+                            "go.parameters": {
+                                "subs": [
+                                    {
+                                        "go.single_param": {
+                                            "pos": 292,
+                                            "text": "rpcName string"
+                                        }
+                                    },
+                                    {
+                                        "go.single_param": {
+                                            "pos": 307,
+                                            "text": " fptr interface{}"
+                                        }
+                                    }
+                                ],
+                                "pos": 291,
+                                "text": "(rpcName string, fptr interface{})"
+                            }
+                        },
+                        {
+                            "go.return": {
+                                "subs": [
+                                    {
+                                        "go.single_return": {
+                                            "pos": 327,
+                                            "text": "err error"
+                                        }
+                                    }
+                                ],
+                                "pos": 326,
+                                "text": "(err error)"
+                            }
+                        }
+                    ],
+                    "pos": 279,
+                    "text": "func MakeRpc(rpcName string, fptr interface{}) (err error)"
+                }
+            },
+            {
+                "go.function_def": {
+                    "subs": [
+                        {
+                            "go.func": {
+                                "pos": 975,
+                                "text": "func "
+                            }
+                        },
+                        {
+                            "go.function_name": {
+                                "pos": 980,
+                                "text": "doThing"
+                            }
+                        },
+                        {
+                            "go.parameters": {
+                                "subs": [
+                                    {
+                                        "go.single_param": {
+                                            "pos": 988,
+                                            "text": ""
+                                        }
+                                    }
+                                ],
+                                "pos": 987,
+                                "text": "()"
+                            }
+                        }
+                    ],
+                    "pos": 975,
+                    "text": "func doThing() "
+                }
+            },
+            {
+                "go.function_def": {
+                    "subs": [
+                        {
+                            "go.func": {
+                                "pos": 1082,
+                                "text": "func "
+                            }
+                        },
+                        {
+                            "go.function_name": {
+                                "pos": 1087,
+                                "text": "pcheck"
+                            }
+                        },
+                        {
+                            "go.parameters": {
+                                "subs": [
+                                    {
+                                        "go.single_param": {
+                                            "pos": 1094,
+                                            "text": "e error"
+                                        }
+                                    }
+                                ],
+                                "pos": 1093,
+                                "text": "(e error)"
+                            }
+                        }
+                    ],
+                    "pos": 1082,
+                    "text": "func pcheck(e error) "
+                }
+            },
+            {
+                "go.function_def": {
+                    "subs": [
+                        {
+                            "go.func": {
+                                "pos": 1141,
+                                "text": "func "
+                            }
+                        },
+                        {
+                            "go.function_name": {
+                                "pos": 1146,
+                                "text": "min"
+                            }
+                        },
+                        {
+                            "go.parameters": {
+                                "subs": [
+                                    {
+                                        "go.single_param": {
+                                            "pos": 1150,
+                                            "text": "a"
+                                        }
+                                    },
+                                    {
+                                        "go.single_param": {
+                                            "pos": 1152,
+                                            "text": " b int"
+                                        }
+                                    }
+                                ],
+                                "pos": 1149,
+                                "text": "(a, b int)"
+                            }
+                        },
+                        {
+                            "go.return": {
+                                "subs": [
+                                    {
+                                        "go.single_return": {
+                                            "pos": 1161,
+                                            "text": "int"
+                                        }
+                                    },
+                                    {
+                                        "go.single_return": {
+                                            "pos": 1165,
+                                            "text": " int"
+                                        }
+                                    }
+                                ],
+                                "pos": 1160,
+                                "text": "(int, int)"
+                            }
+                        }
+                    ],
+                    "pos": 1141,
+                    "text": "func min(a, b int) (int, int)"
+                }
+            },
+            {
+                "go.function_def": {
+                    "subs": [
+                        {
+                            "go.func": {
+                                "pos": 1218,
+                                "text": "func "
+                            }
+                        },
+                        {
+                            "go.function_name": {
+                                "pos": 1223,
+                                "text": "max"
+                            }
+                        },
+                        {
+                            "go.parameters": {
+                                "subs": [
+                                    {
+                                        "go.single_param": {
+                                            "pos": 1227,
+                                            "text": "a"
+                                        }
+                                    },
+                                    {
+                                        "go.single_param": {
+                                            "pos": 1229,
+                                            "text": " b int"
+                                        }
+                                    }
+                                ],
+                                "pos": 1226,
+                                "text": "(a, b int)"
+                            }
+                        }
+                    ],
+                    "pos": 1218,
+                    "text": "func max(a, b int) "
+                }
+            }
+        ],
+        "pos": 1,
+        "text": "/* This file is sourced under MIT license from siddontang/go */\n\npackage rpc\n\nimport (\n\t\"container/list\"\n\t\"fmt\"\n\t\"reflect\"\n\t\"sync\"\n)\n\ntype Client struct { // Client struct\n\tsync.Mutex\n\n\tnetwork string\n\taddr    string\n\n\tmaxIdleConns int\n\n\tconns *list.List\n}\n\n// MakeRpc function\nfunc MakeRpc(rpcName string, fptr interface{}) (err error) {\n\tdefer func() {\n\t\tif e := recover(); e != nil {\n\t\t\terr = fmt.Errorf(\"make rpc error\")\n\t\t}\n\t}()\n\n\tfn := reflect.ValueOf(fptr).Elem()\n\n\tnOut := fn.Type().NumOut()\n\tif nOut == 0 || fn.Type().Out(nOut-1).Kind() != reflect.Interface {\n\t\terr = fmt.Errorf(\"%s return final output param must be error interface\", rpcName)\n\t\treturn\n\t}\n\n\t_, b := fn.Type().Out(nOut - 1).MethodByName(\"Error\")\n\tif !b {\n\t\terr = fmt.Errorf(\"%s return final output param must be error interface\", rpcName)\n\t\treturn\n\t}\n\n\tf := func(in []reflect.Value) []reflect.Value {\n\t\treturn c.call(fn, rpcName, in)\n\t}\n\n\tv := reflect.MakeFunc(fn.Type(), f)\n\tfn.Set(v)\n\n\treturn\n}\n\n\nfunc doThing() {\n\ta, b int\n}\n\n\n/* Following functions are sourced under MIT license from brentp/goleft */\n\nfunc pcheck(e error) {\n\tif e != nil {\n\t\tlog.Fatal(e)\n\t}\n}\n\nfunc min(a, b int) (int, int) {\n\tif a < b {\n\t\treturn a, b\n\t}\n\treturn a, b\n}\n\nfunc max(a, b int) int {\n\tif a > b {\n\t\treturn a\n\t}\n\treturn b\n}\n"
+    }
+}
