@@ -1,120 +1,120 @@
 {
     "r.line_comments": {
+        "text": "# Read file\nstatesInfo <- read.csv('stateData.csv')\n# subset data by region if region is 1\nsubset(statesInfo, state.region == 1)\nstateSubset <- statesInfo[statesInfo$illiteracy == 0.5, ]\n\n# Attributes and dimensions of data\ndim(stateSubset)\nstr(stateSubset)\n\nstateSubset # print out stateSubset\n",
         "subs": [
             {
                 "r.line_comment": {
+                    "text": "# Read file",
                     "subs": [
                         {
                             "r.line_comment_context": {
-                                "pos": 1,
-                                "text": ""
+                                "text": "",
+                                "pos": 1
                             }
                         },
                         {
                             "r.line_comment_body": {
+                                "text": "# Read file",
                                 "subs": [
                                     {
                                         "r.line_comment_text": {
-                                            "pos": 2,
-                                            "text": " Read file"
+                                            "text": "Read file",
+                                            "pos": 3
                                         }
                                     }
                                 ],
-                                "pos": 1,
-                                "text": "# Read file"
+                                "pos": 1
                             }
                         }
                     ],
-                    "pos": 1,
-                    "text": "# Read file"
+                    "pos": 1
                 }
             },
             {
                 "r.line_comment": {
+                    "text": "statesInfo <- read.csv('stateData.csv')\n# subset data by region if region is 1",
                     "subs": [
                         {
                             "r.line_comment_context": {
-                                "pos": 53,
-                                "text": ""
+                                "text": "statesInfo <- read.csv('stateData.csv')",
+                                "pos": 13
                             }
                         },
                         {
                             "r.line_comment_body": {
+                                "text": "# subset data by region if region is 1",
                                 "subs": [
                                     {
                                         "r.line_comment_text": {
-                                            "pos": 54,
-                                            "text": " subset data by region if region is 1"
+                                            "text": "subset data by region if region is 1",
+                                            "pos": 55
                                         }
                                     }
                                 ],
-                                "pos": 53,
-                                "text": "# subset data by region if region is 1"
+                                "pos": 53
                             }
                         }
                     ],
-                    "pos": 53,
-                    "text": "# subset data by region if region is 1"
+                    "pos": 13
                 }
             },
             {
                 "r.line_comment": {
+                    "text": "stateSubset <- statesInfo[statesInfo$illiteracy == 0.5, ]\n\n# Attributes and dimensions of data",
                     "subs": [
                         {
                             "r.line_comment_context": {
-                                "pos": 189,
-                                "text": ""
+                                "text": "stateSubset <- statesInfo[statesInfo$illiteracy == 0.5, ]",
+                                "pos": 130
                             }
                         },
                         {
                             "r.line_comment_body": {
+                                "text": "# Attributes and dimensions of data",
                                 "subs": [
                                     {
                                         "r.line_comment_text": {
-                                            "pos": 190,
-                                            "text": " Attributes and dimensions of data"
+                                            "text": "Attributes and dimensions of data",
+                                            "pos": 191
                                         }
                                     }
                                 ],
-                                "pos": 189,
-                                "text": "# Attributes and dimensions of data"
+                                "pos": 189
                             }
                         }
                     ],
-                    "pos": 189,
-                    "text": "# Attributes and dimensions of data"
+                    "pos": 130
                 }
             },
             {
                 "r.line_comment": {
+                    "text": "stateSubset # print out stateSubset",
                     "subs": [
                         {
                             "r.line_comment_context": {
-                                "pos": 260,
-                                "text": "stateSubset "
+                                "text": "stateSubset ",
+                                "pos": 260
                             }
                         },
                         {
                             "r.line_comment_body": {
+                                "text": "# print out stateSubset",
                                 "subs": [
                                     {
                                         "r.line_comment_text": {
-                                            "pos": 273,
-                                            "text": " print out stateSubset"
+                                            "text": "print out stateSubset",
+                                            "pos": 274
                                         }
                                     }
                                 ],
-                                "pos": 272,
-                                "text": "# print out stateSubset"
+                                "pos": 272
                             }
                         }
                     ],
-                    "pos": 260,
-                    "text": "stateSubset # print out stateSubset"
+                    "pos": 260
                 }
             }
         ],
-        "pos": 1,
-        "text": "# Read file\nstatesInfo <- read.csv('stateData.csv')\n# subset data by region if region is 1\nsubset(statesInfo, state.region == 1)\nstateSubset <- statesInfo[statesInfo$illiteracy == 0.5, ]\n\n# Attributes and dimensions of data\ndim(stateSubset)\nstr(stateSubset)\n\nstateSubset # print out stateSubset\n"
+        "pos": 1
     }
 }
