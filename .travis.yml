@@ -24,6 +24,7 @@ branches:
   - ruby
   - sql
   - vb
+  - r
 
 before_install:
 - sudo apt-get update -qq

@@ -29,7 +29,7 @@ py.dependency = {py.import_all / py.import_from_parent / py.import_module}
 alias py.dependencies_pre = {!java.import !line_end .}*
 py.dependencies = {{py.dependency / py.dependencies_pre} line_end}*
 
---Function Def
+--Function Definitions
 py.function_name = {!"(" .}*
 alias py.string_lit = {{!"\"" .}* "\"" }
 py.paramaters = {!"):"  .}*
