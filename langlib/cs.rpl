@@ -1,21 +1,61 @@
---Inline Comments
+-------------------------------
+-- Inline Comments
+--
+-- Matches in line comments starting with a '//'. Also
+-- captures the code preceeding the comment on the same line.
+--
+-- Run: rosie -wholefile cs.line_comments <C#-source-file>
+-- Structure: cs.line_comments                      // Parent pattern to extract all comments from file
+--                \- cs.line_comment                // Matches a single line comment
+--                    \- cs.line_comment_context    // The code on the line preceeding the comment
+--                    \- cs.line_comment_body       // Matches the whole comment text
+--                        \- cs.line_comment_text   // The text of the comment
+-------------------------------
+
 alias cs.line_comment_start= "//"
 cs.line_comment_text= {!line_end .}*
 alias cs.line_comment_pre= {!cs.line_comment_start !line_end .}*
 cs.line_comment_context= {!cs.line_comment_start !line_end .}*
 cs.line_comment_body= {cs.line_comment_start cs.line_comment_text}
 cs.line_comment= {cs.line_comment_context cs.line_comment_body}
+
 cs.line_comments= {{cs.line_comment / cs.line_comment_body / cs.line_comment_pre} .}*
 
---Block Comments
+-------------------------------
+-- Block Comments
+--
+-- Matches block comments starting with "/*"
+-- and ending with "*/".
+--
+-- Run: rosie -wholefile cs.block_comments <ruby-source-file>
+-- Structure: rb.block_comments           // Parent pattern to match all block comments
+--                \- rb.block_comment     // Matches a single block comment
+--                    \- rb.comment_body  // Matches the body of a block comment
+-------------------------------
+
 alias cs.block_comment_start = "/*"
 alias cs.block_comment_end = "*/"
 alias cs.block_comment_pre= {!cs.block_comment_start.}*
 cs.block_comment_body= {!cs.block_comment_end .}*
 cs.block_comment= { cs.block_comment_start cs.block_comment_body cs.block_comment_end}
+
 cs.block_comments= {cs.block_comment_pre cs.block_comment }*
 
---Dependencies
+-------------------------------
+-- Dependencies
+--
+-- Matches the C# dependencies in the file declared
+-- with the "using" keyword.
+--
+-- Run: rosie -wholefile cs.dependencies <C#-source-file>
+-- Structure: cs.dependencies                // Parent pattern to match all dependencies in a file
+--                \- cs.dependency           // Matches a single dependency statement
+--                    \~ cs.alias_statement  // **ALIASED** Captures the dependency alias statement
+--                        \- cs.alias        // Alias for the dependency
+--                        \- cs.type         // Name of the dependency
+--                    \- cs.type             // Name of the dependency
+-------------------------------
+
 alias cs.using = "using "
 alias cs.static = "static "
 cs.type = {!statement_end !line_end .}*
@@ -26,11 +66,25 @@ alias cs.dependencies_pre = {!cs.using !line_end .}*
 
 cs.dependencies = {{cs.dependency / cs.dependencies_pre} {statement_end / line_end}}*
 
---Class Defs
+-------------------------------
+-- Class Defs
+--
+-- Pattern to match all class definitions in a file.
+-- Does not match class bodies.
+--
+-- Run: rosie -wholefile cs.classes <C#-source-file>
+-- Structure: cs.classes                     // Parent pattern for matching all class definitions in a file
+--                \- cs.classdef             // matches a single class definition
+--                    \- cs.classname        // Name of the class
+--                    \- cs.parentclasslist  // List of all parent class of this class
+--                        \- cs.parentclass  // Name of a single C# parent class
+-------------------------------
+
 cs.classname = {!":" !"{" ![:space:] .}+
 cs.parentclass = {!":" !"{" ![:space:] !"," .}+
 cs.parentclasslist = (cs.parentclass ",")* cs.parentclass
 alias cs.visibility = "public" / "internal"
 alias cs.declaration = "class" / "interface"
 cs.classdef = cs.visibility? "sealed"? "abstract"? "partial"? "static"? cs.declaration cs.classname (":" cs.parentclasslist)? "{"
+
 cs.classes = {{!cs.classdef .}* cs.classdef .}* {!cs.classdef .}*
