@@ -55,4 +55,3 @@ alias go.struct_name = {!go.struct .}*
 
 go.struct_def = {go.type go.struct_name go.struct}
 go.structs = {go.struct_def / .}*
-

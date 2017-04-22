@@ -45,4 +45,3 @@ rb.classname = [[:alnum:][_]]+
 rb.superclass = [[:alnum:][_]]+
 rb.class = {"class" [:space:]+ rb.classname ([:space:]* "<" [:space:]* rb.superclass)? {!line_end .}* line_end}
 rb.classes = {{!rb.class .}* rb.class .}* {!rb.class .}*
-

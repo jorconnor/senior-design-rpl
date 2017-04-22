@@ -9,14 +9,14 @@ alias java.string_alias = ["] {([\\] / !["]) .}* ["]
 java.string = ["] {([\\] / !["]) .}* ["]
 java.strings = {java.string / .}*
 
-alias java.character_alias = ['] {([\\] / ![']) .} ['] 
+alias java.character_alias = ['] {([\\] / ![']) .} [']
 java.character =  ['] {([\\] / ![']) .} [']
 java.characters = {java.character .}*
 
 ----------------------------------------------------
 --Inline Comments
 --
---Matches for inline java comments starting with "//". 
+--Matches for inline java comments starting with "//".
 --Output provides the context of the comment i.e. the text listed on the same line,
 --Values escaped within string literals are ignored.
 ----------------------------------------------------
@@ -31,7 +31,7 @@ java.line_comments= {{ java.line_comment / java.line_comment_body / java.line_co
 ----------------------------------------------------
 --Block Comments
 --
---Matches for java block comments starting with "/*" and ending with "*/". 
+--Matches for java block comments starting with "/*" and ending with "*/".
 --Output simply provides the contents of the comment.
 ----------------------------------------------------
 --Block Comments
