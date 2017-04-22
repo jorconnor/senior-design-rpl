@@ -52,6 +52,12 @@ func MakeRpc(rpcName string, fptr interface{}) (err error) {
 	return
 }
 
+
+func doThing() {
+	a, b int
+}
+
+
 /* Following functions are sourced under MIT license from brentp/goleft */
 
 func pcheck(e error) {
@@ -60,11 +66,11 @@ func pcheck(e error) {
 	}
 }
 
-func min(a, b int) int {
+func min(a, b int) (int, int) {
 	if a < b {
-		return a
+		return a, b
 	}
-	return b
+	return a, b
 }
 
 func max(a, b int) int {
