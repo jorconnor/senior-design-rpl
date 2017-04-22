@@ -1,53 +1,39 @@
 ----------------------------------------------------
---String Literals
+-- Inline Comments
 --
---Currently matches for typical java string and character literals.
---Does allow for escaped single and double quotes
---A "aliased" version is provided to allow for suppressed output in other patterns
+-- Matches for inline java comments starting with "//".
+-- Output provides the context of the comment i.e. the text listed on the same line,
+-- Values escaped within string literals are ignored.
 ----------------------------------------------------
-alias java.string_alias = ["] {([\\] / !["]) .}* ["]
-java.string = ["] {([\\] / !["]) .}* ["]
-java.strings = {java.string / .}*
 
-alias java.character_alias = ['] {([\\] / ![']) .} ['] 
-java.character =  ['] {([\\] / ![']) .} [']
-java.characters = {java.character .}*
-
-----------------------------------------------------
---Inline Comments
---
---Matches for inline java comments starting with "//". 
---Output provides the context of the comment i.e. the text listed on the same line,
---Values escaped within string literals are ignored.
-----------------------------------------------------
-alias java.line_comment_start= "//"
-java.line_comment_text= {!line_end .}*
-alias java.line_comment_pre= {java.string_alias? !java.line_comment_start !line_end .}*
-java.line_comment_context= {java.string_alias? !java.line_comment_start !line_end .}*
-java.line_comment_body= {java.line_comment_start java.line_comment_text}
-java.line_comment= {java.line_comment_context java.line_comment_body}
-java.line_comments= {{ java.line_comment / java.line_comment_body / java.line_comment_pre} .}*
+alias java.line_comment_start = "//"
+java.line_comment_text = {!line_end .}*
+alias java.line_comment_pre = {java.string_alias? !java.line_comment_start !line_end .}*
+java.line_comment_context = {java.string_alias? !java.line_comment_start !line_end .}*
+java.line_comment_body = java.line_comment_start java.line_comment_text
+java.line_comment = java.line_comment_context java.line_comment_body
+java.line_comments = {{java.line_comment / java.line_comment_body / java.line_comment_pre} .}*
 
 ----------------------------------------------------
---Block Comments
+-- Block Comments
 --
---Matches for java block comments starting with "/*" and ending with "*/". 
---Output simply provides the contents of the comment.
+-- Matches for java block comments starting with "/*" and ending with "*/".
+-- Output simply provides the contents of the comment.
 ----------------------------------------------------
---Block Comments
+
 alias java.block_comment_start = "/*"
 alias java.block_comment_end = "*/"
-alias java.block_comment_pre= {!java.block_comment_start .}*
-java.block_comment_body= {!java.block_comment_end .}*
-java.block_comment= {java.block_comment_start java.block_comment_body java.block_comment_end}
-java.block_comments= {java.block_comment_pre java.block_comment }*
+alias java.block_comment_pre = {!java.block_comment_start .}*
+java.block_comment_body = {!java.block_comment_end .}*
+java.block_comment = java.block_comment_start java.block_comment_body java.block_comment_end
+java.block_comments = {java.block_comment_pre java.block_comment }*
 
 --Dependencies
 alias java.space = " "
 alias java.import = "import "
 java.static = "static "
 java.dependency_text = {!java.space !statement_end !line_end .}*
-java.dependency = {java.import java.space* java.static? java.dependency_text java.space*}
+java.dependency = java.import java.static? java.dependency_text
 alias java.dependencies_pre = {!java.import !line_end .}*
 
 java.package_text = {!statement_end !line_end .}*
@@ -66,17 +52,17 @@ alias java.invalid_identifier = [^ [:alnum:][_][$][<>]]
 alias java.throws = "throws "
 
 java.access_sp = {"public " / "private " / "protected "}
-java.return_type = {{!java.invalid_identifier .}+ java.whitespace}
+java.return_type = {!java.invalid_identifier .}+
 java.function_name = {!java.start_paren !java.invalid_identifier .}+
 java.single_param = {!java.end_paren ![,] .}*
 alias java.multi_param =  {[,] java.single_param}*
-java.parameters = {java.start_paren java.single_param java.multi_param java.end_paren java.whitespace}
+java.parameters = java.start_paren java.single_param java.multi_param java.end_paren
 java.exception = {!java.invalid_identifier .}+
 
-java.function_body = {java.whitespace* java.start_block line_end {!java.end_block .}* java.end_block}
-java.function_call = {line_end? java.whitespace* java.access_sp? java.static? java.return_type java.function_name java.parameters java.throws? java.exception?}
+java.function_body = java.start_block line_end {!java.end_block .}* java.end_block
+java.function_def = line_end? java.access_sp? java.static? java.return_type java.function_name java.parameters java.throws? java.exception?
 
-java.functions = {{java.function_call} / .}*
+java.functions = {java.function_def / .}*
 
 --Class Definitions
 alias java.class = "class "
@@ -89,13 +75,28 @@ java.parent_name = {!java.invalid_identifier .}+
 java.interface_name = {!java.invalid_identifier .}+
 java.single_inter = {!{java.whitespace java.start_block} ![,] .}+
 alias java.multi_inter = {[,] java.single_inter}*
-java.hierarchy = {java.whitespace* java.extends java.parent_name}
-java.implementation = {java.whitespace* java.implements java.single_inter java.multi_inter java.whitespace java.start_block}
+java.hierarchy = java.extends java.parent_name
+java.implementation = java.implements java.single_inter java.multi_inter java.start_block
 
-java.class_body = {java.whitespace* java.start_block line_end {!java.end_block .}* java.end_block}
-java.class_call = {line_end? java.whitespace* java.access_sp? java.static? java.final? java.class java.class_name java.hierarchy? java.implementation?}
+java.class_body = java.start_block line_end {!java.end_block .}* java.end_block
+java.class_call = line_end? java.access_sp? java.static? java.final? java.class java.class_name java.hierarchy? java.implementation?
 
-java.classes = {{java.class_call} / .}*
+java.classes = {java.class_call / .}*
+
+----------------------------------------------------
+--String Literals
+--
+--Currently matches for typical java string and character literals.
+--Does allow for escaped single and double quotes
+--A "aliased" version is provided to allow for suppressed output in other patterns
+----------------------------------------------------
+alias java.string_alias = ["] {([\\] / !["]) .}* ["]
+java.string = ["] {([\\] / !["]) .}* ["]
+java.strings = {java.string / .}*
+
+alias java.character_alias = ['] {([\\] / ![']) .} [']
+java.character =  ['] {([\\] / ![']) .} [']
+java.characters = {java.character .}*
 
 --Error Handling
 alias java.throws = "throws "
