@@ -1,19 +1,19 @@
 --Inline Comments
-alias cpp.line_comment_start= "//"
-cpp.line_comment_text= {!line_end .}*
-alias cpp.line_comment_pre= {!cpp.line_comment_start !line_end .}*
-cpp.line_comment_context= {!cpp.line_comment_start !line_end .}*
-cpp.line_comment_body= {cpp.line_comment_start cpp.line_comment_text}
-cpp.line_comment= {cpp.line_comment_context cpp.line_comment_body}
-cpp.line_comments= {{cpp.line_comment / cpp.line_comment_body / cpp.line_comment_pre} .}*
+alias cpp.line_comment_start = "//"
+cpp.line_comment_text = {!line_end .}*
+alias cpp.line_comment_pre = {!cpp.line_comment_start !line_end .}*
+cpp.line_comment_context = {!cpp.line_comment_start !line_end .}*
+cpp.line_comment_body = {cpp.line_comment_start cpp.line_comment_text}
+cpp.line_comment = {cpp.line_comment_context cpp.line_comment_body}
+cpp.line_comments = {{cpp.line_comment / cpp.line_comment_body / cpp.line_comment_pre} .}*
 
 --Block Comments
 alias cpp.block_comment_start = "/*"
 alias cpp.block_comment_end = "*/"
-alias cpp.block_comment_pre= {!cpp.block_comment_start.}*
-cpp.block_comment_body= {!cpp.block_comment_end .}*
-cpp.block_comment= { cpp.block_comment_start cpp.block_comment_body cpp.block_comment_end}
-cpp.block_comments= {cpp.block_comment_pre cpp.block_comment }*
+alias cpp.block_comment_pre = {!cpp.block_comment_start.}*
+cpp.block_comment_body = {!cpp.block_comment_end .}*
+cpp.block_comment = { cpp.block_comment_start cpp.block_comment_body cpp.block_comment_end}
+cpp.block_comments = {cpp.block_comment_pre cpp.block_comment }*
 
 --Dependencies
 alias cpp.include = "#include "
