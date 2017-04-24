@@ -12,36 +12,36 @@
 --                        \- rb.line_comment_text   // The text of the comment
 -------------------------------
 
-alias rb.line_comment_start= "#"
-rb.line_comment_text= {!line_end .}*
-alias rb.line_comment_pre= {!rb.line_comment_start !line_end .}*
-rb.line_comment_context= {!rb.line_comment_start !line_end .}*
-rb.line_comment_body= {rb.line_comment_start rb.line_comment_text}
-rb.line_comment= {rb.line_comment_context rb.line_comment_body}
+alias rb.line_comment_start = "#"
+rb.line_comment_text = {!line_end .}*
+alias rb.line_comment_pre = {!rb.line_comment_start !line_end .}*
+rb.line_comment_context = {!rb.line_comment_start !line_end .}*
+rb.line_comment_body = {rb.line_comment_start rb.line_comment_text}
+rb.line_comment = {rb.line_comment_context rb.line_comment_body}
 
-rb.line_comments= {{rb.line_comment / rb.line_comment_body / rb.line_comment_pre} .}*
+rb.line_comments = {{rb.line_comment / rb.line_comment_body / rb.line_comment_pre} .}*
 
 -------------------------------
 -- Block Comments
 --
--- Matches block comments. Block comments in ruby 
--- start with a "=begin" on a new line and end with 
+-- Matches block comments. Block comments in ruby
+-- start with a "=begin" on a new line and end with
 -- a "=end" on a new line. Both "=begin" and "=end"
 -- must appear first on a line.
 --
 -- Run: rosie -wholefile rb.block_comments <ruby-source-file>
 -- Structure: rb.block_comments                // Parent pattern to match all block comments
---                \- rb.block_comment_comment  // Matches a single block comment
+--                \- rb.block_comment  // Matches a single block comment
 --                    \- rb.comment_body       // Matches the body of a block comment
 -------------------------------
 
 alias rb.block_comment_start = "\n=begin"
 alias rb.block_comment_end = "\n=end"
 rb.comment_body = {!rb.block_comment_end .}*
-rb.block_comment_comment = {rb.block_comment_start rb.comment_body rb.block_comment_end}
+rb.block_comment = {rb.block_comment_start rb.comment_body rb.block_comment_end}
 alias rb.block_comment_pre = {!rb.block_comment_start .}*
 
-rb.block_comments = {rb.block_comment_pre rb.block_comment_comment}*
+rb.block_comments = {rb.block_comment_pre rb.block_comment}*
 
 -------------------------------
 -- Dependencies
