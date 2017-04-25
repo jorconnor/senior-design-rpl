@@ -90,8 +90,25 @@ c.single_param = {!line_end !c.end_paren ![,] .}*
 alias c.multip_param =  {[,] c.single_param }*
 c.parameters = {c.start_paren c.single_param c.multip_param c.end_paren}
 
-alias c.function_body_clean = {!c.end_block .}*
-c.function_body = {c.whitespace c.start_block c.function_body_clean c.end_block}
 c.function_call =  c.static? c.return_type c.pointer? c.function_name c.parameters
-c.function = {c.function_call c.function_body}
+c.function = {c.function_call}
 c.functions = {c.function / .}*
+
+-------------------------------
+-- Structs
+--
+-- Pattern to match struct definitions. Does not
+-- capture struct bodies.
+--
+-- Run: rosie -wholefile c.structs <c-source-file>
+-- Structure: c.structs                     // Parent pattern that matches all struct definitions
+--                \- c.struct_def           // Matches an entire struct definition
+--                    \- c.struct_name      // Name of the struct
+-------------------------------
+
+alias c.type = "type "
+alias c.struct = "struct "
+c.struct_name = {!c.struct .}*
+
+c.struct_def = c.type c.struct_name c.struct
+c.structs = {c.struct_def / .}*
