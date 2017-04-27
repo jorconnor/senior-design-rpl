@@ -96,10 +96,9 @@ cs.dependencies = {{cs.dependency / cs.dependencies_pre} {statement_end / line_e
 
 -------------------------------
 -- Functions
--- DOESN'T CATCH CONSTRUCTORS
 --
 -- Pattern to match all function definitions in a file.
--- Does not match function bodies
+-- Does not match function bodies and constructors.
 --
 -- Run: rosie -wholefile cs.functions <C#-source-file>
 -- Structure: cs.functions

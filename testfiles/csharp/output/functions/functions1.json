@@ -1,0 +1,312 @@
+{
+    "cs.functions": {
+        "pos": 1,
+        "text": "// Code sourced under MIT License from alphaleonis/AlphaVSS\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing System.Linq;\r\nusing AlphaShadow.Options;\r\nusing System.Text;\r\nusing System.Diagnostics;\r\n\r\nnamespace AlphaShadow\r\n{\r\n   public class ConsoleHost : IUIHost\r\n   {\r\n      private int m_indent = 0;\r\n\r\n      public ConsoleHost()\r\n      {\r\n         IsWordWrapEnabled = true;\r\n      }\r\n\r\n      public void WriteHeader(string message, params object[] args)\r\n      {\r\n         WriteLine(ConsoleColor.Cyan, WordWrap(message, args));\r\n      }\r\n\r\n      public void WriteLine(string message, params object[] args)\r\n      {\r\n         WriteLine(Console.ForegroundColor, WordWrap(message, args));\r\n      }\r\n\r\n      public void WriteWarning(string message, params object[] args)\r\n      {\r\n         WriteMessage(ConsoleColor.Red, \"Warning:\", message, args);\r\n      }\r\n\r\n      public void WriteError(string message, params object[] args)\r\n      {\r\n         WriteMessage(ConsoleColor.Red, \"Error:\", message, args);\r\n      }\r\n\r\n      public void WriteVerbose(string message, params object[] args)\r\n      {\r\n         if (VerboseOutputEnabled)\r\n            WriteLine(ConsoleColor.DarkGray, WordWrap(message, args));\r\n      }\r\n\r\n      private void WriteMessage(ConsoleColor color, string label, string message, params object[] args)\r\n      {\r\n         if (IsWordWrapEnabled)\r\n         {\r\n            int col1Width = label.Length;\r\n            int col2Width = Math.Max(1, Console.WindowWidth - col1Width - 2);\r\n\r\n            string text = StringFormatter.FormatInColumns(m_indent, 1,\r\n               new StringFormatter.ColumnInfo(col1Width, label),\r\n               new StringFormatter.ColumnInfo(col2Width, String.Format(message, args)));\r\n\r\n            WriteLine(color, text);\r\n         }\r\n         else\r\n         {\r\n            WriteLine(color, label + \" \" + String.Format(message, args));\r\n         }\r\n      }\r\n\r\n\r\n      private void WriteLine(ConsoleColor color, string message)\r\n      {\r\n         ConsoleColor temp = Console.ForegroundColor;\r\n         Console.ForegroundColor = color;\r\n         Console.WriteLine(message);\r\n         Console.ForegroundColor = temp;\r\n      }\r\n\r\n      private string WordWrap(string message, params object[] args)\r\n      {\r\n         if (IsWordWrapEnabled)\r\n         {\r\n            StringBuilder sb = new StringBuilder();\r\n            string wrappedString = StringFormatter.WordWrap((args == null || args.Length == 0) ? message : String.Format(message, args), Console.WindowWidth - 5 - m_indent, StringFormatter.WordWrappingMethod.Greedy);\r\n            IList<string> splitString = StringFormatter.SplitAtLineBreaks(wrappedString);\r\n            for (int i = 0; i < splitString.Count; i++)\r\n            {\r\n               if (i != 0)\r\n                  sb.AppendLine();\r\n               sb.Append(String.Format(\"{0}{1}\", new String(' ', m_indent), splitString[i]));\r\n            }\r\n            return sb.ToString();\r\n         }\r\n         else\r\n         {\r\n            return new String(' ', m_indent) + String.Format(message, args);\r\n         }\r\n      }\r\n\r\n      public void WriteLine()\r\n      {\r\n         Console.WriteLine();\r\n      }\r\n\r\n\r\n      public bool VerboseOutputEnabled\r\n      {\r\n         get;\r\n         set;\r\n      }\r\n\r\n      public bool IsWordWrapEnabled { get; set; }\r\n\r\n      public void WriteTable(StringTable table, int columnSpacing = 3, bool addVerticalSeparation = false)\r\n      {\r\n         if (table == null)\r\n            throw new ArgumentNullException(\"table\", \"table is null.\");\r\n\r\n         if (IsWordWrapEnabled)\r\n         {\r\n            int indent = m_indent;\r\n            if (indent >= Console.WindowWidth - columnSpacing - 2)\r\n               indent = 0;\r\n\r\n            int maxWidth = Console.WindowWidth - indent;\r\n            int col1Width = Math.Min(table.Labels.Max(text => text.Length), maxWidth / 2);\r\n            int colSpacing = columnSpacing;\r\n            int col2Width = maxWidth - col1Width - colSpacing - 1;\r\n\r\n            for (int i = 0; i < table.Count; i++)\r\n            {\r\n               if (i > 0 && addVerticalSeparation)\r\n                  Console.WriteLine();\r\n\r\n               Console.WriteLine(\r\n                  StringFormatter.FormatInColumns(indent, colSpacing,\r\n                  new StringFormatter.ColumnInfo(col1Width, table.Labels[i]),\r\n                  new StringFormatter.ColumnInfo(col2Width, table.Values[i])));\r\n\r\n            }\r\n         }\r\n         else\r\n         {\r\n            for (int i = 0; i < table.Count; i++)\r\n            {\r\n               Console.WriteLine(\"{0}{1}{2}{3}\", new String(' ', m_indent), table.Labels[i], new String(' ', columnSpacing), table.Values[i]);\r\n            }\r\n         }\r\n\r\n      }\r\n\r\n      public void PushIndent()\r\n      {\r\n         m_indent += 3;\r\n      }\r\n\r\n      public void PopIndent()\r\n      {\r\n         m_indent -= 3;\r\n         if (m_indent < 0)\r\n            m_indent = 0;\r\n      }\r\n\r\n      public IDisposable GetIndent()\r\n      {\r\n         return new Indenter(this);\r\n      }\r\n\r\n      private class Indenter : IDisposable\r\n      {\r\n         IUIHost m_host;\r\n         public Indenter(IUIHost host)\r\n         {\r\n            m_host = host;\r\n            m_host.PushIndent();\r\n         }\r\n\r\n         public void Dispose()\r\n         {\r\n            m_host.PopIndent();\r\n         }\r\n      }\r\n\r\n      public void ExecCommand(string execCommand, string args)\r\n      {\r\n         WriteLine(\"- Executing command '{0}' ...\", execCommand);\r\n         WriteLine(\"-----------------------------------------------------\");\r\n\r\n         ProcessStartInfo ps = new ProcessStartInfo(execCommand, args);\r\n         ps.CreateNoWindow = false;\r\n         ps.UseShellExecute = false;\r\n\r\n         Process p = Process.Start(ps);\r\n         p.WaitForExit();\r\n         WriteLine(\"-----------------------------------------------------\");\r\n\r\n         if (p.ExitCode != 0)\r\n         {\r\n            WriteError(\"Command line '{0}' failed!. Aborting the backup...\", execCommand);\r\n            WriteError(\"Returned error code: {0}\", p.ExitCode);\r\n            throw new CommandAbortedException();\r\n         }\r\n      }\r\n\r\n      public bool ShouldContinue()\r\n      {\r\n         WriteHeader(\"Continue? [Y/N]\");\r\n         string response = Console.ReadLine();\r\n         return response.Equals(\"y\", StringComparison.OrdinalIgnoreCase) || response.Equals(\"yes\", StringComparison.OrdinalIgnoreCase);\r\n      }\r\n   }\r\n}\r\n",
+        "subs": [
+            {
+                "cs.funcdef": {
+                    "pos": 1918,
+                    "text": "private void WriteLine(ConsoleColor color, string message)\r\n      {",
+                    "subs": [
+                        {
+                            "cs.accessmod": {
+                                "pos": 1918,
+                                "text": "private"
+                            }
+                        },
+                        {
+                            "cs.returntype": {
+                                "pos": 1926,
+                                "text": "void"
+                            }
+                        },
+                        {
+                            "cs.methodname": {
+                                "pos": 1931,
+                                "text": "WriteLine"
+                            }
+                        },
+                        {
+                            "cs.paramlist": {
+                                "pos": 1941,
+                                "text": "ConsoleColor color, string message",
+                                "subs": [
+                                    {
+                                        "cs.param": {
+                                            "pos": 1941,
+                                            "text": "ConsoleColor color",
+                                            "subs": [
+                                                {
+                                                    "cs.paramname": {
+                                                        "pos": 1941,
+                                                        "text": "ConsoleColor"
+                                                    }
+                                                },
+                                                {
+                                                    "cs.paramtype": {
+                                                        "pos": 1954,
+                                                        "text": "color"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "cs.param": {
+                                            "pos": 1961,
+                                            "text": "string message",
+                                            "subs": [
+                                                {
+                                                    "cs.paramname": {
+                                                        "pos": 1961,
+                                                        "text": "string"
+                                                    }
+                                                },
+                                                {
+                                                    "cs.paramtype": {
+                                                        "pos": 1968,
+                                                        "text": "message"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "cs.funcdef": {
+                    "pos": 3088,
+                    "text": "public void WriteLine()\r\n      {",
+                    "subs": [
+                        {
+                            "cs.accessmod": {
+                                "pos": 3088,
+                                "text": "public"
+                            }
+                        },
+                        {
+                            "cs.returntype": {
+                                "pos": 3095,
+                                "text": "void"
+                            }
+                        },
+                        {
+                            "cs.methodname": {
+                                "pos": 3100,
+                                "text": "WriteLine"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "cs.funcdef": {
+                    "pos": 4712,
+                    "text": "public void PushIndent()\r\n      {",
+                    "subs": [
+                        {
+                            "cs.accessmod": {
+                                "pos": 4712,
+                                "text": "public"
+                            }
+                        },
+                        {
+                            "cs.returntype": {
+                                "pos": 4719,
+                                "text": "void"
+                            }
+                        },
+                        {
+                            "cs.methodname": {
+                                "pos": 4724,
+                                "text": "PushIndent"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "cs.funcdef": {
+                    "pos": 4789,
+                    "text": "public void PopIndent()\r\n      {",
+                    "subs": [
+                        {
+                            "cs.accessmod": {
+                                "pos": 4789,
+                                "text": "public"
+                            }
+                        },
+                        {
+                            "cs.returntype": {
+                                "pos": 4796,
+                                "text": "void"
+                            }
+                        },
+                        {
+                            "cs.methodname": {
+                                "pos": 4801,
+                                "text": "PopIndent"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "cs.funcdef": {
+                    "pos": 4920,
+                    "text": "public IDisposable GetIndent()\r\n      {",
+                    "subs": [
+                        {
+                            "cs.accessmod": {
+                                "pos": 4920,
+                                "text": "public"
+                            }
+                        },
+                        {
+                            "cs.returntype": {
+                                "pos": 4927,
+                                "text": "IDisposable"
+                            }
+                        },
+                        {
+                            "cs.methodname": {
+                                "pos": 4939,
+                                "text": "GetIndent"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "cs.funcdef": {
+                    "pos": 5225,
+                    "text": "public void Dispose()\r\n         {",
+                    "subs": [
+                        {
+                            "cs.accessmod": {
+                                "pos": 5225,
+                                "text": "public"
+                            }
+                        },
+                        {
+                            "cs.returntype": {
+                                "pos": 5232,
+                                "text": "void"
+                            }
+                        },
+                        {
+                            "cs.methodname": {
+                                "pos": 5237,
+                                "text": "Dispose"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "cs.funcdef": {
+                    "pos": 5322,
+                    "text": "public void ExecCommand(string execCommand, string args)\r\n      {",
+                    "subs": [
+                        {
+                            "cs.accessmod": {
+                                "pos": 5322,
+                                "text": "public"
+                            }
+                        },
+                        {
+                            "cs.returntype": {
+                                "pos": 5329,
+                                "text": "void"
+                            }
+                        },
+                        {
+                            "cs.methodname": {
+                                "pos": 5334,
+                                "text": "ExecCommand"
+                            }
+                        },
+                        {
+                            "cs.paramlist": {
+                                "pos": 5346,
+                                "text": "string execCommand, string args",
+                                "subs": [
+                                    {
+                                        "cs.param": {
+                                            "pos": 5346,
+                                            "text": "string execCommand",
+                                            "subs": [
+                                                {
+                                                    "cs.paramname": {
+                                                        "pos": 5346,
+                                                        "text": "string"
+                                                    }
+                                                },
+                                                {
+                                                    "cs.paramtype": {
+                                                        "pos": 5353,
+                                                        "text": "execCommand"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "cs.param": {
+                                            "pos": 5366,
+                                            "text": "string args",
+                                            "subs": [
+                                                {
+                                                    "cs.paramname": {
+                                                        "pos": 5366,
+                                                        "text": "string"
+                                                    }
+                                                },
+                                                {
+                                                    "cs.paramtype": {
+                                                        "pos": 5373,
+                                                        "text": "args"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "cs.funcdef": {
+                    "pos": 6113,
+                    "text": "public bool ShouldContinue()\r\n      {",
+                    "subs": [
+                        {
+                            "cs.accessmod": {
+                                "pos": 6113,
+                                "text": "public"
+                            }
+                        },
+                        {
+                            "cs.returntype": {
+                                "pos": 6120,
+                                "text": "bool"
+                            }
+                        },
+                        {
+                            "cs.methodname": {
+                                "pos": 6125,
+                                "text": "ShouldContinue"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
