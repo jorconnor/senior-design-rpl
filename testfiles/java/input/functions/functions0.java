@@ -87,7 +87,7 @@ public class ApiTokenProperty extends UserProperty {
     }
 
     @Override
-    public ArrayList<Integer> reconfigure(StaplerRequest req, JSONObject form) throws FormException, IOException {
+    public ArrayList<Integer> reconfigure(StaplerRequest req, JSONObject form) throws FormException {
         return this;
     }
 }
