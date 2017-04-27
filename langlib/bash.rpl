@@ -1,33 +1,63 @@
---Inline Comments
-alias b.line_comment_start= "#"
-b.line_comment_text= {!line_end .}*
-alias b.line_comment_pre= {!b.line_comment_start !line_end .}*
-b.line_comment_context= {!b.line_comment_start !line_end .}*
-b.line_comment_body= {b.line_comment_start b.line_comment_text}
-b.line_comment= {b.line_comment_context b.line_comment_body}
-b.line_comments= {{b.line_comment / b.line_comment_body / b.line_comment_pre} .}*
+-------------------------------
+-- Inline Comments
+--
+-- Matches in line comments starting with a '#'. Also
+-- captures the code preceding the comment on the same line.
+--
+-- Run: rosie -wholefile b.line_comments <bash-source-file>
+-- Structure: b.line_comments                     // Parent pattern to extract all comments from file
+--                \- b.line_comment               // Matches a single line comment
+--                    \- b.line_comment_context   // The code on the line preceding the comment
+--                    \- b.line_comment_body      // Matches the whole comment text
+--                        \- b.line_comment_text  // The text of the comment
+-------------------------------
 
---Block Comments
+alias b.line_comment_start = "#"
+b.line_comment_text = {!line_end .}*
+alias b.line_comment_pre = {!b.line_comment_start !line_end .}*
+b.line_comment_context = {!b.line_comment_start !line_end .}*
+b.line_comment_body = {b.line_comment_start b.line_comment_text}
+b.line_comment = {b.line_comment_context b.line_comment_body}
+b.line_comments = {{b.line_comment / b.line_comment_body / b.line_comment_pre} .}*
 
---- There doesn't seem to be standard block comments in BASH but 
---- things of the form <<ANYWORD\n ...comment... \nANYWORD are commonly used.
---- Because of this I'm picking out some commonly used "ANYWORDS".
+-------------------------------
+-- Block Comments
+--
+-- There doesn't seem to be standard block comments in BASH but
+-- things of the form <<ANYWORD\n ...comment... \nANYWORD are commonly used.
+-- Because of this I'm picking out some commonly used "ANYWORDS".
+--
+-- Run: rosie -wholefile b.block_comments <bash-source-file>
+-- Structure: b.block_comments           // Parent pattern to match all block comments
+--                \- b.block_comment     // Matches a single block comment
+--                    \- b.comment_body  // Matches the body of a block comment
+-------------------------------
 
 alias b.block_comment_start = ":<<COMMENT" / "<<COMMENT" / "<<'COMMENT'"
 alias b.block_comment_end = "\nCOMMENT"
 
 b.comment_body = {!b.block_comment_end .}*
-b.block_comment_comment = { b.block_comment_start b.comment_body b.block_comment_end}
+b.block_comment = {b.block_comment_start b.comment_body b.block_comment_end}
 alias b.block_comment_pre = {!b.block_comment_start .}*
-b.block_comments = {b.block_comment_pre b.block_comment_comment}*
+b.block_comments = {b.block_comment_pre b.block_comment}*
 
---Function Def
+-------------------------------
+-- Functions
+--
+-- Pattern to match function definitions. Does not
+-- capture function bodies.
+--
+-- Run: rosie -wholefile b.functions <bash-source-file>
+-- Structure: b.functions                 // Parent pattern that matches all function definitions
+--                \- b.function           // Matches an entire function definition
+--                    \- b.function_name  // Name of the function
+-------------------------------
+
 grammar
    alias b.string_lit = chars b.string chars
    alias chars = [\"\']
    alias b.string = {b.string_lit / .}*
 end
-
 
 b.function_name = {!"()" ![ ] b.string_lit* .}*
 alias b.temp_comment = {!"#" .}
