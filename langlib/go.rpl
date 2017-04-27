@@ -72,7 +72,7 @@ go.dependencies = {{go.package / go.dependency / go.dependencies_factor / go.dep
 -- Functions
 --
 -- Pattern to match function definitions. Does not
--- capture function bodies.
+-- capture function bodies or constructors.
 --
 -- Run: rosie -wholefile go.functions <go-source-file>
 -- Structure: go.functions                     // Parent pattern that matches all function definitions

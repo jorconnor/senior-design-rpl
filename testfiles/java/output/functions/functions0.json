@@ -1,296 +1,248 @@
 {
     "java.functions": {
-        "pos": 1,
+        "text": "/*\n * The MIT License\n *\n * Copyright (c) 2011, CloudBees, Inc.\n *\n * Permission is hereby granted, free of charge, to any person obtaining a copy\n * of this software and associated documentation files (the \"Software\"), to deal\n * in the Software without restriction, including without limitation the rights\n * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n * copies of the Software, and to permit persons to whom the Software is\n * furnished to do so, subject to the following conditions:\n *\n * The above copyright notice and this permission notice shall be included in\n * all copies or substantial portions of the Software.\n *\n * THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\n * THE SOFTWARE.\n */\npackage jenkins.security;\n\nimport hudson.Extension;\nimport jenkins.util.SystemProperties;\nimport hudson.Util;\nimport hudson.model.Descriptor.FormException;\nimport hudson.model.User;\nimport hudson.model.UserProperty;\nimport hudson.model.UserPropertyDescriptor;\nimport hudson.security.ACL;\nimport hudson.util.HttpResponses;\nimport hudson.util.Secret;\n\npublic class ApiTokenProperty extends UserProperty {\n\n    /**\n     * We don't let the external code set the API token,\n     * but for the initial value of the token we need to compute the seed by ourselves.\n     */\n    /*package*/ ApiTokenProperty(String seed) {\n        apiToken = Secret.fromString(seed);\n    }\n    boolean matchesPassword(String password, String username) {\n        String token = getApiTokenInsecure();\n        // String.equals isn't constant time, but this is\n        return MessageDigest.isEqual(password.getBytes(Charset.forName(\"US-ASCII\")),\n                token.getBytes(Charset.forName(\"US-ASCII\")));\n    }\n\n    private boolean hasPermissionToSeeToken(String temp) {\n        final Jenkins jenkins = Jenkins.getInstance();\n\n        // Administrators can do whatever they want\n        if (SHOW_TOKEN_TO_ADMINS && jenkins.hasPermission(Jenkins.ADMINISTER)) {\n            return true;\n        }\n\n\n        final User current = User.current();\n        if (current == null) { // Anonymous\n            return false;\n        }\n\n        // SYSTEM user is always eligible to see tokens\n        if (Jenkins.getAuthentication() == ACL.SYSTEM) {\n            return true;\n        }\n\n        //TODO: replace by IdStrategy in newer Jenkins versions\n        //return User.idStrategy().equals(user.getId(), current.getId());\n        return StringUtils.equals(user.getId(), current.getId());\n    }\n\n    public static void changeApiToken() throws IOException {\n        user.checkPermission(Jenkins.ADMINISTER);\n        _changeApiToken();\n        user.save();\n    }\n\n    private void _changeApiToken() {\n        byte[] random = new byte[16];   // 16x8=128bit worth of randomness, since we use md5 digest as the API token\n        RANDOM.nextBytes(random);\n        apiToken = Secret.fromString(Util.toHexString(random));\n    }\n\n    @Override\n    public ArrayList<Integer> reconfigure(StaplerRequest req, JSONObject form) throws FormException {\n        return this;\n    }\n}\n",
         "subs": [
             {
                 "java.function_def": {
-                    "pos": 1806,
+                    "text": "\n    boolean matchesPassword(String password, String username) {",
                     "subs": [
                         {
                             "java.return_type": {
-                                "pos": 1811,
-                                "text": "boolean "
+                                "text": "boolean ",
+                                "pos": 1811
                             }
                         },
                         {
                             "java.function_name": {
-                                "pos": 1819,
-                                "text": "matchesPassword"
+                                "text": "matchesPassword",
+                                "pos": 1819
                             }
                         },
                         {
                             "java.parameters": {
-                                "pos": 1834,
+                                "text": "(String password, String username) ",
                                 "subs": [
                                     {
                                         "java.single_param": {
-                                            "pos": 1835,
-                                            "text": "String password"
+                                            "text": "String password",
+                                            "pos": 1835
                                         }
                                     },
                                     {
                                         "java.single_param": {
-                                            "pos": 1851,
-                                            "text": " String username"
+                                            "text": " String username",
+                                            "pos": 1851
                                         }
                                     }
                                 ],
-                                "text": "(String password, String username) "
-                            }
-                        },
-                        {
-                            "java.exceptions": {
-                                "pos": 1869,
-                                "subs": [
-                                    {
-                                        "java.single_excep": {
-                                            "pos": 1869,
-                                            "text": ""
-                                        }
-                                    }
-                                ],
-                                "text": "{"
+                                "pos": 1834
                             }
                         }
                     ],
-                    "text": "\n    boolean matchesPassword(String password, String username) {"
+                    "pos": 1806
                 }
             },
             {
                 "java.function_def": {
-                    "pos": 2127,
+                    "text": "private boolean hasPermissionToSeeToken(String temp) {",
                     "subs": [
                         {
                             "java.access_sp": {
-                                "pos": 2133,
-                                "text": "private "
+                                "text": "private ",
+                                "pos": 2133
                             }
                         },
                         {
                             "java.return_type": {
-                                "pos": 2141,
-                                "text": "boolean "
+                                "text": "boolean ",
+                                "pos": 2141
                             }
                         },
                         {
                             "java.function_name": {
-                                "pos": 2149,
-                                "text": "hasPermissionToSeeToken"
+                                "text": "hasPermissionToSeeToken",
+                                "pos": 2149
                             }
                         },
                         {
                             "java.parameters": {
-                                "pos": 2172,
+                                "text": "(String temp) ",
                                 "subs": [
                                     {
                                         "java.single_param": {
-                                            "pos": 2173,
-                                            "text": "String temp"
+                                            "text": "String temp",
+                                            "pos": 2173
                                         }
                                     }
                                 ],
-                                "text": "(String temp) "
-                            }
-                        },
-                        {
-                            "java.exceptions": {
-                                "pos": 2186,
-                                "subs": [
-                                    {
-                                        "java.single_excep": {
-                                            "pos": 2186,
-                                            "text": ""
-                                        }
-                                    }
-                                ],
-                                "text": "{"
+                                "pos": 2172
                             }
                         }
                     ],
-                    "text": "\n\n    private boolean hasPermissionToSeeToken(String temp) {"
+                    "pos": 2133
                 }
             },
             {
                 "java.function_def": {
-                    "pos": 2898,
+                    "text": "public static void changeApiToken() throws IOException {",
                     "subs": [
                         {
                             "java.access_sp": {
-                                "pos": 2904,
-                                "text": "public "
+                                "text": "public ",
+                                "pos": 2904
                             }
                         },
                         {
                             "java.static": {
-                                "pos": 2911,
-                                "text": "static "
+                                "text": "static ",
+                                "pos": 2911
                             }
                         },
                         {
                             "java.return_type": {
-                                "pos": 2918,
-                                "text": "void "
+                                "text": "void ",
+                                "pos": 2918
                             }
                         },
                         {
                             "java.function_name": {
-                                "pos": 2923,
-                                "text": "changeApiToken"
+                                "text": "changeApiToken",
+                                "pos": 2923
                             }
                         },
                         {
                             "java.parameters": {
-                                "pos": 2937,
+                                "text": "() ",
                                 "subs": [
                                     {
                                         "java.single_param": {
-                                            "pos": 2938,
-                                            "text": ""
+                                            "text": "",
+                                            "pos": 2938
                                         }
                                     }
                                 ],
-                                "text": "() "
+                                "pos": 2937
                             }
                         },
                         {
                             "java.exceptions": {
-                                "pos": 2947,
+                                "text": "throws IOException ",
                                 "subs": [
                                     {
                                         "java.single_excep": {
-                                            "pos": 2947,
-                                            "text": "IOException"
+                                            "text": "IOException",
+                                            "pos": 2947
                                         }
                                     }
                                 ],
-                                "text": "IOException "
+                                "pos": 2940
                             }
                         }
                     ],
-                    "text": "\n\n    public static void changeApiToken() throws IOException "
+                    "pos": 2904
                 }
             },
             {
                 "java.function_def": {
-                    "pos": 3064,
+                    "text": "private void _changeApiToken() {",
                     "subs": [
                         {
                             "java.access_sp": {
-                                "pos": 3070,
-                                "text": "private "
+                                "text": "private ",
+                                "pos": 3070
                             }
                         },
                         {
                             "java.return_type": {
-                                "pos": 3078,
-                                "text": "void "
+                                "text": "void ",
+                                "pos": 3078
                             }
                         },
                         {
                             "java.function_name": {
-                                "pos": 3083,
-                                "text": "_changeApiToken"
+                                "text": "_changeApiToken",
+                                "pos": 3083
                             }
                         },
                         {
                             "java.parameters": {
-                                "pos": 3098,
+                                "text": "() ",
                                 "subs": [
                                     {
                                         "java.single_param": {
-                                            "pos": 3099,
-                                            "text": ""
+                                            "text": "",
+                                            "pos": 3099
                                         }
                                     }
                                 ],
-                                "text": "() "
-                            }
-                        },
-                        {
-                            "java.exceptions": {
-                                "pos": 3101,
-                                "subs": [
-                                    {
-                                        "java.single_excep": {
-                                            "pos": 3101,
-                                            "text": ""
-                                        }
-                                    }
-                                ],
-                                "text": "{"
+                                "pos": 3098
                             }
                         }
                     ],
-                    "text": "\n\n    private void _changeApiToken() {"
+                    "pos": 3070
                 }
             },
             {
                 "java.function_def": {
-                    "pos": 3338,
+                    "text": "public ArrayList<Integer> reconfigure(StaplerRequest req, JSONObject form) throws FormException {",
                     "subs": [
                         {
                             "java.access_sp": {
-                                "pos": 3343,
-                                "text": "public "
+                                "text": "public ",
+                                "pos": 3343
                             }
                         },
                         {
                             "java.return_type": {
-                                "pos": 3350,
-                                "text": "ArrayList<Integer> "
+                                "text": "ArrayList<Integer> ",
+                                "pos": 3350
                             }
                         },
                         {
                             "java.function_name": {
-                                "pos": 3369,
-                                "text": "reconfigure"
+                                "text": "reconfigure",
+                                "pos": 3369
                             }
                         },
                         {
                             "java.parameters": {
-                                "pos": 3380,
+                                "text": "(StaplerRequest req, JSONObject form) ",
                                 "subs": [
                                     {
                                         "java.single_param": {
-                                            "pos": 3381,
-                                            "text": "StaplerRequest req"
+                                            "text": "StaplerRequest req",
+                                            "pos": 3381
                                         }
                                     },
                                     {
                                         "java.single_param": {
-                                            "pos": 3400,
-                                            "text": " JSONObject form"
+                                            "text": " JSONObject form",
+                                            "pos": 3400
                                         }
                                     }
                                 ],
-                                "text": "(StaplerRequest req, JSONObject form) "
+                                "pos": 3380
                             }
                         },
                         {
                             "java.exceptions": {
-                                "pos": 3425,
+                                "text": "throws FormException ",
                                 "subs": [
                                     {
                                         "java.single_excep": {
-                                            "pos": 3425,
-                                            "text": "FormException"
-                                        }
-                                    },
-                                    {
-                                        "java.single_excep": {
-                                            "pos": 3440,
-                                            "text": "IOException"
+                                            "text": "FormException",
+                                            "pos": 3425
                                         }
                                     }
                                 ],
-                                "text": "FormException, IOException "
+                                "pos": 3418
                             }
                         }
                     ],
-                    "text": "\n    public ArrayList<Integer> reconfigure(StaplerRequest req, JSONObject form) throws FormException, IOException "
+                    "pos": 3343
                 }
             }
         ],
-        "text": "/*\n * The MIT License\n *\n * Copyright (c) 2011, CloudBees, Inc.\n *\n * Permission is hereby granted, free of charge, to any person obtaining a copy\n * of this software and associated documentation files (the \"Software\"), to deal\n * in the Software without restriction, including without limitation the rights\n * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n * copies of the Software, and to permit persons to whom the Software is\n * furnished to do so, subject to the following conditions:\n *\n * The above copyright notice and this permission notice shall be included in\n * all copies or substantial portions of the Software.\n *\n * THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\n * THE SOFTWARE.\n */\npackage jenkins.security;\n\nimport hudson.Extension;\nimport jenkins.util.SystemProperties;\nimport hudson.Util;\nimport hudson.model.Descriptor.FormException;\nimport hudson.model.User;\nimport hudson.model.UserProperty;\nimport hudson.model.UserPropertyDescriptor;\nimport hudson.security.ACL;\nimport hudson.util.HttpResponses;\nimport hudson.util.Secret;\n\npublic class ApiTokenProperty extends UserProperty {\n\n    /**\n     * We don't let the external code set the API token,\n     * but for the initial value of the token we need to compute the seed by ourselves.\n     */\n    /*package*/ ApiTokenProperty(String seed) {\n        apiToken = Secret.fromString(seed);\n    }\n    boolean matchesPassword(String password, String username) {\n        String token = getApiTokenInsecure();\n        // String.equals isn't constant time, but this is\n        return MessageDigest.isEqual(password.getBytes(Charset.forName(\"US-ASCII\")),\n                token.getBytes(Charset.forName(\"US-ASCII\")));\n    }\n\n    private boolean hasPermissionToSeeToken(String temp) {\n        final Jenkins jenkins = Jenkins.getInstance();\n\n        // Administrators can do whatever they want\n        if (SHOW_TOKEN_TO_ADMINS && jenkins.hasPermission(Jenkins.ADMINISTER)) {\n            return true;\n        }\n\n\n        final User current = User.current();\n        if (current == null) { // Anonymous\n            return false;\n        }\n\n        // SYSTEM user is always eligible to see tokens\n        if (Jenkins.getAuthentication() == ACL.SYSTEM) {\n            return true;\n        }\n\n        //TODO: replace by IdStrategy in newer Jenkins versions\n        //return User.idStrategy().equals(user.getId(), current.getId());\n        return StringUtils.equals(user.getId(), current.getId());\n    }\n\n    public static void changeApiToken() throws IOException {\n        user.checkPermission(Jenkins.ADMINISTER);\n        _changeApiToken();\n        user.save();\n    }\n\n    private void _changeApiToken() {\n        byte[] random = new byte[16];   // 16x8=128bit worth of randomness, since we use md5 digest as the API token\n        RANDOM.nextBytes(random);\n        apiToken = Secret.fromString(Util.toHexString(random));\n    }\n\n    @Override\n    public ArrayList<Integer> reconfigure(StaplerRequest req, JSONObject form) throws FormException, IOException {\n        return this;\n    }\n}\n"
+        "pos": 1
     }
 }
