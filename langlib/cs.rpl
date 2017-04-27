@@ -21,6 +21,13 @@ cs.line_comment= {cs.line_comment_context cs.line_comment_body}
 
 cs.line_comments= {{cs.line_comment / cs.line_comment_body / cs.line_comment_pre} .}*
 
+-- Aliased version of pattern for use in other patterns
+alias cs.alias_line_comment_text= {!line_end .}*
+alias cs.alias_line_comment_context= {!cs.line_comment_start !line_end .}*
+alias cs.alias_line_comment_body= {cs.line_comment_start cs.alias_line_comment_text}
+alias cs.line_comment= {cs.alias_line_comment_context cs.alias_line_comment_body}
+alias cs.alias_line_comment= {cs.alias_line_comment_context cs.alias_line_comment_body}
+
 -------------------------------
 -- Block Comments
 --
@@ -40,6 +47,10 @@ cs.block_comment_body= {!cs.block_comment_end .}*
 cs.block_comment= { cs.block_comment_start cs.block_comment_body cs.block_comment_end}
 
 cs.block_comments= {cs.block_comment_pre cs.block_comment }*
+
+-- Aliased version of the pattern for use in other patterns
+alias cs.alias_block_comment_body= {!cs.block_comment_end .}*
+alias cs.alias_block_comment = { cs.block_comment_start cs.alias_block_comment_body cs.block_comment_end}
 
 -------------------------------
 -- Dependencies
@@ -65,6 +76,36 @@ cs.dependency = {cs.using cs.static? {cs.alias_statement / cs.type}}
 alias cs.dependencies_pre = {!cs.using !line_end .}*
 
 cs.dependencies = {{cs.dependency / cs.dependencies_pre} {statement_end / line_end}}*
+
+-------------------------------
+-- Functions
+-- DOESN'T CATCH CONSTRUCTORS
+--
+-- Pattern to match all function definitions in a file.
+-- Does not match function bodies
+--
+-- Run: rosie -wholefile cs.functions <C#-source-file>
+-- Structure: cs.functions
+--                \- cs.funcdef
+--                    \? cs.accessmod   // **OPTIONAL** the access modifier for the function
+--                    \? cs.mod         // **OPTIONAL** the modifiers for the function
+--                    \- cs.returntype  // The return type of the function
+--                    \- cs.methodname  // The method name
+--                    \? cs.paramlist   // **OPTIONAL** the list of parameters of the method
+--                        \- cs.param   // The parameters in the param list
+-------------------------------
+
+cs.accessmod = "public" / "private" / "internal" / "protected internal" / "protected"
+cs.mod = "abstract" / "async" / "extern" / "override" / "partial" / "static" / "virtual" / "event" / "delegate"
+
+cs.methodname = {!cs.accessmod !cs.mod !"base" [[:alnum:][_]] {![[:space:][()]] .}* }
+cs.returntype = {!cs.accessmod !cs.mod !"base" [[:alnum:][_]] {![[:space:][()]] .}* }
+cs.paramname = {!cs.accessmod !cs.mod !"base" [[:alnum:][_]] {![[:space:][(),]] .}* }
+cs.paramtype = {!cs.accessmod !cs.mod !"base" [[:alnum:][_]] {![[:space:][(),]] .}* }
+cs.param = cs.paramname cs.paramtype
+cs.paramlist = (cs.param ",")* cs.param
+cs.funcdef = cs.accessmod? cs.mod* cs.returntype cs.methodname "(" cs.paramlist? ")" "{"
+cs.functions = {cs.alias_line_comment / cs.alias_block_comment / cs.funcdef / .}*
 
 -------------------------------
 -- Class Defs
