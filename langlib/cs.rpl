@@ -53,6 +53,23 @@ alias cs.alias_block_comment_body= {!cs.block_comment_end .}*
 alias cs.alias_block_comment = { cs.block_comment_start cs.alias_block_comment_body cs.block_comment_end}
 
 -------------------------------
+-- String Literals
+--
+-- Currently matches for typical C# string and character literals.
+-- Does allow for escaped single and double quotes
+--
+-- Run: rosie -wholefile cs.strings <C#-source-file>
+-- Structure: cs.strings        // Parent pattern to match all string literals
+--                \- cs.string  // Pattern to match a single string
+-------------------------------
+
+cs.string = (["] {([\\] / !["]) .}* ["]) / (['] {([\\] / ![']) .}* ['])
+cs.strings = {cs.alias_line_comment / cs.alias_block_comment / cs.string / .}*
+
+--A "aliased" version is provided to allow for suppressed output in other patterns
+alias cs.alias_string = (["] {([\\] / !["]) .}* ["]) / (['] {([\\] / ![']) .}* ['])
+
+-------------------------------
 -- Dependencies
 --
 -- Matches the C# dependencies in the file declared
