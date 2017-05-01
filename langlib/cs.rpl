@@ -103,22 +103,28 @@ cs.dependencies = {{cs.dependency / cs.dependencies_pre} {statement_end / line_e
 -- Run: rosie -wholefile cs.functions <C#-source-file>
 -- Structure: cs.functions
 --                \- cs.funcdef
---                    \? cs.accessmod   // **OPTIONAL** the access modifier for the function
---                    \? cs.mod         // **OPTIONAL** the modifiers for the function
---                    \- cs.returntype  // The return type of the function
---                    \- cs.methodname  // The method name
---                    \? cs.paramlist   // **OPTIONAL** the list of parameters of the method
---                        \- cs.param   // The parameters in the param list
+--                    \? cs.accessmod           // **OPTIONAL** the access modifier for the function
+--                    \? cs.mod                 // **OPTIONAL** the modifiers for the function
+--                    \- cs.returntype          // The return type of the function
+--                    \- cs.methodname          // The method name
+--                    \? cs.paramlist           // **OPTIONAL** the list of parameters of the method
+--                        \- cs.param           // The parameters in the param list
+--                            \? cs.parammod    // **OPTIONAL** parameter modifier
+--                            \- cs.paramtype   // Type of the parameter
+--                            \- cs.paramname   // Name of the parameter
+--                            \? cs.defaultval  // **OPTIONAL** Default value of parameter
 -------------------------------
 
 cs.accessmod = "public" / "private" / "internal" / "protected internal" / "protected"
 cs.mod = "abstract" / "async" / "extern" / "override" / "partial" / "static" / "virtual" / "event" / "delegate"
+cs.parammod = "params" / "ref" / "out"
 
 cs.methodname = {!cs.accessmod !cs.mod !"base" [[:alnum:][_]] {![[:space:][()]] .}* }
 cs.returntype = {!cs.accessmod !cs.mod !"base" [[:alnum:][_]] {![[:space:][()]] .}* }
 cs.paramname = {!cs.accessmod !cs.mod !"base" [[:alnum:][_]] {![[:space:][(),]] .}* }
 cs.paramtype = {!cs.accessmod !cs.mod !"base" [[:alnum:][_]] {![[:space:][(),]] .}* }
-cs.param = cs.paramname cs.paramtype
+cs.defaultval = [^,);]+
+cs.param = cs.parammod? cs.paramtype cs.paramname ("=" cs.defaultval)?
 cs.paramlist = (cs.param ",")* cs.param
 cs.funcdef = cs.accessmod? cs.mod* cs.returntype cs.methodname "(" cs.paramlist? ")" "{"
 cs.functions = {cs.alias_line_comment / cs.alias_block_comment / cs.funcdef / .}*
