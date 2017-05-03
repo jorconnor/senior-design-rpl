@@ -43,8 +43,9 @@ langs = {
         ".b" : "b",
         ".sh" : "b",
         ".vb" : "vb",
-        ".h" : "c"
-        ".js" "js"
+        ".h" : "c",
+        ".js" : "js",
+        ".py" : "py",
         }
 
 features = [ 
@@ -57,10 +58,10 @@ features = [
         "package",
         ]
 
-rows = ["b", "c", "cpp", "cs", "go", "java", "js", "r", "rb", "vb"]
+rows = ["b", "c", "cpp", "cs", "go", "java", "js", "py", "r", "rb", "vb"]
 cols = ["block_comment", "line_comment", "dependency", "function", "class", "struct", "package"]
-vals = pylab.zeros((10,8), dtype=object)
-for i in range(10):
+vals = pylab.zeros((11,8), dtype=object)
+for i in range(11):
     vals[i][0] = rows[i]
 
 #url = 'https://github.com/jamiejennings/rosie-pattern-language'
@@ -77,7 +78,6 @@ if(isdir(repo_path)):
 clone_repository(url,repo_path)
 
 def run_thread(file_list,q):
-    print(len(file_list))
     for f in file_list:
         run_rosie(f,q)
     return 
@@ -106,7 +106,7 @@ def iterate_over_path(path):
             if file_extension in langs:
                 if(len(split_files[i % 4]) < 50):
                     split_files[i % 4].append(path+"/"+files[i])
-   
+
     for file_list in split_files:
         ps.append(Process(target=run_thread,args=(file_list,q)))
     for p in ps: p.start()
