@@ -1,0 +1,786 @@
+{
+    "java.functions": {
+        "subs": [
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 1979,
+                                "text": "public "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 1986,
+                                "text": "long "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 1991,
+                                "text": "getRotateDuration"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 2009,
+                                            "text": ""
+                                        }
+                                    }
+                                ],
+                                "pos": 2008,
+                                "text": "() "
+                            }
+                        }
+                    ],
+                    "pos": 1979,
+                    "text": "public long getRotateDuration() {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 2067,
+                                "text": "public "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 2074,
+                                "text": "long "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 2079,
+                                "text": "getFlashDuration"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 2096,
+                                            "text": ""
+                                        }
+                                    }
+                                ],
+                                "pos": 2095,
+                                "text": "() "
+                            }
+                        }
+                    ],
+                    "pos": 2067,
+                    "text": "public long getFlashDuration() {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 2544,
+                                "text": "private "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 2552,
+                                "text": "void "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 2557,
+                                "text": "initialise"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 2568,
+                                            "text": "AttributeSet attrs"
+                                        }
+                                    }
+                                ],
+                                "pos": 2567,
+                                "text": "(AttributeSet attrs) "
+                            }
+                        }
+                    ],
+                    "pos": 2544,
+                    "text": "private void initialise(AttributeSet attrs) {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 4786,
+                                "text": "public "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 4793,
+                                "text": "Parcelable "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 4804,
+                                "text": "onSaveInstanceState"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 4824,
+                                            "text": ""
+                                        }
+                                    }
+                                ],
+                                "pos": 4823,
+                                "text": "() "
+                            }
+                        }
+                    ],
+                    "pos": 4786,
+                    "text": "public Parcelable onSaveInstanceState() {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 5112,
+                                "text": "public "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 5119,
+                                "text": "void "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 5124,
+                                "text": "onRestoreInstanceState"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 5147,
+                                            "text": "Parcelable state"
+                                        }
+                                    }
+                                ],
+                                "pos": 5146,
+                                "text": "(Parcelable state) "
+                            }
+                        }
+                    ],
+                    "pos": 5112,
+                    "text": "public void onRestoreInstanceState(Parcelable state) {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 6002,
+                                "text": "public "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 6009,
+                                "text": "void "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 6014,
+                                "text": "startFlashing"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 6028,
+                                            "text": "boolean forever"
+                                        }
+                                    },
+                                    {
+                                        "java.single_param": {
+                                            "pos": 6044,
+                                            "text": " AnimationSpeed speed"
+                                        }
+                                    }
+                                ],
+                                "pos": 6027,
+                                "text": "(boolean forever, AnimationSpeed speed) "
+                            }
+                        }
+                    ],
+                    "pos": 6002,
+                    "text": "public void startFlashing(boolean forever, AnimationSpeed speed) {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 6761,
+                                "text": "public "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 6768,
+                                "text": "void "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 6773,
+                                "text": "startRotate"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 6785,
+                                            "text": "boolean clockwise"
+                                        }
+                                    },
+                                    {
+                                        "java.single_param": {
+                                            "pos": 6803,
+                                            "text": " AnimationSpeed speed"
+                                        }
+                                    }
+                                ],
+                                "pos": 6784,
+                                "text": "(boolean clockwise, AnimationSpeed speed) "
+                            }
+                        }
+                    ],
+                    "pos": 6761,
+                    "text": "public void startRotate(boolean clockwise, AnimationSpeed speed) {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.return_type": {
+                                "pos": 6885,
+                                "text": "animation\n"
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 6903,
+                                "text": "if"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 6907,
+                                            "text": "clockwise"
+                                        }
+                                    }
+                                ],
+                                "pos": 6906,
+                                "text": "(clockwise) "
+                            }
+                        }
+                    ],
+                    "pos": 6884,
+                    "text": " animation\n        if (clockwise) {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 7744,
+                                "text": "public "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 7751,
+                                "text": "void "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 7756,
+                                "text": "setIcon"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 7764,
+                                            "text": "CharSequence iconCode"
+                                        }
+                                    },
+                                    {
+                                        "java.single_param": {
+                                            "pos": 7786,
+                                            "text": " IconSet iconSet"
+                                        }
+                                    }
+                                ],
+                                "pos": 7763,
+                                "text": "(CharSequence iconCode, IconSet iconSet) "
+                            }
+                        }
+                    ],
+                    "pos": 7744,
+                    "text": "public void setIcon(CharSequence iconCode, IconSet iconSet) {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 8169,
+                                "text": "public "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 8176,
+                                "text": "void "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 8181,
+                                "text": "setFontAwesomeIcon"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 8200,
+                                            "text": "@FontAwesome.Icon CharSequence iconCode"
+                                        }
+                                    }
+                                ],
+                                "pos": 8199,
+                                "text": "(@FontAwesome.Icon CharSequence iconCode) "
+                            }
+                        }
+                    ],
+                    "pos": 8169,
+                    "text": "public void setFontAwesomeIcon(@FontAwesome.Icon CharSequence iconCode) {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 8614,
+                                "text": "public "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 8621,
+                                "text": "void "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 8626,
+                                "text": "setMaterialIcon"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 8642,
+                                            "text": "@FontAwesome.Icon CharSequence iconCode"
+                                        }
+                                    }
+                                ],
+                                "pos": 8641,
+                                "text": "(@FontAwesome.Icon CharSequence iconCode) "
+                            }
+                        }
+                    ],
+                    "pos": 8614,
+                    "text": "public void setMaterialIcon(@FontAwesome.Icon CharSequence iconCode) {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 9047,
+                                "text": "public "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 9054,
+                                "text": "void "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 9059,
+                                "text": "setTypicon"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 9070,
+                                            "text": "@Typicon.Icon CharSequence iconCode"
+                                        }
+                                    }
+                                ],
+                                "pos": 9069,
+                                "text": "(@Typicon.Icon CharSequence iconCode) "
+                            }
+                        }
+                    ],
+                    "pos": 9047,
+                    "text": "public void setTypicon(@Typicon.Icon CharSequence iconCode) {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 9242,
+                                "text": "public "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 9249,
+                                "text": "void "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 9254,
+                                "text": "setMarkdownText"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 9270,
+                                            "text": "String text"
+                                        }
+                                    }
+                                ],
+                                "pos": 9269,
+                                "text": "(String text) "
+                            }
+                        }
+                    ],
+                    "pos": 9242,
+                    "text": "public void setMarkdownText(String text) {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 9388,
+                                "text": "protected "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 9398,
+                                "text": "void "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 9403,
+                                "text": "updateBootstrapState"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 9424,
+                                            "text": ""
+                                        }
+                                    }
+                                ],
+                                "pos": 9423,
+                                "text": "() "
+                            }
+                        }
+                    ],
+                    "pos": 9388,
+                    "text": "protected void updateBootstrapState() {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 9687,
+                                "text": "public "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 9694,
+                                "text": "void "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 9699,
+                                "text": "setBootstrapText"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 9716,
+                                            "text": "BootstrapText bootstrapText"
+                                        }
+                                    }
+                                ],
+                                "pos": 9715,
+                                "text": "(BootstrapText bootstrapText) "
+                            }
+                        }
+                    ],
+                    "pos": 9687,
+                    "text": "public void setBootstrapText(BootstrapText bootstrapText) {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 9854,
+                                "text": "public "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 9861,
+                                "text": "BootstrapText "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 9875,
+                                "text": "getBootstrapText"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 9892,
+                                            "text": ""
+                                        }
+                                    }
+                                ],
+                                "pos": 9891,
+                                "text": "() "
+                            }
+                        }
+                    ],
+                    "pos": 9854,
+                    "text": "public BootstrapText getBootstrapText() {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 9947,
+                                "text": "public "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 9954,
+                                "text": "void "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 9959,
+                                "text": "setBootstrapBrand"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 9977,
+                                            "text": "@NonNull BootstrapBrand bootstrapBrand"
+                                        }
+                                    }
+                                ],
+                                "pos": 9976,
+                                "text": "(@NonNull BootstrapBrand bootstrapBrand) "
+                            }
+                        }
+                    ],
+                    "pos": 9947,
+                    "text": "public void setBootstrapBrand(@NonNull BootstrapBrand bootstrapBrand) {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 10127,
+                                "text": "public "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 10134,
+                                "text": "BootstrapBrand "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 10149,
+                                "text": "getBootstrapBrand"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 10167,
+                                            "text": ""
+                                        }
+                                    }
+                                ],
+                                "pos": 10166,
+                                "text": "() "
+                            }
+                        }
+                    ],
+                    "pos": 10127,
+                    "text": "public BootstrapBrand getBootstrapBrand() {"
+                }
+            },
+            {
+                "java.function_def": {
+                    "subs": [
+                        {
+                            "java.access_sp": {
+                                "pos": 10223,
+                                "text": "public "
+                            }
+                        },
+                        {
+                            "java.return_type": {
+                                "pos": 10230,
+                                "text": "void "
+                            }
+                        },
+                        {
+                            "java.function_name": {
+                                "pos": 10235,
+                                "text": "setText"
+                            }
+                        },
+                        {
+                            "java.parameters": {
+                                "subs": [
+                                    {
+                                        "java.single_param": {
+                                            "pos": 10243,
+                                            "text": "CharSequence text"
+                                        }
+                                    },
+                                    {
+                                        "java.single_param": {
+                                            "pos": 10261,
+                                            "text": " BufferType type"
+                                        }
+                                    }
+                                ],
+                                "pos": 10242,
+                                "text": "(CharSequence text, BufferType type) "
+                            }
+                        }
+                    ],
+                    "pos": 10223,
+                    "text": "public void setText(CharSequence text, BufferType type) {"
+                }
+            }
+        ],
+        "pos": 1,
+        "text": "package com.beardedhen.androidbootstrap;\n\nimport android.content.Context;\nimport android.content.res.TypedArray;\nimport android.os.Bundle;\nimport android.os.Parcelable;\nimport android.support.annotation.NonNull;\nimport android.support.annotation.Nullable;\nimport android.util.AttributeSet;\nimport android.view.Gravity;\nimport android.view.animation.AlphaAnimation;\nimport android.view.animation.Animation;\nimport android.view.animation.LinearInterpolator;\nimport android.view.animation.RotateAnimation;\nimport android.widget.TextView;\n\nimport com.beardedhen.androidbootstrap.api.attributes.BootstrapBrand;\nimport com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand;\nimport com.beardedhen.androidbootstrap.api.view.BootstrapBrandView;\nimport com.beardedhen.androidbootstrap.api.view.BootstrapTextView;\nimport com.beardedhen.androidbootstrap.font.FontAwesome;\nimport com.beardedhen.androidbootstrap.font.IconSet;\nimport com.beardedhen.androidbootstrap.font.MaterialIcons;\nimport com.beardedhen.androidbootstrap.font.Typicon;\n\nimport java.io.Serializable;\n\n/**\n * This class extends the default Android TextView to supply Bootstrap behaviour. The text color\n * can be set by changing the BootstrapBrand, and scalable Typeface icons can be interspersed with\n * regular text, using the BootstrapText spannable.\n */\npublic class AwesomeTextView extends TextView implements BootstrapTextView, BootstrapBrandView {\n\n    private static final String TAG = \"com.beardedhen.androidbootstrap.AwesomeTextView\";\n\n    private BootstrapText bootstrapText;\n    private BootstrapBrand bootstrapBrand;\n\n    public enum AnimationSpeed {\n        FAST(500, 200),\n        MEDIUM(1000, 500),\n        SLOW(2000, 1000);\n\n        private final long rotateDuration;\n        private final long flashDuration;\n\n        AnimationSpeed(long rotateDuration, long flashDuration) {\n            this.rotateDuration = rotateDuration;\n            this.flashDuration = flashDuration;\n        }\n\n        public long getRotateDuration() {\n            return rotateDuration;\n        }\n\n        public long getFlashDuration() {\n            return flashDuration;\n        }\n    }\n\n    public AwesomeTextView(Context context) {\n        super(context);\n        initialise(null);\n    }\n\n    public AwesomeTextView(Context context, AttributeSet attrs) {\n        super(context, attrs);\n        initialise(attrs);\n    }\n\n    public AwesomeTextView(Context context, AttributeSet attrs, int defStyle) {\n        super(context, attrs, defStyle);\n        initialise(attrs);\n    }\n\n    private void initialise(AttributeSet attrs) {\n        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.AwesomeTextView);\n        String markdownText;\n\n        try {\n            int typeOrdinal = a.getInt(R.styleable.AwesomeTextView_bootstrapBrand, -1);\n            int faIconOrdinal = a.getInt(R.styleable.AwesomeTextView_fontAwesomeIcon, -1);\n            int typiconOrdinal = a.getInt(R.styleable.AwesomeTextView_typicon, -1);\n            int materialIconOrdinal = a.getInt(R.styleable.AwesomeTextView_materialIcon, -1);\n\n            boolean clickable = a.getBoolean(R.styleable.AwesomeTextView_android_clickable, true);\n\n            this.bootstrapBrand = DefaultBootstrapBrand.fromAttributeValue(typeOrdinal);\n            boolean editMode = isInEditMode();\n\n            if (typiconOrdinal != -1) {\n                final IconSet typicon = TypefaceProvider.retrieveRegisteredIconSet(Typicon.FONT_PATH, editMode);\n\n                if (!editMode) {\n                    setIcon(typicon.iconCodeForAttrIndex(typiconOrdinal), typicon);\n                }\n            }\n            if (faIconOrdinal != -1) {\n                final IconSet fontAwesome = TypefaceProvider.retrieveRegisteredIconSet(FontAwesome.FONT_PATH, editMode);\n\n                if (!editMode) {\n                    setIcon(fontAwesome.iconCodeForAttrIndex(faIconOrdinal), fontAwesome);\n                }\n            }\n            if (materialIconOrdinal != -1) {\n                final IconSet materialIcons = TypefaceProvider.retrieveRegisteredIconSet(MaterialIcons.FONT_PATH, editMode);\n\n                if (!editMode) {\n                    setIcon(materialIcons.iconCodeForAttrIndex(materialIconOrdinal), materialIcons);\n                }\n            }\n            markdownText = a.getString(R.styleable.AwesomeTextView_bootstrapText);\n\n            setClickable(clickable); // allows view to reach android:state_pressed\n\n            int gravity = a.getInt(R.styleable.AwesomeTextView_android_gravity, Gravity.CENTER);\n            setGravity(gravity);\n        }\n        finally {\n            a.recycle();\n        }\n\n        if (markdownText != null) {\n            setMarkdownText(markdownText);\n        }\n        updateBootstrapState();\n    }\n\n    @Override public Parcelable onSaveInstanceState() {\n        Bundle bundle = new Bundle();\n        bundle.putParcelable(TAG, super.onSaveInstanceState());\n        bundle.putSerializable(BootstrapTextView.KEY, bootstrapText);\n        bundle.putSerializable(BootstrapBrand.KEY, bootstrapBrand);\n        return bundle;\n    }\n\n    @Override public void onRestoreInstanceState(Parcelable state) {\n        if (state instanceof Bundle) {\n            Bundle bundle = (Bundle) state;\n\n            Serializable text = bundle.getSerializable(BootstrapTextView.KEY);\n            Serializable brand = bundle.getSerializable(BootstrapBrand.KEY);\n\n            if (brand instanceof BootstrapBrand) {\n                bootstrapBrand = (BootstrapBrand) brand;\n            }\n            if (text instanceof BootstrapText) {\n                bootstrapText = (BootstrapText) text;\n            }\n            state = bundle.getParcelable(TAG);\n        }\n        super.onRestoreInstanceState(state);\n        updateBootstrapState();\n    }\n\n    /**\n     * Starts a Flashing Animation on the AwesomeTextView\n     *\n     * @param forever whether the animation should be infinite or play once\n     * @param speed   how fast the item should flash\n     */\n    public void startFlashing(boolean forever, AnimationSpeed speed) {\n        Animation fadeIn = new AlphaAnimation(0, 1);\n\n        //set up extra variables\n        fadeIn.setDuration(50);\n        fadeIn.setRepeatMode(Animation.REVERSE);\n\n        //default repeat count is 0, however if user wants, set it up to be infinite\n        fadeIn.setRepeatCount(0);\n        if (forever) {\n            fadeIn.setRepeatCount(Animation.INFINITE);\n        }\n\n        fadeIn.setStartOffset(speed.getFlashDuration());\n        startAnimation(fadeIn);\n    }\n\n    /**\n     * Starts a rotating animation on the AwesomeTextView\n     *\n     * @param clockwise true for clockwise, false for anti clockwise spinning\n     * @param speed     how fast the item should rotate\n     */\n    public void startRotate(boolean clockwise, AnimationSpeed speed) {\n        Animation rotate;\n\n        //set up the rotation animation\n        if (clockwise) {\n            rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);\n        }\n        else {\n            rotate = new RotateAnimation(360, 0, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);\n        }\n\n        //set up some extra variables\n        rotate.setRepeatCount(Animation.INFINITE);\n        rotate.setInterpolator(new LinearInterpolator());\n        rotate.setStartOffset(0);\n        rotate.setRepeatMode(Animation.RESTART);\n        rotate.setDuration(speed.getRotateDuration());\n        startAnimation(rotate);\n    }\n\n    /**\n     * Sets the text to display a FontIcon, replacing whatever text is already present.\n     * Used to set the text to display a FontAwesome Icon.\n     *\n     * @param iconSet - An implementation of FontIcon\n     */\n    public void setIcon(CharSequence iconCode, IconSet iconSet) {\n        setBootstrapText(new BootstrapText.Builder(getContext(), isInEditMode()).addIcon(iconCode, iconSet).build());\n    }\n\n    /**\n     * Sets the text to display a FontIcon, replacing whatever text is already present.\n     * Used to set the text to display a FontAwesome Icon.\n     *\n     * @param iconCode the fontawesome icon code e.g. \"fa_play\"\n     */\n    public void setFontAwesomeIcon(@FontAwesome.Icon CharSequence iconCode) {\n        setBootstrapText(new BootstrapText.Builder(getContext(), isInEditMode()).addFontAwesomeIcon(iconCode).build());\n    }\n\n    /**\n     * Sets the text to display a MaterialIcon, replacing whatever text is already present.\n     * Used to set the text to display a MaterialIcon Icon.\n     *\n     * @param iconCode the fontawesome icon code e.g. \"md_share\"\n     */\n    public void setMaterialIcon(@FontAwesome.Icon CharSequence iconCode) {\n        setBootstrapText(new BootstrapText.Builder(getContext(), isInEditMode()).addMaterialIcon(iconCode).build());\n    }\n\n    /**\n     * Sets the text to display a FontIcon, replacing whatever text is already present.\n     * Used to set the text to display a Typicon.\n     *\n     * @param iconCode the typicon icon code e.g. \"ty_adjust_brightness\"\n     */\n    public void setTypicon(@Typicon.Icon CharSequence iconCode) {\n        setBootstrapText(new BootstrapText.Builder(getContext(), isInEditMode()).addTypicon(iconCode).build());\n    }\n\n    @Override public void setMarkdownText(String text) {\n        setBootstrapText(IconResolver.resolveMarkdown(getContext(), text, isInEditMode()));\n    }\n\n    protected void updateBootstrapState() {\n        if (bootstrapText != null) {\n            setText(bootstrapText);\n        }\n        if (bootstrapBrand != null) {\n            setTextColor(bootstrapBrand.defaultFill(getContext()));\n        }\n    }\n\n    /*\n     * Getters/Setters\n     */\n\n    @Override public void setBootstrapText(BootstrapText bootstrapText) {\n        this.bootstrapText = bootstrapText;\n        updateBootstrapState();\n    }\n\n    @Nullable @Override public BootstrapText getBootstrapText() {\n        return bootstrapText;\n    }\n\n    @Override public void setBootstrapBrand(@NonNull BootstrapBrand bootstrapBrand) {\n        this.bootstrapBrand = bootstrapBrand;\n        updateBootstrapState();\n    }\n\n    @NonNull @Override public BootstrapBrand getBootstrapBrand() {\n        return bootstrapBrand;\n    }\n\n    @Override public void setText(CharSequence text, BufferType type) {\n        super.setText(text, type);\n        bootstrapText = null;\n    }\n\n}\n"
+    }
+}
