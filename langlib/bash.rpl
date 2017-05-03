@@ -63,3 +63,5 @@ b.function_name = {!"()" ![ ] b.string_lit* .}*
 alias b.temp_comment = {!"#" .}
 b.function = {{"function" b.function_name "()"} / {[ ]* b.function_name [ ]* "()"}}
 b.functions = {{!b.function {b.temp_comment / .}}* b.function}*
+
+b.file = {b.line_comment / b.block_comment / .}*

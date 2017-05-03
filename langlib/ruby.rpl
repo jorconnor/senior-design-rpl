@@ -71,7 +71,7 @@ rb.dependencies = {{rb.dependency / rb.dependencies_pre} line_end}*
 --
 -- Run: rosie -wholefile rb.functions <ruby-source-file>
 -- Structure: rb.functions                    // Parent pattern that matches all function definitions
---                \- rb.funcdef               // Matches an entire function definition
+--                \- rb.function              // Matches an entire function definition
 --                    \- rb.funcname          // Name of the function
 --                    \- rb.paramlist         // Matches a list of parameters
 --                        \- rb.paramdef      // Catches parameter defintions in the paramlist
@@ -86,9 +86,9 @@ rb.param = {!")" !"," !";" ![:space:] !"=" .}+
 rb.paramval = {!")" !"," !";" ![:space:] .}+
 rb.paramdef = rb.param "=" rb.paramval
 rb.paramlist = {{ [ \t]* {rb.paramdef / rb.param} [ \t]* ","}* [ \t]* {rb.paramdef / rb.param}}
-rb.funcdef = {rb.def rb.funcname "("? rb.paramlist? ")"? (line_end / ";")}
+rb.function= {rb.def rb.funcname "("? rb.paramlist? ")"? (line_end / ";")}
 
-rb.functions = {{!rb.funcdef .}* rb.funcdef? .}* {!rb.funcdef .}*
+rb.functions = {{!rb.function.}* rb.function? .}* {!rb.function.}*
 
 -------------------------------
 -- Class Defs
@@ -108,3 +108,5 @@ rb.superclass = [[:alnum:][_]]+
 rb.class = {"class" [:space:]+ rb.classname ([:space:]* "<" [:space:]* rb.superclass)? {!line_end .}* line_end}
 
 rb.classes = {{!rb.class .}* rb.class .}* {!rb.class .}*
+
+rb.file = {rb.line_comment / rb.block_comment / rb.dependency / rb.dependency / rb.function / rb.class / .}*

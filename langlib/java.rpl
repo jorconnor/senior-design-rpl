@@ -89,7 +89,7 @@ java.dependencies = {{{java.package / java.dependency} / java.dependencies_pre} 
 --
 -- Run: rosie -wholefile java.functions <java-source-file>
 -- Structure: java.functions                     // Parent pattern that matches all function definitions
---                \- java.function_def           // Matches an entire function definition
+--                \- java.function               // Matches an entire function definition
 --                    \- java.access_sp          // Access specifier (public, private, protected)
 --                    \- java.return_type        // Return type of function
 --                    \- java.function_name      // Name of the function
@@ -120,9 +120,9 @@ alias java.multi_excep = {[,] java.whitespace* java.single_excep}*
 java.exceptions = {java.single_excep java.multi_excep java.invalid_identifier}
 
 java.function_body = {java.whitespace* java.start_block line_end {!java.end_block .}* java.end_block}
-java.function_def = {line_end? java.whitespace* java.access_sp? java.static? java.return_type java.function_name java.parameters java.throws? java.exceptions?}
+java.function = {line_end? java.whitespace* java.access_sp? java.static? java.return_type java.function_name java.parameters java.throws? java.exceptions?}
 
-java.functions = {java.function_def / .}*
+java.functions = {java.function / .}*
 
 -------------------------------
 -- Classes
@@ -132,7 +132,7 @@ java.functions = {java.function_def / .}*
 --
 -- Run: rosie -wholefile java.classes <java-source-file>
 -- Structure: java.classes                         // Parent pattern that matches all class definitions
---                \- java.class_def                // Matches an entire class definition
+--                \- java.class                    // Matches an entire class definition
 --                    \- java.access_sp            // Access specifier (public, private, protected)
 --                    \- java.class_name           // Name of the class
 --                    \- java.hierarcy             // Does the class have a parent?
@@ -155,9 +155,9 @@ java.hierarchy = {java.whitespace* java.extends java.parent_name}
 java.implementation = {java.whitespace* java.implements java.single_inter java.multi_inter java.whitespace java.start_block}
 
 --java.class_body = {java.whitespace* java.start_block line_end {!java.end_block .}* java.end_block}
-java.class_def = {line_end? java.whitespace* java.access_sp? java.static? java.final? java.class java.class_name java.hierarchy? java.implementation?}
+java.class = {line_end? java.whitespace* java.access_sp? java.static? java.final? java.class java.class_name java.hierarchy? java.implementation?}
 
-java.classes = {java.class_def / .}*
+java.classes = {java.class / .}*
 
 -------------------------------
 -- Error Handling
@@ -166,7 +166,7 @@ java.classes = {java.class_def / .}*
 --
 -- Run: rosie -wholefile java.errors <java-source-file>
 -- Structure: java.classes                         // Parent pattern that matches all class definitions
---                \- java.class_def                // Matches an entire class definition
+--                \- java.class                    // Matches an entire class definition
 --                    \- java.access_sp            // Access specifier (public, private, protected)
 --                    \- java.class_name           // Name of the class
 --                    \- java.hierarcy             // Does the class have a parent?
@@ -199,4 +199,7 @@ java.catch_exception = {java.catch java.whitespace+ java.start_paren java.catch_
 java.catch_body = {!java.end_block .}*
 java.catch_block = {java.catch_exception java.catch_body}
 
-java.errors = {java.throws_exception / java.throw_new_exception / java.try_block / java.catch_block / .}*
+java.error = {java.throws_exception / java.throw_new_exception / java.try_block / java.catch_block}
+java.errors = {java.error / .}*
+
+java.file = {java.line_comment / java.block_comment / java.package / java.dependency / java.function / java.class / java.error / .}*

@@ -35,3 +35,5 @@ alias py.string_lit = {{!"\"" .}* "\"" }
 py.paramaters = {!"):"  .}*
 py.function = {"def " py.function_name "(" py.paramaters "):"}
 py.functions = {{{!"def " .}* py.function }}*
+
+py.file = { py.line_comment / py.dependency / py.function .}*

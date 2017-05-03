@@ -76,7 +76,7 @@ go.dependencies = {{go.package / go.dependency / go.dependencies_factor / go.dep
 --
 -- Run: rosie -wholefile go.functions <go-source-file>
 -- Structure: go.functions                     // Parent pattern that matches all function definitions
---                \- go.function_def           // Matches an entire function definition
+--                \- go.function           // Matches an entire function definition
 --                    \- go.function_name      // Name of the function
 --                    \- go.parameters         // Matches a list of parameters
 --                        \- go.single_param   // Matches a parameter in list
@@ -97,9 +97,9 @@ go.parameters = go.start_paren go.single_param go.multi_param go.end_paren
 go.single_return = {!go.end_paren ![,] .}*
 alias go.multi_return =  {[,] go.single_return}*
 go.return = go.start_paren go.single_return go.multi_return go.end_paren
-go.function_def = go.func go.function_name go.parameters? go.return?
+go.function = go.func go.function_name go.parameters? go.return?
 
-go.functions = {go.function_def / .}*
+go.functions = {go.function / .}*
 
 -------------------------------
 -- Structs
@@ -109,7 +109,7 @@ go.functions = {go.function_def / .}*
 --
 -- Run: rosie -wholefile go.structs <go-source-file>
 -- Structure: go.structs                     // Parent pattern that matches all struct definitions
---                \- go.struct_def           // Matches an entire struct definition
+--                \- go.struct           // Matches an entire struct definition
 --                    \- go.struct_name      // Name of the struct
 -------------------------------
 
@@ -117,5 +117,7 @@ alias go.type = "type "
 alias go.struct = "struct "
 go.struct_name = {!go.struct .}*
 
-go.struct_def = go.type go.struct_name go.struct
-go.structs = {go.struct_def / .}*
+go.struct = go.type go.struct_name go.struct
+go.structs = {go.struct / .}*
+
+go.file = {go.line_comment / go.block_comment / go.package / go.dependency / go.dependency / go.function / go.struct / .}*

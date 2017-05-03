@@ -39,8 +39,8 @@ r.dependencies_text = {!{")" line_end} .}*
 r.library = {{r.lib "("} r.dependencies_text {")"}}
 r.source = {{r.src "("} r.dependencies_text {")"}}
 alias r.dependencies_pre = {!r.lib !r.src !line_end .}*
-
-r.dependencies = {{r.library / r.source / r.dependencies_pre} line_end}*
+r.dependency = {{r.library / r.source} line_end}
+r.dependencies = {r.dependency / .}*
 
 -------------------------------
 -- Functions
@@ -64,5 +64,7 @@ r.function_name = {{!r.whitespace .}* .}
 r.single_param = {!r.end_paren ![,] .}*
 alias r.multip_param = {[,] r.single_param }*
 r.parameters = {r.start_paren r.single_param r.multip_param r.end_paren}
+r.function = {r.function_name r.assignment r.parameters}
+r.functions = {{r.function} / .}*
 
-r.functions = {{r.function_name r.assignment r.parameters} / .}*
+r.file = {r.line_comment / r.dependency / r.function / .}*

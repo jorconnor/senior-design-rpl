@@ -85,6 +85,8 @@ cs.parentclass = {!":" !"{" ![:space:] !"," .}+
 cs.parentclasslist = (cs.parentclass ",")* cs.parentclass
 alias cs.visibility = "public" / "internal"
 alias cs.declaration = "class" / "interface"
-cs.classdef = cs.visibility? "sealed"? "abstract"? "partial"? "static"? cs.declaration cs.classname (":" cs.parentclasslist)? "{"
+cs.class = cs.visibility? "sealed"? "abstract"? "partial"? "static"? cs.declaration cs.classname (":" cs.parentclasslist)? "{"
 
-cs.classes = {{!cs.classdef .}* cs.classdef .}* {!cs.classdef .}*
+cs.classes = {{!cs.class .}* cs.class .}* {!cs.class .}*
+
+cs.file = {cs.block_comment / cs.line_comment / cs.dependency / cs.class / .}*
