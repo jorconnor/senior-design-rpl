@@ -35,7 +35,9 @@ langs = {
 tests = [ 
         "comments",
         "dependencies",
-        "functions"
+        "functions",
+        "classes",
+        "structs",
         ]
 
 def resolve_input(lang_dir, test,test_dir):
