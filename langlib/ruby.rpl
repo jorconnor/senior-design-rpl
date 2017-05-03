@@ -21,6 +21,12 @@ rb.line_comment = {rb.line_comment_context rb.line_comment_body}
 
 rb.line_comments = {{rb.line_comment / rb.line_comment_body / rb.line_comment_pre} .}*
 
+-- Aliased version of pattern for use in other patterns
+alias rb.alias_line_comment_text = {!line_end .}*
+alias rb.alias_line_comment_context = {!rb.line_comment_start !line_end .}*
+alias rb.alias_line_comment_body = {rb.line_comment_start rb.alias_line_comment_text}
+alias rb.alias_line_comment = {rb.alias_line_comment_context rb.alias_line_comment_body}
+
 -------------------------------
 -- Block Comments
 --
@@ -30,9 +36,9 @@ rb.line_comments = {{rb.line_comment / rb.line_comment_body / rb.line_comment_pr
 -- must appear first on a line.
 --
 -- Run: rosie -wholefile rb.block_comments <ruby-source-file>
--- Structure: rb.block_comments                // Parent pattern to match all block comments
---                \- rb.block_comment  // Matches a single block comment
---                    \- rb.comment_body       // Matches the body of a block comment
+-- Structure: rb.block_comments           // Parent pattern to match all block comments
+--                \- rb.block_comment     // Matches a single block comment
+--                    \- rb.comment_body  // Matches the body of a block comment
 -------------------------------
 
 alias rb.block_comment_start = "\n=begin"
@@ -42,6 +48,27 @@ rb.block_comment = {rb.block_comment_start rb.comment_body rb.block_comment_end}
 alias rb.block_comment_pre = {!rb.block_comment_start .}*
 
 rb.block_comments = {rb.block_comment_pre rb.block_comment}*
+
+-- Aliased version of pattern for use in other patterns
+alias rb.alias_comment_body = {!rb.block_comment_end .}*
+alias rb.alias_block_comment = {rb.block_comment_start rb.alias_comment_body rb.block_comment_end}
+
+-------------------------------
+-- String Literals
+--
+-- Currently matches for typical ruby string and character literals.
+-- Does allow for escaped single and double quotes
+--
+-- Run: rosie -wholefile rb.strings <ruby-source-file>
+-- Structure: rb.strings        // Parent pattern to match all string literals
+--                \- rb.string  // Pattern to match a single string
+-------------------------------
+
+rb.string = (["] {([\\] / !["]) .}* ["]) / (['] {([\\] / ![']) .}* ['])
+rb.strings = {rb.alias_line_comment / rb.alias_block_comment / rb.string / .}*
+
+--A "aliased" version is provided to allow for suppressed output in other patterns
+alias rb.alias_string = (["] {([\\] / !["]) .}* ["]) / (['] {([\\] / ![']) .}* ['])
 
 -------------------------------
 -- Dependencies

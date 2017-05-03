@@ -23,7 +23,7 @@ langs = {
         "java" : "java",
         "c" : "c",
         "cpp" : "cpp",
-        "chsarp" : "cs",
+        "csharp" : "cs",
         "go" : "go",
         "javascript" : "js",
         "ruby" : "rb",

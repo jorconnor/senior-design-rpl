@@ -85,7 +85,7 @@ java.dependencies = {{{java.package / java.dependency} / java.dependencies_pre} 
 -- Functions
 --
 -- Pattern to match function definitions. Does not
--- capture function bodies.
+-- capture function bodies or constructors.
 --
 -- Run: rosie -wholefile java.functions <java-source-file>
 -- Structure: java.functions                     // Parent pattern that matches all function definitions
@@ -108,19 +108,22 @@ alias java.whitespace = [:space:]
 alias java.invalid_identifier = [^ [:alnum:][_][$][<>]]
 alias java.throws = "throws "
 
-java.access_sp = {"public " / "private " / "protected "}
-java.return_type = {{!java.invalid_identifier .}+ java.whitespace}
+java.access_sp = "public " / "private " / "protected "
+java.return_type = {!java.access_sp {!java.invalid_identifier .}+ java.whitespace}
 java.function_name = {!java.start_paren !java.invalid_identifier .}+
+
 java.single_param = {!java.end_paren ![,] .}*
 alias java.multi_param = {[,] java.single_param}*
-java.parameters = {java.start_paren java.single_param java.multi_param java.end_paren java.whitespace*}
+java.parameters = {java.start_paren java.single_param java.multi_param java.end_paren java.whitespace+}
 
-java.single_excep = {!java.invalid_identifier ![,] .}*
+java.single_excep = {!java.whitespace ![,] .}*
 alias java.multi_excep = {[,] java.whitespace* java.single_excep}*
-java.exceptions = {java.single_excep java.multi_excep java.invalid_identifier}
+java.exceptions = {java.throws java.single_excep java.multi_excep java.whitespace+}
 
 java.function_body = {java.whitespace* java.start_block line_end {!java.end_block .}* java.end_block}
-java.function = {line_end? java.whitespace* java.access_sp? java.static? java.return_type java.function_name java.parameters java.throws? java.exceptions?}
+
+java.function = (java.access_sp? java.static? java.return_type java.function_name java.parameters java.exceptions? java.start_block)
+
 
 java.functions = {java.function / .}*
 
