@@ -82,15 +82,15 @@ alias c.start_block = "{"
 alias c.end_block = "}"
 alias c.whitespace = [:space:]
 alias c.pointer = "*"
-
+alias c.keywords = {"if" / "for" / "switch"}
 c.static = "static"
-c.return_type = {!c.whitespace .}*
+c.return_type = {!c.keywords !c.whitespace .}*
 c.function_name = {!line_end !c.start_paren .}*
 c.single_param = {!line_end !c.end_paren ![,] .}*
 alias c.multip_param =  {[,] c.single_param }*
 c.parameters = {c.start_paren c.single_param c.multip_param c.end_paren}
 
-c.function_call =  c.static? {!"if" c.return_type} c.pointer? c.function_name c.parameters "{"
+c.function_call =  {"\n"} c.static? {c.return_type} !c.keywords c.pointer? c.function_name c.parameters "{"
 c.function = {c.function_call}
 c.functions = {c.function / .}*
 
