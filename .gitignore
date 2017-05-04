@@ -2,3 +2,5 @@
 .pydevproject
 *.html
 *.pyc
+demoscripts/repo/
+demoscripts/libgit2-0.25.1/
