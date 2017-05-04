@@ -59,10 +59,11 @@ features = [
         ]
 
 rows = ["b", "c", "cpp", "cs", "go", "java", "js", "py", "r", "rb", "vb"]
+tmp = ["Bash", "C", "C++", "C#", "Go", "Java", "Javascript", "Python", "R", "Ruby", "Visual Basic"]
 cols = ["block_comment", "line_comment", "dependency", "function", "class", "struct", "package"]
 vals = pylab.zeros((11,8), dtype=object)
 for i in range(11):
-    vals[i][0] = rows[i]
+    vals[i][0] = tmp[i]
 
 #url = 'https://github.com/jamiejennings/rosie-pattern-language'
 
@@ -75,6 +76,7 @@ repo_path = "./repo/"
 output =  repo_path + "/output"
 if(isdir(repo_path)):
     rmtree(repo_path)
+print("Cloning Repository")
 clone_repository(url,repo_path)
 
 def run_thread(file_list,q):
@@ -116,9 +118,10 @@ def iterate_over_path(path):
         tmp = q.get()
         vals[tmp[0]][tmp[1]+1] += tmp[2]
             
+print("Parsing Files")
 bef = time()
 iterate_over_path(repo_path)
-print(time() - bef)
+print("Total Parse Time: " + str(time() - bef) + " s")
 print tabulate(vals, headers=cols, tablefmt='orgtbl')
 
     
