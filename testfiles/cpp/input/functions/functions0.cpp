@@ -62,7 +62,7 @@ const CADTables& CADFile::getTables() const
 int CADFile::ParseFile( enum OpenOptions eOptions, bool bReadUnsupportedGeometries )
 {
     if( nullptr == pFileIO )
-        return CADErrorCodes::FILE_OPEN_FAILED; // Comment
+        return CADErrorCodes::FILE_OPEN_FAILED;
 
     if( !pFileIO->IsOpened() )
     {
@@ -93,7 +93,7 @@ int CADFile::ParseFile( enum OpenOptions eOptions, bool bReadUnsupportedGeometri
     return CADErrorCodes::SUCCESS;
 }
 
-int CADFile::ReadTables( CADFile::OpenOptions /*eOptions*/ )
+int CADFile::ReadTables( CADFile::OpenOptions )
 {
     // TODO: read other tables in ALL option mode
 
