@@ -21,6 +21,29 @@ vb.line_comment= {vb.line_comment_context vb.line_comment_body}
 
 vb.line_comments= {{vb.line_comment / vb.line_comment_body / vb.line_comment_pre} .}*
 
+-- Aliased version of pattern for use in other patterns
+alias vb.alias_line_comment_text= {!line_end .}*
+alias vb.alias_line_comment_context= {!vb.line_comment_start !line_end .}*
+alias vb.alias_line_comment_body= {vb.line_comment_start vb.alias_line_comment_text}
+alias vb.alias_line_comment= {vb.alias_line_comment_context vb.alias_line_comment_body}
+
+-------------------------------
+-- String Literals
+--
+-- Currently matches for typical vb string literals.
+-- Does allow for escaped single and double quotes
+--
+-- Run: rosie -wholefile vb.strings <vb-source-file>
+-- Structure: vb.strings        // Parent pattern to match all string literals
+--                \- vb.string  // Pattern to match a single string
+-------------------------------
+
+vb.string = ["] {([\\] / !["]) .}* ["]
+vb.strings = {vb.alias_line_comment / vb.string / .}*
+
+--A "aliased" version is provided to allow for suppressed output in other patterns
+alias vb.alias_string = ["] {([\\] / !["]) .}* ["]
+
 -------------------------------
 -- Dependencies
 --
