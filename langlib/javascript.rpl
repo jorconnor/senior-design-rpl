@@ -1,3 +1,10 @@
+alias js.seperator = ","
+alias js.start_paren = "("
+alias js.end_paren = ")"
+alias js.start_block = "{"
+alias js.end_block = "}"
+alias js.whitespace = [:space:]
+
 ---------------------------------------------------------------------
 -- String Literals
 --Catches strings in the file any text inside the charactesrs " x " 
@@ -102,12 +109,6 @@ js.dependencies = { { js.dependency / js.dependencies_pre} {line_end / statement
 --                         \- js.multip_param           // Matches all parameters
 --                             \- js.single_param       // matches a single parameter
 ---------------------------------------------------------------------
-alias js.seperator = ","
-alias js.start_paren = "("
-alias js.end_paren = ")"
-alias js.start_block = "{"
-alias js.end_block = "}"
-alias js.whitespace = [:space:]
 
 alias js.pre_function = {statement_end / line_end / [.] / [=] / "return"  . } 
 alias js.function = {js.pre_function? "function" }
@@ -130,11 +131,31 @@ js.functions = { { js.function_call } / .}*
 --                \- js.throw                            // The "throw" keyword
 --                \- js.new                              // If "new" is present
 --                \- js.exception                        // The exception name
+try...catch
+try...finally
+try...catch...finally
 ---------------------------------------------------------------------
 alias js.throw = "throw "
 alias js.new = "new "
 js.exception = { !statement_end .}*
-js.exceptions = {{ js.throw js.new? js.exception statement_end } / .}*
+alias js.exception_stmt = js.throw js.new? js.exception statement_end
+js.exceptions = {{ js.exception_stmt } / .}*
+alias js.try = "try"
+alias js.catch = "catch"
+alias js.finally = "finally"
+alias js.exception_body = {{!js.end_block .}*}*
+alias js.try_block = js.try js.start_block js.exception_body js.end_block
+alias js.catch_block = js.catch js.start_paren js.single_param js.end_paren js.start_block js.exception_body js.end_block
+alias js.finally_block = js.finally js.start_block js.exception_body js.end_block
+alias js.try_catch_finally = js.try_block js.catch_block js.finally_block
+js.exceptions_try_catch = {{ js.try_catch_finally }/.}*
 
+---------------------------------------------------------------------
+-- Class Definitions
 
+---------------------------------------------------------------------
+alias js.class = "class"
+js.class_name = { !js.start_block !js.start_paren .}*
+alias js.class_definition = js.class js.class_name js.parameters? js.start_block
 
+js.class_definitions = { js.class_definitions / . }*
