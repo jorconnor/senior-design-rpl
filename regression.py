@@ -23,7 +23,7 @@ langs = {
         "java" : "java",
         "c" : "c",
         "cpp" : "cpp",
-        "chsarp" : "cs",
+        "csharp" : "cs",
         "go" : "go",
         "javascript" : "js",
         "ruby" : "rb",
@@ -35,7 +35,9 @@ langs = {
 tests = [ 
         "comments",
         "dependencies",
-        "functions"
+        "functions",
+        "classes",
+        "structs",
         ]
 
 def resolve_input(lang_dir, test,test_dir):

@@ -54,6 +54,7 @@ alias js.block_comment_pre= {!js.block_comment_start.}*
 js.block_comment_body= {!js.block_comment_end .}*
 js.block_comment= { js.block_comment_start js.block_comment_body js.block_comment_end}
 js.block_comments= {js.block_comment_pre js.block_comment }*
+<<<<<<< HEAD
 ---------------------------------------------------------------------
 -- Dependencies
 -- Matches all the import statements present in the source file
@@ -71,6 +72,10 @@ js.block_comments= {js.block_comment_pre js.block_comment }*
 --                    \- js.dependencies_module         // Matches import statement with just module name
 --                        \- js.module_text             // The module name
 ---------------------------------------------------------------------
+=======
+
+--Dependencies
+>>>>>>> c658a3c2759f1ed93121196f86c6a581cd9b86ac
 alias js.import = "import "
 alias js.from = " from "
 alias js.as = " as "
@@ -111,7 +116,7 @@ js.dependencies = { { js.dependency / js.dependencies_pre} {line_end / statement
 ---------------------------------------------------------------------
 
 alias js.pre_function = {statement_end / line_end / [.] / [=] / "return"  . } 
-alias js.function = {js.pre_function? "function" }
+alias js.function_call = {js.pre_function? "function" }
 js.function_name = {!line_end !js.start_paren .}*
 js.single_param = { !js.end_paren ![,] .}+
 alias js.multip_param = (js.single_param ",")* js.single_param
@@ -119,9 +124,9 @@ js.parameters =  "(" js.multip_param? ")"
 
 alias js.function_body_clean = {!js.end_block .}*
 js.function_body = {js.whitespace js.start_block js.function_body_clean js.end_block}
-js.function_call =  js.function  js.function_name js.parameters 
+js.function =  js.function_call  js.function_name js.parameters 
 
-js.functions = { { js.function_call } / .}* 
+js.functions = { { js.function } / .}* 
 
 ---------------------------------------------------------------------
 -- Exceptions
@@ -138,24 +143,17 @@ try...catch...finally
 alias js.throw = "throw "
 alias js.new = "new "
 js.exception = { !statement_end .}*
-alias js.exception_stmt = js.throw js.new? js.exception statement_end
-js.exceptions = {{ js.exception_stmt } / .}*
-alias js.try = "try"
-alias js.catch = "catch"
-alias js.finally = "finally"
-alias js.exception_body = {{!js.end_block .}*}*
-alias js.try_block = js.try js.start_block js.exception_body js.end_block
-alias js.catch_block = js.catch js.start_paren js.single_param js.end_paren js.start_block js.exception_body js.end_block
-alias js.finally_block = js.finally js.start_block js.exception_body js.end_block
-alias js.try_catch_finally = js.try_block js.catch_block js.finally_block
-js.exceptions_try_catch = {{ js.try_catch_finally }/.}*
+alias js.throw = "throw "
+alias js.new = "new "
+js.exception = { !statement_end .}*
+js.exceptions = {{ js.throw js.new? js.exception statement_end } / .}*
 
----------------------------------------------------------------------
--- Class Definitions
-
----------------------------------------------------------------------
+--Class Definitions
 alias js.class = "class"
-js.class_name = { !js.start_block !js.start_paren .}*
-alias js.class_definition = js.class js.class_name js.parameters? js.start_block
+alias js.extends = "extends"
+js.class_name = { !js.start_block !js.start_paren !js.extends .}*
+js.class_definition = js.class js.class_name js.parameters? {js.extends js.class_name}? js.start_block
 
-js.class_definitions = { js.class_definitions / . }*
+js.class_definitions = { js.class_definition / . }*
+
+
