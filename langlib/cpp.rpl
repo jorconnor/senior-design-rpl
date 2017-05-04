@@ -34,7 +34,7 @@ cpp.dependencies = {{cpp.dependency / cpp.dependencies_pre} line_end}*
 -- Run: rosie -wholefile cpp.functions <cpp-source-file>
 -- Structure: cpp.functions                       // Parent pattern that matches all function definitions
 --                \- cpp.function                 // Matches an entire function definition
---                    \- cpp.function_call        // Matches a c++ function call definition
+--                    \- cpp.function             // Matches a c++ function call definition
 --                        \- cpp.static           // Matches if the function call is defined as static
 --                        \- cpp.return_type      // Matches the return type of the function
 --                        \- cpp.pointer          // Matches wether or not the functions return type is a pointer
