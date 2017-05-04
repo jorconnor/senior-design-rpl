@@ -28,13 +28,13 @@ cpp.dependencies = {{cpp.dependency / cpp.dependencies_pre} line_end}*
 -- Functions
 --
 -- Pattern to match function definitions. This does not
--- capture the functions body. This is currently the same syntatic definition of a C function.
+-- capture the functions body. This is currently the same syntatic definition of a C++ function.
 -- New features of C++ have not yet been accounted for.
 --
 -- Run: rosie -wholefile cpp.functions <cpp-source-file>
 -- Structure: cpp.functions                       // Parent pattern that matches all function definitions
 --                \- cpp.function                 // Matches an entire function definition
---                    \- cpp.function_call        // Matches a c function call definition
+--                    \- cpp.function_call        // Matches a c++ function call definition
 --                        \- cpp.static           // Matches if the function call is defined as static
 --                        \- cpp.return_type      // Matches the return type of the function
 --                        \- cpp.pointer          // Matches wether or not the functions return type is a pointer
@@ -48,18 +48,20 @@ alias cpp.start_paren = "("
 alias cpp.end_paren = ")"
 alias cpp.start_block = "{"
 alias cpp.end_block = "}"
-alias cpp.whitespace = [:space:]
 alias cpp.pointer = "*"
-alias cpp.keywords = {"if" / "for" / "switch"}
+alias cpp.invalid_identifier = [^ [A-Z][a-z][0-9][_][&][<][>]]
+alias cpp.keywords = {"if" / "for" / "switch" / "catch" / "try" / "do" / "while" / "else" / "else if" / "} else if"}
+alias cpp.whitespace = [:space:]
+alias cpp.const = "const"
 cpp.static = "static"
-cpp.return_type = {!cpp.keywords !cpp.whitespace .}*
-cpp.function_name = {!line_end !cpp.start_paren .}*
-cpp.single_param = {!line_end !cpp.end_paren ![,] .}*
-alias cpp.multip_param =  {[,] cpp.single_param }*
-cpp.parameters = {cpp.start_paren cpp.single_param cpp.multip_param cpp.end_paren}
+cpp.return_type = !cpp.keywords cpp.const? {{!cpp.invalid_identifier .}+ " "}*
+cpp.function_name = !cpp.keywords {!line_end !cpp.start_paren .}+
 
-cpp.function_call =  {"\n"} cpp.static? {cpp.return_type} !cpp.keywords cpp.pointer? cpp.function_name cpp.parameters "{"
-cpp.function = {cpp.function_call}
+cpp.single_param = {!cpp.end_paren ![,] .}*
+alias cpp.multi_param = {[,] cpp.single_param}*
+cpp.parameters = {cpp.start_paren cpp.single_param cpp.multi_param cpp.end_paren cpp.whitespace+}
+
+cpp.function = cpp.static?  cpp.return_type !cpp.keywords cpp.pointer? cpp.function_name !cpp.keywords cpp.parameters cpp.const? "{"
 cpp.functions = {cpp.function / .}*
 
 cpp.file = {cpp.block_comment / cpp.line_comment / cpp.dependency / .}*
