@@ -20,6 +20,15 @@ py.line_comment_body= {py.line_comment_start py.line_comment_text}
 py.line_comment= {py.line_comment_context py.line_comment_body}
 py.line_comments= {{py.line_comment / py.line_comment_body / py.line_comment_pre} .}*
 
+alias py.alias_line_comment_start= "#"
+alias py.alias_line_comment_text= {!line_end .}*
+alias py.alias_line_comment_pre= {!py.alias_line_comment_start !line_end .}*
+alias py.alias_line_comment_context= {!py.alias_line_comment_start !line_end .}*
+alias py.alias_line_comment_body= {py.alias_line_comment_start py.alias_line_comment_text}
+alias py.alias_line_comment= {py.alias_line_comment_context py.alias_line_comment_body}
+alias py.alias_line_comments= {{py.alias_line_comment / py.alias_line_comment_body / py.line_comment_pre} .}*
+
+
 -------------------------------
 -- Dependencies
 --
@@ -75,7 +84,7 @@ py.function_name = {!"(" .}*
 alias py.string_lit = {{!"\"" .}* "\"" }
 py.paramaters = {!"):"  .}*
 py.function = {"def " py.function_name "(" py.paramaters "):"}
-py.functions = {{{!"def " .}* py.function }}*
+py.functions = {py.alias_line_comment? py.function / .}*
 
 -------------------------------
 -- Classes
@@ -92,7 +101,7 @@ py.functions = {{{!"def " .}* py.function }}*
 py.class_name = {!"(" .}*
 alias py.string_lit = {{!"\"" .}* "\"" }
 py.parents= {!"):"  .}*
-py.class = {"def " py.function_name "(" py.paramaters "):"}
-py.classes = {{{!"def " .}* py.function }}*
+py.class = {"class " py.class_name "(" py.parents "):"}
+py.classes = {py.alias_line_comment? py.class / .}+
 
 py.file = { py.line_comment / py.dependency / py.function / py.classes / .}*
