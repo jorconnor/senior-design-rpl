@@ -1,4 +1,20 @@
 -------------------------------
+--String Literals
+--
+--Currently matches for typical c string and character literals.
+--Does allow for escaped single and double quotes
+--A "aliased" version is provided to allow for suppressed output in other patterns
+-- Run: rosie -wholefile py.strings <c-source-file>
+-- Structure: py.strings                      // Parent pattern to extract all strings from file
+--              \- py.string                  // Matches a single c string
+-- NOTE py.strings and py.characters are defined AFTER comments to allow for
+--      commented strings to be ignored.
+-------------------------------
+alias py.alias_double_quoted_string = ["] {([\\] / !["]) .}* ["]
+alias py.alias_single_quoted_string = ['] {([\\] / ![']) .}* [']
+py.string = py.alias_double_quoted_string / py.alias_single_quoted_string
+
+-------------------------------
 -- Inline Comments
 --
 -- Matches in line comments starting with a '//'. Also
@@ -28,6 +44,7 @@ alias py.alias_line_comment_body= {py.alias_line_comment_start py.alias_line_com
 alias py.alias_line_comment= {py.alias_line_comment_context py.alias_line_comment_body}
 alias py.alias_line_comments= {{py.alias_line_comment / py.alias_line_comment_body / py.line_comment_pre} .}*
 
+py.strings = {py.alias_line_comment / py.string / .}*
 
 -------------------------------
 -- Dependencies
@@ -81,7 +98,6 @@ py.dependencies = {py.alias_line_comment / py.dependency / .}*
 --                    \- py.paraeters               // The plain list of function parameters
 -------------------------------
 py.function_name = {!"(" .}*
-alias py.string_lit = {{!"\"" .}* "\"" }
 py.paramaters = {!"):"  .}*
 py.function = {"def " py.function_name "(" py.paramaters "):"}
 py.functions = {py.alias_line_comment? py.function / .}*
@@ -99,7 +115,6 @@ py.functions = {py.alias_line_comment? py.function / .}*
 --                    \- py.parents              // Any implemented classes
 -------------------------------
 py.class_name = {!"(" .}*
-alias py.string_lit = {{!"\"" .}* "\"" }
 py.parents= {!"):"  .}*
 py.class = {"class " py.class_name "(" py.parents "):"}
 py.classes = {py.alias_line_comment? py.class / .}+
