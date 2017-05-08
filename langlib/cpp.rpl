@@ -106,14 +106,15 @@ alias cpp.keywords = {"if" / "for" / "switch" / "catch" / "try" / "do" / "while"
 alias cpp.whitespace = [:space:]
 alias cpp.const = "const"
 cpp.static = "static"
-cpp.return_type = !cpp.keywords cpp.const? {{!cpp.invalid_identifier .}+ " "}*
+cpp.inline = "inline"
+cpp.return_type = !cpp.keywords cpp.const? "struct"? {!cpp.invalid_identifier .}+ cpp.pointer*
 cpp.function_name = !cpp.keywords {!line_end !cpp.start_paren .}+
 
 cpp.single_param = {!cpp.end_paren ![,] .}*
 alias cpp.multi_param = {[,] cpp.single_param}*
 cpp.parameters = {cpp.start_paren cpp.single_param cpp.multi_param cpp.end_paren cpp.whitespace+}
 
-cpp.function = cpp.static?  cpp.return_type !cpp.keywords cpp.pointer? cpp.function_name !cpp.keywords cpp.parameters cpp.const? "{"
+cpp.function = cpp.whitespace? cpp.static? cpp.inline? cpp.return_type !cpp.keywords cpp.function_name !cpp.keywords cpp.parameters cpp.const? "{"
 cpp.functions = {cpp.function / .}*
 
 -------------------------------

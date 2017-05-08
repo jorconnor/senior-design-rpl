@@ -101,19 +101,20 @@ alias c.end_paren = ")"
 alias c.start_block = "{"
 alias c.end_block = "}"
 alias c.pointer = "*"
-alias c.invalid_identifier = [^ [A-Z][a-z][0-9][_][&][<][>]]
+alias c.invalid_identifier = [^[A-Z][a-z][0-9][_][&][<][>]]
 alias c.keywords = {"if" / "for" / "switch" / "catch" / "try" / "do" / "while" / "else" / "else if" / "} else if"}
 alias c.whitespace = [:space:]
 alias c.const = "const"
 c.static = "static"
-c.return_type = !c.keywords c.const? {{!c.invalid_identifier .}+ " "}*
+c.inline = "inline"
+c.return_type = !c.keywords c.const? "struct"? {!c.invalid_identifier .}+ c.pointer*
 c.function_name = !c.keywords {!line_end !c.start_paren .}+
 
 c.single_param = {!c.end_paren ![,] .}*
 alias c.multi_param = {[,] c.single_param}*
 c.parameters = {c.start_paren c.single_param c.multi_param c.end_paren c.whitespace+}
 
-c.function = c.static?  c.return_type !c.keywords c.pointer? c.function_name !c.keywords c.parameters c.const? "{"
+c.function = c.whitespace? c.static? c.inline? c.return_type !c.keywords c.function_name !c.keywords c.parameters c.const? "{"
 c.functions = {c.function / .}*
 
 -------------------------------
