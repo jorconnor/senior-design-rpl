@@ -7,9 +7,9 @@ alias js.whitespace = [:space:]
 
 ---------------------------------------------------------------------
 -- String Literals
---Catches strings in the file any text inside the charactesrs " x " 
+--Catches strings in the file any text inside the charactesrs " x "
 -- Also catches  \" to continue matching the string if  " is escaped
--- 
+--
 -- Run : rosie -wholefile "js.strings" <javascript-source-file>
 -- Structure : js.strings                       // Parent pattern to extract all strings from file
 --                \- js.strings_text            // Matches the text enclosed within "" and ''
@@ -95,7 +95,7 @@ alias js.comma = [,]
 alias js.brace_start = {"{"}
 alias js.brace_end = {"}"}
 js.member_alias = { !js.brace_end !js.comma !js.from !statement_end !line_end  .}*
-js.member_name = { !js.brace_end !js.comma !js.as !js.from !statement_end !line_end  .}* 
+js.member_name = { !js.brace_end !js.comma !js.as !js.from !statement_end !line_end  .}*
 alias js.member_alias_text = js.as js.member_alias
 js.member = { js.member_name js.member_alias_text? }
 alias js.member_text = { js.brace_start? js.member js.brace_end? }
@@ -127,22 +127,22 @@ js.dependencies = { { js.dependency / js.dependencies_pre} {line_end / statement
 --                             \- js.single_param       // matches a single parameter
 ---------------------------------------------------------------------
 
-alias js.pre_function = {statement_end / line_end / [.] / [=] / "return"  . } 
+alias js.pre_function = {statement_end / line_end / [.] / [=] / "return"  . }
 alias js.function_call = {js.pre_function? "function" }
 js.function_name = {!line_end !js.start_paren .}*
 js.single_param = { !js.end_paren ![,] .}+
 alias js.multip_param = (js.single_param ",")* js.single_param
-js.parameters =  "(" js.multip_param? ")" 
+js.parameters =  "(" js.multip_param? ")"
 
 alias js.function_body_clean = {!js.end_block .}*
 js.function_body = {js.whitespace js.start_block js.function_body_clean js.end_block}
-js.function =  js.function_call  js.function_name js.parameters 
+js.function =  js.function_call  js.function_name js.parameters
 
-js.functions = { js.alias_line_comment / js.alias_block_comment / js.function / .}* 
+js.functions = { js.alias_line_comment / js.alias_block_comment / js.function / .}*
 
 ---------------------------------------------------------------------
 -- Exceptions
--- Throw statements are caught with this pattern 
+-- Throw statements are caught with this pattern
 -- Run: rosie -wholefile "js.exceptions" <javascript-source-file>
 -- Structure: js.exceptions                              // All Exceptions statements
 --                \- js.throw                            // The "throw" keyword
@@ -166,6 +166,4 @@ alias js.extends = "extends"
 js.class_name = { !js.start_block !js.start_paren !js.extends .}*
 js.class_definition = js.class js.class_name js.parameters? {js.extends js.class_name}? js.start_block
 
-js.class_definitions = { js.class_definition / . }*
-
-
+js.classes = { js.class_definition / . }*
