@@ -37,20 +37,23 @@ alias b.alias_line_comment = {b.alias_line_comment_context b.alias_line_comment_
 -- Structure: b.block_comments           // Parent pattern to match all block comments
 --                \- b.block_comment     // Matches a single block comment
 --                    \- b.comment_body  // Matches the body of a block comment
+-- NOTE: Bash does not have true "block" comments defined in the language syntax.
+--       As a result this is not truly supported by langlib. This pattern is untested
+--       but is left in incase some use may be found.
 -------------------------------
-
-alias b.block_comment_start = ":<<COMMENT" / "<<COMMENT" / "<<'COMMENT'"
-alias b.block_comment_end = "\nCOMMENT"
-
-b.comment_body = {!b.block_comment_end .}*
-b.block_comment = {b.block_comment_start b.comment_body b.block_comment_end}
-alias b.block_comment_pre = {!b.block_comment_start .}*
-b.block_comments = {b.block_comment_pre b.block_comment}*
-
+--
+--alias b.block_comment_start = ":<<COMMENT" / "<<COMMENT" / "<<'COMMENT'"
+--alias b.block_comment_end = "\nCOMMENT"
+--
+--b.comment_body = {!b.block_comment_end .}*
+--b.block_comment = {b.block_comment_start b.comment_body b.block_comment_end}
+--alias b.block_comment_pre = {!b.block_comment_start .}*
+--b.block_comments = {b.block_comment_pre b.block_comment}*
+--
 -- Aliased version of the pattern for use in other patterns
-alias b.alias_comment_body = {!b.block_comment_end .}*
-alias b.alias_block_comment = {b.block_comment_start b.alias_comment_body b.block_comment_end}
-
+--alias b.alias_comment_body = {!b.block_comment_end .}*
+--alias b.alias_block_comment = {b.block_comment_start b.alias_comment_body b.block_comment_end}
+-- 
 -------------------------------
 -- String Literals
 --
@@ -63,7 +66,7 @@ alias b.alias_block_comment = {b.block_comment_start b.alias_comment_body b.bloc
 -------------------------------
 
 b.string = (["] {([\\] / !["]) .}* ["]) / (['] {([\\] / ![']) .}* ['])
-b.strings = {b.alias_line_comment / b.alias_block_comment / b.string / .}*
+b.strings = {b.alias_line_comment / b.string / .}*
 
 --A "aliased" version is provided to allow for suppressed output in other patterns
 alias b.alias_string = (["] {([\\] / !["]) .}* ["]) / (['] {([\\] / ![']) .}* ['])
@@ -91,4 +94,4 @@ alias b.temp_comment = {!"#" .}
 b.function = {{"function" b.function_name "()"} / {[ ]* b.function_name [ ]* "()"}}
 b.functions = {{!b.function {b.temp_comment / .}}* b.function}*
 
-b.file = {b.line_comment / b.block_comment / .}*
+b.file = {b.function / .}*
