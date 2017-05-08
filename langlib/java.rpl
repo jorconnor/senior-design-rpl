@@ -4,14 +4,19 @@
 --Currently matches for typical java string and character literals.
 --Does allow for escaped single and double quotes
 --A "aliased" version is provided to allow for suppressed output in other patterns
+-- Run: rosie -wholefile java.strings <java-source-file>
+-- Structure: java.strings                      // Parent pattern to extract all strings from file
+--              \- java.string                  // Matches a single java string
+--            java.characters                   // Parent pattern to match all character literals from file
+--              \- java.character               // Matches a single java character
+-- NOTE java.strings and java.characters are defined AFTER inline comments to allow for
+--      commented strings to be ignored.
 -------------------------------
-alias java.string_alias = ["] {([\\] / !["]) .}* ["]
+alias java.alias_string = ["] {([\\] / !["]) .}* ["]
 java.string = ["] {([\\] / !["]) .}* ["]
-java.strings = {java.string / .}*
 
-alias java.character_alias = ['] {([\\] / ![']) .} [']
+alias java.alias_character = ['] {([\\] / ![']) .} [']
 java.character =  ['] {([\\] / ![']) .} [']
-java.characters = {java.character .}*
 
 -------------------------------
 -- Inline Comments
@@ -30,11 +35,18 @@ java.characters = {java.character .}*
 
 alias java.line_comment_start= "//"
 java.line_comment_text= {!line_end .}*
-alias java.line_comment_pre= {java.string_alias? !java.line_comment_start !line_end .}*
-java.line_comment_context= {java.string_alias? !java.line_comment_start !line_end .}*
+alias java.line_comment_pre= {java.alias_string? !java.line_comment_start !line_end .}*
+java.line_comment_context= {java.alias_string? !java.line_comment_start !line_end .}*
 java.line_comment_body= {java.line_comment_start java.line_comment_text}
 java.line_comment= {java.line_comment_context java.line_comment_body}
 java.line_comments= {{ java.line_comment / java.line_comment_body / java.line_comment_pre} .}*
+
+alias java.alias_line_comment_start= "//"
+alias java.alias_line_comment_text= {!line_end .}*
+alias java.alias_line_comment_pre= {java.alias_string? !java.alias_line_comment_start !line_end .}*
+alias java.alias_line_comment_context= {java.alias_string? !java.alias_line_comment_start !line_end .}*
+alias java.alias_line_comment_body= {java.alias_line_comment_start java.alias_line_comment_text}
+alias java.alias_line_comment= {java.alias_line_comment_context java.alias_line_comment_body}
 
 -------------------------------
 -- Block Comments
@@ -54,6 +66,15 @@ alias java.block_comment_pre= {!java.block_comment_start .}*
 java.block_comment_body= {!java.block_comment_end .}*
 java.block_comment= {java.block_comment_start java.block_comment_body java.block_comment_end}
 java.block_comments= {java.block_comment_pre java.block_comment }*
+
+alias java.alias_block_comment_start = "/*"
+alias java.alias_block_comment_end = "*/"
+alias java.alias_block_comment_pre= {!java.alias_block_comment_start .}*
+alias java.alias_block_comment_body= {!java.alias_block_comment_end .}*
+alias java.alias_block_comment= {java.alias_block_comment_start java.alias_block_comment_body java.alias_block_comment_end}
+
+java.strings = {java.alias_line_comment / java.alias_block_comment / java.string / .}*
+java.characters = {java.alias_line_comment / java.alias_block_comment / java.character / .}*
 
 -------------------------------
 -- Dependencies
@@ -205,4 +226,4 @@ java.catch_block = {java.catch_exception java.catch_body}
 java.error = {java.throws_exception / java.throw_new_exception / java.try_block / java.catch_block}
 java.errors = {java.error / .}*
 
-java.file = {java.line_comment / java.block_comment / java.package / java.dependency / java.function / java.class / java.error / .}*
+java.file = {java.line_comment / java.block_comment / java.string / java.package / java.dependency / java.function / java.class / java.error / .}*
