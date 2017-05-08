@@ -148,19 +148,28 @@ js.functions = { js.alias_line_comment / js.alias_block_comment / js.function / 
 --                \- js.throw                            // The "throw" keyword
 --                \- js.new                              // If "new" is present
 --                \- js.exception                        // The exception name
---try...catch
---try...finally
---try...catch...finally
 ---------------------------------------------------------------------
-alias js.throw = "throw "
-alias js.new = "new "
-js.exception = { !statement_end .}*
 alias js.throw = "throw "
 alias js.new = "new "
 js.exception = { !statement_end .}*
 js.exceptions = {{ js.throw js.new? js.exception statement_end } / .}*
 
---Class Definitions
+-------------------------------
+-- Classes
+--
+-- Pattern to match class definitions. Does not
+-- capture class bodies.
+--
+-- Run: rosie -wholefile js.classes <java-source-file>
+-- Structure: js.classes                                // Parent pattern that matches all class definitions
+--                \- js.class_definition                // Matches an entire class definition
+--                   \- js.class                        // The word "class"
+--                   \- js.class_name                   // The name of the class being matched
+--                     \- js.parameters                 // Matches the parameters for the function call
+--                         \- js.multip_param           // Matches all parameters
+--                             \- js.single_param       // matches a single parameter
+--                   \- js.extends                      // The word "extends"
+-------------------------------
 alias js.class = "class"
 alias js.extends = "extends"
 js.class_name = { !js.start_block !js.start_paren !js.extends .}*
