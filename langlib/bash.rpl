@@ -66,7 +66,7 @@ alias b.alias_line_comment = {b.alias_line_comment_context b.alias_line_comment_
 -------------------------------
 
 b.string = (["] {([\\] / !["]) .}* ["]) / (['] {([\\] / ![']) .}* ['])
-b.strings = {b.alias_line_comment / b.alias_block_comment / b.string / .}*
+b.strings = {b.alias_line_comment / b.string / .}*
 
 --A "aliased" version is provided to allow for suppressed output in other patterns
 alias b.alias_string = (["] {([\\] / !["]) .}* ["]) / (['] {([\\] / ![']) .}* ['])
