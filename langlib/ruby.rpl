@@ -85,12 +85,10 @@ alias rb.alias_string = (["] {([\\] / !["]) .}* ["]) / (['] {([\\] / ![']) .}* [
 -------------------------------
 
 alias rb.load = "load " / "require " / "require_relative "
-rb.module = {!["'] .}*
-alias rb.module_lit = ["'] rb.module
-rb.dependency = {rb.load rb.module_lit ["']}
-alias rb.dependencies_pre = {!rb.load !line_end .}*
+rb.module = {!line_end .}*
+rb.dependency = {rb.load rb.module line_end}
 
-rb.dependencies = {{rb.dependency / rb.dependencies_pre} line_end}*
+rb.dependencies = {rb.dependency / .}*
 
 -------------------------------
 -- Functions
