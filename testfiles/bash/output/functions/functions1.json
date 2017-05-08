@@ -1,80 +1,36 @@
-Reading manifest file /mnt/c/Users/mshanka/git/rosie-pattern-language/MANIFEST
-Compiling /mnt/c/Users/mshanka/git/rosie-pattern-language/rpl/common.rpl
-Compiling /mnt/c/Users/mshanka/git/rosie-pattern-language/rpl/datetime.rpl
-Compiling /mnt/c/Users/mshanka/git/rosie-pattern-language/rpl/network.rpl
-Warning: reassignment to identifier any
-Warning: reassignment to identifier digit
-Warning: reassignment to identifier letter
-Compiling /mnt/c/Users/mshanka/git/rosie-pattern-language/rpl/basic.rpl
-Compiling /mnt/c/Users/mshanka/git/rosie-pattern-language/../senior-design-rpl/langlib/lang-common.rpl
-Compiling /mnt/c/Users/mshanka/git/rosie-pattern-language/../senior-design-rpl/langlib/java.rpl
-Warning: reassignment to identifier java.class
-Warning: reassignment to identifier java.throws
-Compiling /mnt/c/Users/mshanka/git/rosie-pattern-language/../senior-design-rpl/langlib/go.rpl
-Warning: reassignment to identifier go.struct
-Compiling /mnt/c/Users/mshanka/git/rosie-pattern-language/../senior-design-rpl/langlib/r.rpl
-Warning: reassignment to identifier r.alias_line_comment_text
-Warning: reassignment to identifier r.alias_line_comment_context
-Warning: reassignment to identifier r.alias_line_comment_body
-Warning: reassignment to identifier r.alias_line_comment
-Compiling /mnt/c/Users/mshanka/git/rosie-pattern-language/../senior-design-rpl/langlib/go.rpl
-Warning: reassignment to identifier go.line_comment_start
-Warning: reassignment to identifier go.line_comment_text
-Warning: reassignment to identifier go.line_comment_pre
-Warning: reassignment to identifier go.line_comment_context
-Warning: reassignment to identifier go.line_comment_body
-Warning: reassignment to identifier go.line_comment
-Warning: reassignment to identifier go.line_comments
-Warning: reassignment to identifier go.alias_line_comment_text
-Warning: reassignment to identifier go.alias_line_comment_context
-Warning: reassignment to identifier go.alias_line_comment_body
-Warning: reassignment to identifier go.alias_line_comment
-Warning: reassignment to identifier go.block_comment_start
-Warning: reassignment to identifier go.block_comment_end
-Warning: reassignment to identifier go.block_comment_pre
-Warning: reassignment to identifier go.block_comment_body
-Warning: reassignment to identifier go.block_comment
-Warning: reassignment to identifier go.block_comments
-Warning: reassignment to identifier go.alias_block_comment_body
-Warning: reassignment to identifier go.alias_block_comment
-Warning: reassignment to identifier go.string
-Warning: reassignment to identifier go.strings
-Warning: reassignment to identifier go.alias_string
-Warning: reassignment to identifier go.import
-Warning: reassignment to identifier go.indent
-Warning: reassignment to identifier go.dependencies_text
-Warning: reassignment to identifier go.dependency
-Warning: reassignment to identifier go.import_list
-Warning: reassignment to identifier go.dependencies_factor
-Warning: reassignment to identifier go.dependencies_pre
-Warning: reassignment to identifier go.package_text
-Warning: reassignment to identifier go.package
-Warning: reassignment to identifier go.dependencies
-Warning: reassignment to identifier go.func
-Warning: reassignment to identifier go.start_paren
-Warning: reassignment to identifier go.end_paren
-Warning: reassignment to identifier go.whitespace
-Warning: reassignment to identifier go.function_name
-Warning: reassignment to identifier go.single_param
-Warning: reassignment to identifier go.multi_param
-Warning: reassignment to identifier go.parameters
-Warning: reassignment to identifier go.single_return
-Warning: reassignment to identifier go.multi_return
-Warning: reassignment to identifier go.return
-Warning: reassignment to identifier go.function
-Warning: reassignment to identifier go.functions
-Warning: reassignment to identifier go.type
-Warning: reassignment to identifier go.struct
-Warning: reassignment to identifier go.struct_name
-Warning: reassignment to identifier go.struct
-Warning: reassignment to identifier go.structs
-Warning: reassignment to identifier go.file
-Compiling /mnt/c/Users/mshanka/git/rosie-pattern-language/../senior-design-rpl/langlib/c.rpl
-Warning: reassignment to identifier c.alias_line_comment
-Warning: reassignment to identifier c.alias_block_comment
-Warning: reassignment to identifier c.struct
-Compiling /mnt/c/Users/mshanka/git/rosie-pattern-language/../senior-design-rpl/langlib/bash.rpl
-Compile error: reference to undefined identifier: b.alias_block_comment
-At line 69:
-b.strings = {b.alias_line_comment / b.alias_block_comment / b.string / .}*
-                                   ^
+{
+    "b.functions": {
+        "pos": 1,
+        "text": "# pwoodworth/bashsupport\n\nfunction f() {\n    function inner()",
+        "subs": [
+            {
+                "b.function": {
+                    "pos": 35,
+                    "text": " f()",
+                    "subs": [
+                        {
+                            "b.function_name": {
+                                "pos": 36,
+                                "text": "f"
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "b.function": {
+                    "pos": 54,
+                    "text": " inner()",
+                    "subs": [
+                        {
+                            "b.function_name": {
+                                "pos": 55,
+                                "text": "inner"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

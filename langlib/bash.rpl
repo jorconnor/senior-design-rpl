@@ -53,7 +53,7 @@ alias b.alias_line_comment = {b.alias_line_comment_context b.alias_line_comment_
 -- Aliased version of the pattern for use in other patterns
 --alias b.alias_comment_body = {!b.block_comment_end .}*
 --alias b.alias_block_comment = {b.block_comment_start b.alias_comment_body b.block_comment_end}
--- 
+--
 -------------------------------
 -- String Literals
 --
@@ -83,13 +83,7 @@ alias b.alias_string = (["] {([\\] / !["]) .}* ["]) / (['] {([\\] / ![']) .}* ['
 --                    \- b.function_name  // Name of the function
 -------------------------------
 
-grammar
-   alias b.string_lit = chars b.string chars
-   alias chars = [\"\']
-   alias b.string = {b.string_lit / .}*
-end
-
-b.function_name = {!"()" ![ ] b.string_lit* .}*
+b.function_name = {!"()" ![ ] .}*
 alias b.temp_comment = {!"#" .}
 b.function = {{"function" b.function_name "()"} / {[ ]* b.function_name [ ]* "()"}}
 b.functions = {{!b.function {b.temp_comment / .}}* b.function}*
