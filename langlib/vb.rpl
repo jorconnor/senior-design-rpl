@@ -59,11 +59,12 @@ alias vb.alias_string = ["] {([\\] / !["]) .}* ["]
 -------------------------------
 
 alias vb.import = "Imports "
-vb.alias_name = {!"=" .}*
+vb.alias_name = {!"=" !line_end .}*
 alias vb.import_alias = "="
-vb.dependency_name = {!line_end .}*
-vb.dependency_alias = {vb.alias_name vb.import_alias} 
-vb.dependency = {vb.import vb.dependency_alias? vb.dependency_name}
+alias vb.dependency_alias = {vb.alias_name vb.import_alias} 
+vb.dependency_name = {!"=" !line_end .}*
+alias vb.dependency_text = vb.dependency_alias? vb.dependency_name
+vb.dependency = vb.import vb.dependency_text
 alias vb.dependencies_pre = {!vb.import !line_end .}*
 
 vb.dependencies = {{vb.dependency / vb.dependencies_pre} line_end}*
