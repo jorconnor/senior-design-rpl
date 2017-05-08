@@ -18,7 +18,38 @@ alias r.line_comment_pre= {!r.line_comment_start !line_end .}*
 r.line_comment_context= {!r.line_comment_start !line_end .}*
 r.line_comment_body= r.line_comment_start r.line_comment_text
 r.line_comment= r.line_comment_context r.line_comment_body
+
+alias r.alias_line_comment_start= "#"
+alias r.alias_line_comment_text= {!line_end .}*
+alias r.alias_line_comment_pre= {!r.alias_line_comment_start !line_end .}*
+alias r.alias_line_comment_context= {!r.alias_line_comment_start !line_end .}*
+alias r.alias_line_comment_body= r.alias_line_comment_start r.alias_line_comment_text
+alias r.alias_line_comment= r.alias_line_comment_context r.alias_line_comment_body
+
 r.line_comments= {{r.line_comment / r.line_comment_body / r.line_comment_pre} .}*
+
+-- Aliased version of the pattern for use in other patterns
+alias r.alias_line_comment_text= {!line_end .}*
+alias r.alias_line_comment_context= {!r.line_comment_start !line_end .}*
+alias r.alias_line_comment_body= r.line_comment_start r.alias_line_comment_text
+alias r.alias_line_comment= r.alias_line_comment_context r.alias_line_comment_body
+
+-------------------------------
+-- String Literals
+--
+-- Currently matches for typical R string and character literals.
+-- Does allow for escaped single and double quotes
+--
+-- Run: rosie -wholefile cs.strings <R-source-file>
+-- Structure: r.strings        // Parent pattern to match all string literals
+--                \- r.string  // Pattern to match a single string
+-------------------------------
+
+r.string = (["] {([\\] / !["]) .}* ["]) / (['] {([\\] / ![']) .}* ['])
+r.strings = {r.alias_line_comment / r.string / .}*
+
+--A "aliased" version is provided to allow for suppressed output in other patterns
+alias r.alias_string = (["] {([\\] / !["]) .}* ["]) / (['] {([\\] / ![']) .}* ['])
 
 -------------------------------
 -- Dependencies
@@ -65,6 +96,6 @@ r.single_param = {!r.end_paren ![,] .}*
 alias r.multip_param = {[,] r.single_param }*
 r.parameters = {r.start_paren r.single_param r.multip_param r.end_paren}
 r.function = {r.function_name r.assignment r.parameters}
-r.functions = {{r.function} / .}*
+r.functions = {r.alias_line_comment / r.function / .}*
 
 r.file = {r.line_comment / r.dependency / r.function / .}*

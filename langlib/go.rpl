@@ -20,6 +20,12 @@ go.line_comment_body= {go.line_comment_start go.line_comment_text}
 go.line_comment= {go.line_comment_context go.line_comment_body}
 go.line_comments= {{go.line_comment / go.line_comment_body / go.line_comment_pre} .}*
 
+-- Aliased version of the pattern for use in other patterns
+alias go.alias_line_comment_text= {!line_end .}*
+alias go.alias_line_comment_context= {!go.line_comment_start !line_end .}*
+alias go.alias_line_comment_body= {go.line_comment_start go.alias_line_comment_text}
+alias go.alias_line_comment= {go.alias_line_comment_context go.alias_line_comment_body}
+
 -------------------------------
 -- Block Comments
 --
@@ -38,6 +44,27 @@ alias go.block_comment_pre= {!go.block_comment_start.}*
 go.block_comment_body= {!go.block_comment_end .}*
 go.block_comment= {go.block_comment_start go.block_comment_body go.block_comment_end}
 go.block_comments= {go.block_comment_pre go.block_comment}*
+
+-- Aliased version of the pattern for use in other patterns
+alias go.alias_block_comment_body= {!go.block_comment_end .}*
+alias go.alias_block_comment= {go.block_comment_start go.alias_block_comment_body go.block_comment_end}
+
+-------------------------------
+-- String Literals
+--
+-- Currently matches for typical Go string and character literals.
+-- Does allow for escaped single and double quotes
+--
+-- Run: rosie -wholefile go.strings <Go-source-file>
+-- Structure: go.strings        // Parent pattern to match all string literals
+--                \- go.string  // Pattern to match a single string
+-------------------------------
+
+go.string = (["] {([\\] / !["]) .}* ["]) / (['] {([\\] / ![']) .}* ['])
+go.strings = {go.alias_line_comment / go.alias_block_comment / go.string / .}*
+
+--A "aliased" version is provided to allow for suppressed output in other patterns
+alias go.alias_string = (["] {([\\] / !["]) .}* ["]) / (['] {([\\] / ![']) .}* ['])
 
 -------------------------------
 -- Dependencies
