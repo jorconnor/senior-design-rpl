@@ -19,6 +19,7 @@ r.line_comment_context= {!r.line_comment_start !line_end .}*
 r.line_comment_body= r.line_comment_start r.line_comment_text
 r.line_comment= r.line_comment_context r.line_comment_body
 
+-- Aliased version of the pattern for use in other patterns
 alias r.alias_line_comment_start= "#"
 alias r.alias_line_comment_text= {!line_end .}*
 alias r.alias_line_comment_pre= {!r.alias_line_comment_start !line_end .}*
@@ -27,13 +28,6 @@ alias r.alias_line_comment_body= r.alias_line_comment_start r.alias_line_comment
 alias r.alias_line_comment= r.alias_line_comment_context r.alias_line_comment_body
 
 r.line_comments= {{r.line_comment / r.line_comment_body / r.line_comment_pre} .}*
-
--- Aliased version of the pattern for use in other patterns
-alias r.alias_line_comment_text= {!line_end .}*
-alias r.alias_line_comment_context= {!r.line_comment_start !line_end .}*
-alias r.alias_line_comment_body= r.line_comment_start r.alias_line_comment_text
-alias r.alias_line_comment= r.alias_line_comment_context r.alias_line_comment_body
-
 -------------------------------
 -- String Literals
 --
@@ -80,10 +74,11 @@ r.dependencies = {r.dependency / .}*
 -- capture function bodies.
 --
 -- Run: rosie -wholefile r.functions <r-source-file>
--- Structure: r.functions                // Parent pattern to match all functions in a file
---                \- r.function_name     // Matches an entire function
---                \- r.parameters        // Matches the parameter list
---                    \- r.single_param  // Matches a single parameter
+-- Structure: r.functions                    // Parent pattern to match all functions in a file
+--                \- r.function              // Matched function definitions
+--                    \- r.function_name     // Matches an entire function
+--                    \- r.parameters        // Matches the parameter list
+--                        \- r.single_param  // Matches a single parameter
 -------------------------------
 
 alias r.assignment = "<- function"
@@ -97,5 +92,32 @@ alias r.multip_param = {[,] r.single_param }*
 r.parameters = {r.start_paren r.single_param r.multip_param r.end_paren}
 r.function = {r.function_name r.assignment r.parameters}
 r.functions = {r.alias_line_comment / r.function / .}*
+
+-------------------------------
+-- Classes
+--
+-- Pattern to match function definitions. Does not
+-- capture function bodies. Individual parameters are not parsed
+-- since parantheses need to be matched.
+-- Parameters that have assignments are not caught correctly for
+-- the same reason.
+--
+-- Run: rosie -wholefile r.functions <r-source-file>
+-- Structure: r.classes                      // Parent pattern to match all functions in a file
+--                \- r.class                 // Matches class definition
+--                    \- r.class_type        // Matches the type of class
+--                    \- r.param_list        // Matches the parameter list
+-------------------------------
+
+alias r.class = "class"
+alias r.unclass = "unclass"
+alias r.inherits = "inherits"
+alias r.old_class = "oldClass"
+
+r.class_assignment = {"<-" {!line_end !r.line_comment_start .}*}
+r.class_type = r.class / r.unclass / r.inherits / r.old_class
+r.param_list = {!r.class_assignment !r.line_comment_start !line_end .}*
+r.class = r.class_type r.param_list r.class_assignment?
+r.classes = {r.class / r.alias_line_comment / .}*
 
 r.file = {r.line_comment / r.dependency / r.function / .}*
