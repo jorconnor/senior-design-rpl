@@ -12,6 +12,14 @@ js.line_comment_body= {js.line_comment_start js.line_comment_text}
 js.line_comment= {js.line_comment_context js.line_comment_body}
 js.line_comments= {{js.line_comment / js.line_comment_body / js.line_comment_pre} .}*
 
+alias js.alias_line_comment_start= "//"
+alias js.alias_line_comment_text= {!line_end .}*
+alias js.alias_line_comment_pre= {!js.alias_line_comment_start !line_end .}*
+alias js.alias_line_comment_context= {!js.alias_line_comment_start !line_end .}*
+alias js.alias_line_comment_body= {js.alias_line_comment_start js.alias_line_comment_text}
+alias js.alias_line_comment= {js.alias_line_comment_context js.alias_line_comment_body}
+alias js.alias_line_comments= {{js.alias_line_comment / js.alias_line_comment_body / js.alias_line_comment_pre} .}*
+
 --Block Comments
 alias js.block_comment_start = "/*"
 alias js.block_comment_end = "*/"
@@ -19,6 +27,14 @@ alias js.block_comment_pre= {!js.block_comment_start.}*
 js.block_comment_body= {!js.block_comment_end .}*
 js.block_comment= { js.block_comment_start js.block_comment_body js.block_comment_end}
 js.block_comments= {js.block_comment_pre js.block_comment }*
+
+alias js.alias_block_comment_start = "/*"
+alias js.alias_block_comment_end = "*/"
+alias js.alias_block_comment_pre= {!js.alias_block_comment_start.}*
+alias js.alias_block_comment_body= {!js.alias_block_comment_end .}*
+alias js.alias_block_comment= { js.alias_block_comment_start js.alias_block_comment_body js.alias_block_comment_end}
+alias js.alias_block_comments= {js.alias_block_comment_pre js.alias_block_comment }*
+
 
 --Dependencies
 alias js.import = "import "
@@ -66,7 +82,7 @@ alias js.function_body_clean = {!js.end_block .}*
 js.function_body = {js.whitespace js.start_block js.function_body_clean js.end_block}
 js.function =  js.function_call  js.function_name js.parameters 
 
-js.functions = { { js.function } / .}* 
+js.functions = { js.alias_line_comment / js.alias_block_comment / js.function / .}* 
 
 --Exceptions
 alias js.throw = "throw "
