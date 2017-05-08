@@ -29,7 +29,8 @@ langs = {
         "ruby" : "rb",
         "r" : "r",
         "bash" : "b",
-        "vb" : "vb"
+        "vb" : "vb",
+        "python" : "py",
         }
 
 tests = [ 
@@ -38,6 +39,7 @@ tests = [
         "functions",
         "classes",
         "structs",
+        "strings"
         ]
 
 def resolve_input(lang_dir, test,test_dir):

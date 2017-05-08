@@ -146,8 +146,8 @@ cs.functions = {cs.alias_line_comment / cs.alias_block_comment / cs.funcdef / .}
 cs.classname = {!":" !"{" ![:space:] .}+
 cs.parentclass = {!":" !"{" ![:space:] !"," .}+
 cs.parentclasslist = (cs.parentclass ",")* cs.parentclass
-alias cs.visibility = "public" / "internal"
-alias cs.declaration = "class" / "interface"
+cs.visibility = "public" / "internal"
+cs.declaration = "class" / "interface"
 cs.class = cs.visibility? "sealed"? "abstract"? "partial"? "static"? cs.declaration cs.classname (":" cs.parentclasslist)? "{"
 
 cs.classes = {{!cs.class .}* cs.class .}* {!cs.class .}*

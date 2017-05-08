@@ -19,6 +19,16 @@ c.line_comment_body= {c.line_comment_start c.line_comment_text}
 c.line_comment= {c.line_comment_context c.line_comment_body}
 c.line_comments= {{c.line_comment / c.line_comment_body / c.line_comment_pre} .}*
 
+alias c.alias_line_comment_start = "//"
+alias c.alias_line_comment_text = {!line_end .}*
+alias c.alias_line_comment_pre = {!c.alias_line_comment_start !line_end .}*
+alias c.alias_line_comment_context = {!c.alias_line_comment_start !line_end .}*
+alias c.alias_line_comment_body = {c.alias_line_comment_start c.alias_line_comment_text}
+alias c.alias_line_comment = {c.alias_line_comment_context c.alias_line_comment_body}
+alias c.alias_line_comment = {c.alias_line_comment_context c.alias_line_comment_body}
+alias c.alias_line_comments = {{c.alias_line_comment / c.alias_line_comment_body / c.alias_line_comment_pre} .}*
+
+
 -------------------------------
 -- Block Comments
 --
@@ -39,6 +49,17 @@ c.block_comment_body= {!c.block_comment_end .}*
 alias c.block_comment_a = { c.block_comment_start c.block_comment_body_a c.block_comment_end}
 c.block_comment= {c.block_comment_start c.block_comment_body c.block_comment_end}
 c.block_comments= {c.block_comment_pre c.block_comment}*
+
+alias c.alias_block_comment_start = "/*"
+alias c.alias_block_comment_end = "*/"
+alias c.alias_block_comment_pre = {!c.block_comment_start.}*
+
+alias c.alias_block_comment_body = {!c.alias_block_comment_end .}*
+alias c.alias_block_comment = { c.alias_block_comment_start c.alias_block_comment_body c.alias_block_comment_end}
+alias c.alias_block_comment = { c.alias_block_comment_start c.alias_block_comment_body c.alias_block_comment_end}
+
+alias c.alias_block_comments = {c.alias_block_comment_pre c.alias_block_comment }*
+
 
 -------------------------------
 -- Dependencies
@@ -74,24 +95,26 @@ c.dependencies = {{c.dependency / c.dependencies_pre} line_end}*
 --                        \- c.parameters       // Matches the functions list of parameters
 --                            \- c.single_param // Matches a single parameter in a function call.
 --------------------------------
-
 alias c.seperator = ","
 alias c.start_paren = "("
 alias c.end_paren = ")"
 alias c.start_block = "{"
 alias c.end_block = "}"
-alias c.whitespace = [:space:]
 alias c.pointer = "*"
-alias c.keywords = {"if" / "for" / "switch"}
+alias c.invalid_identifier = [^[A-Z][a-z][0-9][_][&][<][>]]
+alias c.keywords = {"if" / "for" / "switch" / "catch" / "try" / "do" / "while" / "else" / "else if" / "} else if"}
+alias c.whitespace = [:space:]
+alias c.const = "const"
 c.static = "static"
-c.return_type = {!c.keywords !c.whitespace .}*
-c.function_name = {!line_end !c.start_paren .}*
-c.single_param = {!line_end !c.end_paren ![,] .}*
-alias c.multip_param =  {[,] c.single_param }*
-c.parameters = {c.start_paren c.single_param c.multip_param c.end_paren}
+c.inline = "inline"
+c.return_type = !c.keywords c.const? "struct"? {!c.invalid_identifier .}+ c.pointer*
+c.function_name = !c.keywords {!line_end !c.start_paren .}+
 
-c.function_call =  {"\n"} c.static? {c.return_type} !c.keywords c.pointer? c.function_name c.parameters "{"
-c.function = {c.function_call}
+c.single_param = {!c.end_paren ![,] .}*
+alias c.multi_param = {[,] c.single_param}*
+c.parameters = {c.start_paren c.single_param c.multi_param c.end_paren c.whitespace+}
+
+c.function = c.whitespace? c.static? c.inline? c.return_type !c.keywords c.function_name !c.keywords c.parameters c.const? "{"
 c.functions = {c.function / .}*
 
 -------------------------------
@@ -106,11 +129,15 @@ c.functions = {c.function / .}*
 --                    \- c.struct_name      // Name of the struct
 -------------------------------
 
-alias c.type = "type "
-alias c.struct = "struct "
-c.struct_name = {!c.struct .}*
+alias c.typedef = "typedef "
+alias c.struct = "struct " 
+alias c.enum = "enum"
+alias c.class = {c.whitespace "class" c.whitespace}
+c.type = {{!c.invalid_identifier .}+ " "}+
 
-c.struct = c.type c.struct_name c.struct
-c.structs = {c.struct / .}*
+c.struct_name = {!c.start_block .}*
+
+c.struct = c.typedef? c.struct c.type?  c.struct_name
+c.structs = {{c.alias_line_comment / c.alias_block_comment}? c.struct / .}*
 
 c.file = {c.block_comment / c.line_comment / c.dependency / c.function / c.struct / .}*

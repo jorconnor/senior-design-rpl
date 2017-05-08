@@ -18,7 +18,31 @@ alias r.line_comment_pre= {!r.line_comment_start !line_end .}*
 r.line_comment_context= {!r.line_comment_start !line_end .}*
 r.line_comment_body= r.line_comment_start r.line_comment_text
 r.line_comment= r.line_comment_context r.line_comment_body
+
 r.line_comments= {{r.line_comment / r.line_comment_body / r.line_comment_pre} .}*
+
+-- Aliased version of the pattern for use in other patterns
+alias r.alias_line_comment_text= {!line_end .}*
+alias r.alias_line_comment_context= {!r.line_comment_start !line_end .}*
+alias r.alias_line_comment_body= r.line_comment_start r.alias_line_comment_text
+alias r.alias_line_comment= r.alias_line_comment_context r.alias_line_comment_body
+
+-------------------------------
+-- String Literals
+--
+-- Currently matches for typical R string and character literals.
+-- Does allow for escaped single and double quotes
+--
+-- Run: rosie -wholefile cs.strings <R-source-file>
+-- Structure: r.strings        // Parent pattern to match all string literals
+--                \- r.string  // Pattern to match a single string
+-------------------------------
+
+r.string = (["] {([\\] / !["]) .}* ["]) / (['] {([\\] / ![']) .}* ['])
+r.strings = {r.alias_line_comment / r.string / .}*
+
+--A "aliased" version is provided to allow for suppressed output in other patterns
+alias r.alias_string = (["] {([\\] / !["]) .}* ["]) / (['] {([\\] / ![']) .}* ['])
 
 -------------------------------
 -- Dependencies
