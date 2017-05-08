@@ -39,6 +39,7 @@ tests = [
         "functions",
         "classes",
         "structs",
+        "strings"
         ]
 
 def resolve_input(lang_dir, test,test_dir):
