@@ -1,4 +1,24 @@
 -------------------------------
+--String Literals
+--
+--Currently matches for typical c string and character literals.
+--Does allow for escaped single and double quotes
+--A "aliased" version is provided to allow for suppressed output in other patterns
+-- Run: rosie -wholefile cpp.strings <cpp-source-file>
+-- Structure: cpp.strings                      // Parent pattern to extract all strings from file
+--              \- cpp.string                  // Matches a single cpp string
+--            cpp.characters                   // Parent pattern to match all character literals from file
+--              \- cpp.character               // Matches a single cpp character
+-- NOTE cpp.strings and cpp.characters are defined AFTER comments to allow for
+--      commented strings to be ignored.
+-------------------------------
+alias cpp.alias_string = ["] {([\\] / !["]) .}* ["]
+cpp.string = ["] {([\\] / !["]) .}* ["]
+
+alias cpp.alias_character = ['] {([\\] / ![']) .} [']
+cpp.character =  ['] {([\\] / ![']) .} [']
+
+-------------------------------
 -- Inline Comments
 --
 -- Matches in line comments starting with a '//'. Also
@@ -60,6 +80,8 @@ alias cpp.alias_block_comment = { cpp.alias_block_comment_start cpp.alias_block_
 
 alias cpp.alias_block_comments = {cpp.alias_block_comment_pre cpp.alias_block_comment }*
 
+cpp.strings = {cpp.alias_line_comment / cpp.alias_block_comment / cpp.string / .}*
+cpp.characters = {cpp.alias_line_comment / cpp.alias_block_comment / cpp.character / .}*
 
 -------------------------------
 -- Dependencies
