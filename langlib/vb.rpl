@@ -138,4 +138,4 @@ vb.classend = "End Class" / "End Interface"
 vb.classbody = {!vb.classend .}*
 vb.class = vb.classdef vb.classbody vb.classend
 
-vb.classes = {{!vb.class .}* vb.class .}* {!vb.class .}*
+vb.classes = {vb.class / .}*
