@@ -1,3 +1,5 @@
+# from r documentation
+
 x <- 10
 class(x) # "numeric"
 oldClass(x) # NULL
