@@ -1,4 +1,24 @@
 -------------------------------
+--String Literals
+--
+--Currently matches for typical c string and character literals.
+--Does allow for escaped single and double quotes
+--A "aliased" version is provided to allow for suppressed output in other patterns
+-- Run: rosie -wholefile c.strings <c-source-file>
+-- Structure: c.strings                      // Parent pattern to extract all strings from file
+--              \- c.string                  // Matches a single c string
+--            c.characters                   // Parent pattern to match all character literals from file
+--              \- c.character               // Matches a single c character
+-- NOTE c.strings and c.characters are defined AFTER comments to allow for
+--      commented strings to be ignored.
+-------------------------------
+alias c.alias_string = ["] {([\\] / !["]) .}* ["]
+c.string = ["] {([\\] / !["]) .}* ["]
+
+alias c.alias_character = ['] {([\\] / ![']) .} [']
+c.character =  ['] {([\\] / ![']) .} [']
+
+-------------------------------
 -- Inline Comments
 --
 -- Matches in line comments starting with a '//'. Also
@@ -60,6 +80,8 @@ alias c.alias_block_comment = { c.alias_block_comment_start c.alias_block_commen
 
 alias c.alias_block_comments = {c.alias_block_comment_pre c.alias_block_comment }*
 
+c.strings = {c.alias_line_comment / c.alias_block_comment / c.string / .}*
+c.characters = {c.alias_line_comment / c.alias_block_comment / c.character / .}*
 
 -------------------------------
 -- Dependencies
