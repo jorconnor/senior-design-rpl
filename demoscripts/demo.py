@@ -102,13 +102,12 @@ def iterate_over_path(path):
     q = Queue()
     ps = []
     split_files = [[],[],[],[]]
-    for path,subdirs,files in walk(path):    
-        for i in range(len(files)):
-            filename, file_extension = splitext(path+"/"+ files[i])
+    for path,subdirs,files in walk(path):
+        for i,file in enumerate(files):
+            filename, file_extension = splitext(path+"/"+ file)
             if file_extension in langs:
                 if(len(split_files[i % 4]) < 50):
-                    split_files[i % 4].append(path+"/"+files[i])
-
+                    split_files[i % 4].append(path+"/"+file)
     for file_list in split_files:
         ps.append(Process(target=run_thread,args=(file_list,q)))
     for p in ps: p.start()
