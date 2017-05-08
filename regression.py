@@ -18,7 +18,7 @@ testfiles = "./testfiles/"
 manifest_file = "./MANIFEST"
 
 #This dict defines the translation from directory names in the "testfiles" directory to actual rosie pattern
-#i.e. csharp -> "cs.<feature>"
+#i.e. csharp -> "cs.<pattern>"
 langs = { 
         "java" : "java",
         "c" : "c",
