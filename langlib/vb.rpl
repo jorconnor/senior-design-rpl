@@ -18,8 +18,7 @@ alias vb.line_comment_pre= {!vb.line_comment_start !line_end .}*
 vb.line_comment_context= {!vb.line_comment_start !line_end .}*
 vb.line_comment_body= {vb.line_comment_start vb.line_comment_text}
 vb.line_comment= {vb.line_comment_context vb.line_comment_body}
-
-vb.line_comments= {{vb.line_comment / vb.line_comment_body / vb.line_comment_pre} .}*
+vb.line_comments= {vb.line_comment / .}*
 
 -- Aliased version of pattern for use in other patterns
 alias vb.alias_line_comment_text= {!line_end .}*
@@ -139,3 +138,5 @@ vb.classbody = {!vb.classend .}*
 vb.class = vb.classdef vb.classbody vb.classend
 
 vb.classes = {vb.class / .}*
+
+vb.file = {vb.line_comment / vb.string / vb.dependency / vb.class / vb.function / .}* 

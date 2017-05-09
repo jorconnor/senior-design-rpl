@@ -38,7 +38,7 @@ cpp.line_comment_context = {!cpp.line_comment_start !line_end .}*
 cpp.line_comment_body = {cpp.line_comment_start cpp.line_comment_text}
 cpp.aliased_line_comment = {cpp.line_comment_context cpp.line_comment_body}
 cpp.line_comment = {cpp.line_comment_context cpp.line_comment_body}
-cpp.line_comments = {{cpp.line_comment / cpp.line_comment_body / cpp.line_comment_pre} .}*
+cpp.line_comments = {cpp.line_comment / .}*
 
 alias cpp.alias_line_comment_start = "//"
 alias cpp.alias_line_comment_text = {!line_end .}*
@@ -165,4 +165,4 @@ cpp.class = {cpp.enum? cpp.class cpp.type? cpp.class_name}
 cpp.structs = {{cpp.alias_line_comment / cpp.alias_block_comment}? cpp.struct / .}*
 cpp.classes = {{cpp.alias_line_comment / cpp.alias_block_comment}? cpp.class / .}*
 
-cpp.file = {cpp.block_comment / cpp.line_comment / cpp.dependency / cpp.struct / cpp.class / .}*
+cpp.file = {cpp.block_comment / cpp.line_comment / cpp.dependency / cpp.struct / cpp.class / cpp.function / .}*

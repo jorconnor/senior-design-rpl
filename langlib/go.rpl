@@ -18,7 +18,7 @@ alias go.line_comment_pre= {!go.line_comment_start !line_end .}*
 go.line_comment_context= {!go.line_comment_start !line_end .}*
 go.line_comment_body= {go.line_comment_start go.line_comment_text}
 go.line_comment= {go.line_comment_context go.line_comment_body}
-go.line_comments= {{go.line_comment / go.line_comment_body / go.line_comment_pre} .}*
+go.line_comments= {go.line_comment / .}*
 
 -- Aliased version of the pattern for use in other patterns
 alias go.alias_line_comment_text= {!line_end .}*
@@ -147,4 +147,4 @@ go.struct_name = {!go.struct .}*
 go.struct = go.type go.struct_name go.struct
 go.structs = {go.struct / .}*
 
-go.file = {go.line_comment / go.block_comment / go.package / go.dependency / go.dependency / go.function / go.struct / .}*
+go.file = {go.line_comment / go.block_comment / go.package / go.dependency / go.function / go.struct / .}*

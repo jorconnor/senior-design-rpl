@@ -34,7 +34,7 @@ alias py.line_comment_pre= {!py.line_comment_start !line_end .}*
 py.line_comment_context= {!py.line_comment_start !line_end .}*
 py.line_comment_body= {py.line_comment_start py.line_comment_text}
 py.line_comment= {py.line_comment_context py.line_comment_body}
-py.line_comments= {{py.line_comment / py.line_comment_body / py.line_comment_pre} .}*
+py.line_comments= {py.line_comment .}*
 
 alias py.alias_line_comment_start= "#"
 alias py.alias_line_comment_text= {!line_end .}*
@@ -119,4 +119,4 @@ py.parents= {!"):"  .}*
 py.class = {"class " py.class_name "(" py.parents "):"}
 py.classes = {py.alias_line_comment? py.class / .}+
 
-py.file = { py.line_comment / py.dependency / py.function / py.classes / .}*
+py.file = { py.line_comment / py.dependency / py.function / py.class / .}*

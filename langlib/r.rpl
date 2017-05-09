@@ -27,7 +27,7 @@ alias r.alias_line_comment_context= {!r.alias_line_comment_start !line_end .}*
 alias r.alias_line_comment_body= r.alias_line_comment_start r.alias_line_comment_text
 alias r.alias_line_comment= r.alias_line_comment_context r.alias_line_comment_body
 
-r.line_comments= {{r.line_comment / r.line_comment_body / r.line_comment_pre} .}*
+r.line_comments= {r.line_comment / .}*
 -------------------------------
 -- String Literals
 --
@@ -120,4 +120,4 @@ r.param_list = {!r.class_assignment !r.line_comment_start !line_end .}*
 r.class = r.class_type r.param_list r.class_assignment?
 r.classes = {r.class / r.alias_line_comment / .}*
 
-r.file = {r.line_comment / r.dependency / r.function / .}*
+r.file = {r.line_comment / r.dependency / r.function / r.class / .}*

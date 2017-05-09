@@ -17,15 +17,14 @@ cs.line_comment_text= {!line_end .}*
 alias cs.line_comment_pre= {!cs.line_comment_start !line_end .}*
 cs.line_comment_context= {!cs.line_comment_start !line_end .}*
 cs.line_comment_body= {cs.line_comment_start cs.line_comment_text}
-cs.line_comment= {cs.line_comment_context cs.line_comment_body}
-
-cs.line_comments= {{cs.line_comment / cs.line_comment_body / cs.line_comment_pre} .}*
+cs.line_comment= {cs.line_comment_body line_end}
+cs.line_comments= {cs.line_comment .}*
 
 -- Aliased version of pattern for use in other patterns
 alias cs.alias_line_comment_text= {!line_end .}*
 alias cs.alias_line_comment_context= {!cs.line_comment_start !line_end .}*
 alias cs.alias_line_comment_body= {cs.line_comment_start cs.alias_line_comment_text}
-alias cs.line_comment= {cs.alias_line_comment_context cs.alias_line_comment_body}
+alias cs.alias_line_comment= {cs.alias_line_comment_context cs.alias_line_comment_body}
 alias cs.alias_line_comment= {cs.alias_line_comment_context cs.alias_line_comment_body}
 
 -------------------------------
@@ -126,8 +125,8 @@ cs.paramtype = {!cs.accessmod !cs.mod !"base" [[:alnum:][_]] {![[:space:][(),]] 
 cs.defaultval = [^,);]+
 cs.param = cs.parammod? cs.paramtype cs.paramname ("=" cs.defaultval)?
 cs.paramlist = (cs.param ",")* cs.param
-cs.funcdef = cs.accessmod? cs.mod* cs.returntype cs.methodname "(" cs.paramlist? ")" "{"
-cs.functions = {cs.alias_line_comment / cs.alias_block_comment / cs.funcdef / .}*
+cs.function = cs.accessmod? cs.mod* cs.returntype cs.methodname "(" cs.paramlist? ")" "{"
+cs.functions = {cs.alias_line_comment / cs.alias_block_comment / cs.function / .}*
 
 -------------------------------
 -- Class Defs
@@ -152,4 +151,4 @@ cs.class = cs.visibility? "sealed"? "abstract"? "partial"? "static"? cs.declarat
 
 cs.classes = {{!cs.class .}* cs.class .}* {!cs.class .}*
 
-cs.file = {cs.block_comment / cs.line_comment / cs.dependency / cs.class / .}*
+cs.file = {cs.block_comment / cs.line_comment / cs.dependency / cs.class / cs.function / .}*

@@ -39,7 +39,7 @@ alias java.line_comment_pre= {java.alias_string? !java.line_comment_start !line_
 java.line_comment_context= {java.alias_string? !java.line_comment_start !line_end .}*
 java.line_comment_body= {java.line_comment_start java.line_comment_text}
 java.line_comment= {java.line_comment_context java.line_comment_body}
-java.line_comments= {{ java.line_comment / java.line_comment_body / java.line_comment_pre} .}*
+java.line_comments= {java.line_comment / .}*
 
 alias java.alias_line_comment_start= "//"
 alias java.alias_line_comment_text= {!line_end .}*
@@ -226,4 +226,4 @@ java.catch_block = {java.catch_exception java.catch_body}
 java.error = {java.throws_exception / java.throw_new_exception / java.try_block / java.catch_block}
 java.errors = {java.error / .}*
 
-java.file = {java.line_comment / java.block_comment / java.string / java.package / java.dependency / java.function / java.class / java.error / .}*
+java.file = {java.line_comment / java.block_comment / java.string / java.package / java.dependency / java.function / java.class / .}*

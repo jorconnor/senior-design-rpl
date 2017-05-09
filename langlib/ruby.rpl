@@ -52,8 +52,7 @@ alias rb.alias_line_comment_context = {!rb.line_comment_start !line_end .}*
 alias rb.alias_line_comment_body = {rb.line_comment_start rb.alias_line_comment_text}
 alias rb.alias_line_comment = {rb.alias_line_comment_context rb.alias_line_comment_body}
 
-
-rb.line_comments = {{rb.alias_block_comment / rb.line_comment / rb.line_comment_body / rb.line_comment_pre} .}*
+rb.line_comments = {rb.line_comment / .}*
 
 -------------------------------
 -- String Literals
@@ -136,4 +135,4 @@ rb.class = {"class" [:space:]+ rb.classname ([:space:]* "<" [:space:]* rb.superc
 
 rb.classes = {{!rb.class .}* rb.class .}* {!rb.class .}*
 
-rb.file = {rb.line_comment / rb.block_comment / rb.dependency / rb.dependency / rb.function / rb.class / .}*
+rb.file = {rb.line_comment / rb.block_comment / rb.dependency  / rb.function / rb.class / .}*

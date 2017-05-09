@@ -16,7 +16,8 @@ alias js.whitespace = [:space:]
 ---------------------------------------------------------------------
 alias js.string_start = ["] / [']
 js.string_text = { !js.string_start {"\\\"" / "\\\'" /.}}*
-js.strings = { { js.string_start js.string_text js.string_start }/ .}*
+js.string = { js.string_start js.string_text js.string_start }
+js.strings = { js.string / .}*
 
 ---------------------------------------------------------------------
 -- Inline Comments
@@ -44,7 +45,7 @@ alias js.alias_line_comment_pre= {!js.alias_line_comment_start !line_end .}*
 alias js.alias_line_comment_context= {!js.alias_line_comment_start !line_end .}*
 alias js.alias_line_comment_body= {js.alias_line_comment_start js.alias_line_comment_text}
 alias js.alias_line_comment= {js.alias_line_comment_context js.alias_line_comment_body}
-alias js.alias_line_comments= {{js.alias_line_comment / js.alias_line_comment_body / js.alias_line_comment_pre} .}*
+alias js.alias_line_comments= {js.line_comment / .}*
 
 ---------------------------------------------------------------------
 --Block Comments
@@ -170,9 +171,11 @@ js.exceptions = {{ js.throw js.new? js.exception statement_end } / .}*
 --                             \- js.single_param       // matches a single parameter
 --                   \- js.extends                      // The word "extends"
 -------------------------------
-alias js.class = "class"
+alias js.class_identifier = "class"
 alias js.extends = "extends"
 js.class_name = { !js.start_block !js.start_paren !js.extends .}*
-js.class_definition = js.class js.class_name js.parameters? {js.extends js.class_name}? js.start_block
+js.class = js.class_identifier js.class_name js.parameters? {js.extends js.class_name}? js.start_block
 
-js.classes = { js.class_definition / . }*
+js.classes = { js.class / . }*
+
+js.file = {js.line_comment / js.block_comment / js.string / js.dependency / js.function / js.class / .}*
